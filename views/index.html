@@ -22,6 +22,7 @@
 
 	<input id="publish" type="button" value="Publish">
     <ul id="messages"></ul>
+
     <script type="text/javascript">
       var es = new EventSource('/stream');
       es.onmessage = function(e) { 
@@ -30,9 +31,6 @@
       $("#publish").click(function () {
         $.post("/publish")
       })
-    </script>
-
-    <script>
 
 	/* Globals */
 	var HEIGHT = 720;
@@ -51,7 +49,7 @@
 	var renderer = PIXI.autoDetectRenderer(WIDTH, HEIGHT);
 
 	// importing Link's images
-	var characterJSON = ["/images/link.json"];
+	var characterJSON = ["/images/spy.json"];
 
 	// create a new loader
 	var loader = new PIXI.AssetLoader(characterJSON);
@@ -60,7 +58,6 @@
 	var cameraJSON = ["/images/camera.json"];
 	var cameraLoader = new PIXI.AssetLoader(cameraJSON);
 	cameraLoader.load();
-
 
 	// create an empty container
 	var gameContainer = new PIXI.DisplayObjectContainer();
@@ -135,16 +132,12 @@ function onTilesLoaded(){
 	window.addEventListener('keyup', function(event) { 
 		key.onKeyUp(event.keyCode); 
 	});
-	
 
 //	character.mousedown = character.touchstart = function(data) {
-
 //		gameContainer.removeChild(this);
 //		var character = PIXI.Sprite.fromFrame(1);
 //		gameContainer.addChild(character);
-
 //	}		
-
 
 	requestAnimFrame(animate);
 }
@@ -164,7 +157,7 @@ function animate() {
 	if((timeout%25) == 0) {	
 
 		/* Increment through all of the spite images of Link */
-		if(spriteNum > 3)
+		if(spriteNum >= 3)
 			spriteNum = 0;
 
 		/* Get the current character and the one to switch with
@@ -188,14 +181,8 @@ function animate() {
 		spriteNum++;
 	}
 
-
-
 	renderer.render(stage);
 }
-
-
-
-
 
 
 //	var renderer = new PIXI.CanvasRenderer(1024, 768, null, true, true);
@@ -241,6 +228,7 @@ function animate() {
 //	    
 //	    renderer.render(stage);
 //	}
+
 
     </script>
 
