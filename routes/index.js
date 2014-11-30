@@ -1,8 +1,13 @@
 var express = require('express');
-var passport = require('passport');
-var querystring = require('querystring');
 var router = express.Router();
 
+var mqtt = require('mqtt')
+var url = require('url');
+
+var app = express();
+//not sure why these are here//
+var passport = require('passport');
+var querystring = require('querystring');
 
 /* Make sure that a user is logged in before accessing potentially private pages */
 

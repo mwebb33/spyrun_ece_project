@@ -15,10 +15,23 @@
 	<script src="/bin/character.js"> </script>
 	<script src="/bin/key.js"> </script>
 	<script src="/bin/camera.js"> </script>
-
+	<script src="/lib/jquery.min.js" type="text/javascript"></script>
 
 </head>
 <body>
+
+	<input id="publish" type="button" value="Publish">
+    <ul id="messages"></ul>
+    <script type="text/javascript">
+      var es = new EventSource('/stream');
+      es.onmessage = function(e) { 
+        $('#messages').append("<li>" + e.data + "</li>") 
+      }
+      $("#publish").click(function () {
+        $.post("/publish")
+      })
+    </script>
+
     <script>
 
 	/* Globals */
@@ -83,6 +96,9 @@
 	var loader_new = new PIXI.AssetLoader(bground);
 	loader_new.onComplete = test;
 	loader_new.load();
+ 
+
+	console.log('this is running in index.html');
 
 
 	function test() {
