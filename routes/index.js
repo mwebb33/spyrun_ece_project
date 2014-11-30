@@ -1,10 +1,7 @@
 var express = require('express');
 var router = express.Router();
 
-var mqtt = require('mqtt')
-var url = require('url');
 
-var app = express();
 //not sure why these are here//
 var passport = require('passport');
 var querystring = require('querystring');

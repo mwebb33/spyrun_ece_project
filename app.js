@@ -15,9 +15,6 @@ var flash = require('connect-flash');
 var session = require('express-session');
 var angular = require('angular');
 
-var routes = require('./routes/index');
-var users = require('./routes/users');
-
 // create the app
 var app = express();
 var port = process.env.PORT || 5000;
@@ -61,8 +58,14 @@ app.use(flash());
 
 console.log("this is running in app.js")
 
+var routes = require('./routes/index');
+var users = require('./routes/users');
+var publish = require('./routes/publish');
+
 app.use('/', routes);
-// app.use('/users', users)
+app.use('/publish', publish); //not sure? 
+app.use('/users', users)
+
 
 app.post('/publish', function(req, res) {
   var client = mqtt.createClient(mqtt_url.port, mqtt_url.hostname, {
@@ -77,6 +80,7 @@ app.post('/publish', function(req, res) {
     });
   });
 });
+
 
 app.get('/stream', function(req, res) {
   // set timeout as high as possible
@@ -117,6 +121,8 @@ app.get('/stream', function(req, res) {
     client.end();
   });
 });
+
+
 
 /// ERROR HANDLERS ///
 
