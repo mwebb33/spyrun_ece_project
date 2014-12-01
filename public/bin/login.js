@@ -59,14 +59,23 @@
 
             document.getElementById('content').appendChild(heading);
             document.getElementById('logoutbutton').style.visibility="visible";
+            pausecomp(1000);
             stage.visible = true;  
+            window.location= "http://spyrun.heroku.com";
           });
         });
       }
 
       function logout() {
           window.location= "https://accounts.google.com/logout";
-          window.location= "http://spyrun.heroku.com";
+          pausecomp(1000);
           stage.visible = false; 
+          window.location= "http://spyrun.heroku.com";
+      }
+
+      function pausecomp(millis) {
+        var date = new Date();
+        var curDate = null;
+        do { curDate = new Date(); } while(curDate-date < millis);
       }
 
