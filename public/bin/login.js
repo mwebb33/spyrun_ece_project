@@ -14,7 +14,7 @@
       var apiKey = 'AIzaSyCY9O9Wl9F_lkWiJToOf9IrZtddQ__EOFE';
 
       // To enter one or more authentication scopes, refer to the documentation for the API.
-      var scopes = 'https://www.googleapis.com/auth/plus.me';
+      var scopes = 'profile';
 
       // Use a button to handle authentication the first time.
       function handleClientLoad() {
