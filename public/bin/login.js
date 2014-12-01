@@ -52,8 +52,8 @@
           });
           request.execute(function(resp) {
             var heading = document.createElement('h4');
-            var image = document.createElement('img');
-            image.src = resp.image.url;
+            //var image = document.createElement('img');
+            //image.src = resp.image.url;
             heading.appendChild(image);
             heading.appendChild(document.createTextNode(resp.displayName));
 
@@ -67,7 +67,7 @@
       }
 
       function logout() {
-          gapi.auth.signOut();
+          //gapi.auth.signOut();
           stage.visible = false; 
           window.location= "http://spyrun.heroku.com";
       }
