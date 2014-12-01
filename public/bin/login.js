@@ -63,3 +63,8 @@
         });
       }
 
+      function logout() {
+          window.location= "https://accounts.google.com/logout";
+          window.location= "http://spyrun.heroku.com";
+      }
+
