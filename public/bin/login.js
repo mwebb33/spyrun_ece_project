@@ -67,8 +67,7 @@
       }
 
       function logout() {
-          window.location= "https://accounts.google.com/logout";
-          pausecomp(1000);
+          gapi.auth.signOut();
           stage.visible = false; 
           window.location= "http://spyrun.heroku.com";
       }
