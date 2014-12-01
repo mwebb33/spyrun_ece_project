@@ -1,5 +1,4 @@
 
-    <script type="text/javascript">
       // Enter a client ID for a web application from the Google Developer Console.
       // The provided clientId will only work if the sample is run directly from
       // https://google-api-javascript-client.googlecode.com/hg/samples/authSample.html
@@ -61,5 +60,4 @@
           });
         });
       }
-    </script>
-    <script src="https://apis.google.com/js/client.js?onload=handleClientLoad"></script>
+
