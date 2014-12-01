@@ -35,6 +35,7 @@
         } else {
           authorizeButton.style.visibility = '';
           authorizeButton.onclick = handleAuthClick;
+          stage.visible = false;
         }
       }
 
@@ -57,8 +58,8 @@
             heading.appendChild(document.createTextNode(resp.displayName));
 
             document.getElementById('content').appendChild(heading);
-
-            document.getElementById('logoutframe').style.visibility="visible";
+            document.getElementById('logoutbutton').style.visibility="visible";
+            stage.visible = true;  
           });
         });
       }
@@ -66,5 +67,6 @@
       function logout() {
           window.location= "https://accounts.google.com/logout";
           window.location= "http://spyrun.heroku.com";
+          stage.visible = false; 
       }
 
