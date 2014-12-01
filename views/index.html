@@ -16,6 +16,7 @@
 	<script src="/bin/character.js"> </script>
 	<script src="/bin/key.js"> </script>
 	<script src="/bin/login.js"> </script>
+	<script src="https://apis.google.com/js/client:platform.js" async defer> </script>
 	<script src="/bin/camera.js"> </script>
 	<script src="/lib/jquery.min.js" type="text/javascript"></script>
 </head>
@@ -25,7 +26,7 @@
 
     <script src="https://apis.google.com/js/client.js?onload=handleClientLoad"></script>
     
-    <button id="logoutbutton" onclick="logout()">Log out</button>
+    <button id="logoutbutton">Log out</button>
 
 	<input id="publish" type="button" value="Publish">
 
@@ -131,6 +132,11 @@ function onTilesLoaded(){
 
 	/* Add the cameras to the screen */
 	gameBoard.setCameras(levelMaps);
+
+	// draw a circle
+	graphics.lineStyle(0);
+	graphics.beginFill(0xFFFF0B, 0.5);
+	graphics.drawCircle(470, 200,100);
 
 	/* Add the event listeners for the button pushes */
 	window.addEventListener('keydown', function(event) { 

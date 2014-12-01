@@ -14,10 +14,18 @@
       var apiKey = 'AIzaSyCY9O9Wl9F_lkWiJToOf9IrZtddQ__EOFE';
 
       // To enter one or more authentication scopes, refer to the documentation for the API.
-      var scopes = 'profile';
+      var scopes = 'https://www.googleapis.com/auth/plus.login';
+
+
+function logout() {
+          gapi.auth.signOut();
+          stage.visible = false; 
+          //window.location= "http://spyrun.heroku.com";
+      }
 
       // Use a button to handle authentication the first time.
       function handleClientLoad() {
+        document.getElementById('logoutbutton').onClick=function(){logout};
         gapi.client.setApiKey(apiKey);
         window.setTimeout(checkAuth,1);
       }
@@ -40,7 +48,8 @@
       }
 
       function handleAuthClick(event) {
-        gapi.auth.authorize({client_id: clientId, scope: scopes, immediate: false}, handleAuthResult);
+        //gapi.auth.authorize({client_id: clientId, scope: scopes, immediate: false}, handleAuthResult);
+        gapi.auth.signIn({client_id: clientId, cookiepolicy: single_host_origin, callback: handleAuthResult} );
         return false;
       }
 
@@ -61,17 +70,12 @@
             document.getElementById('logoutbutton').style.visibility="visible";
             pausecomp(1000);
             stage.visible = true;  
-            window.location= "http://spyrun.heroku.com";
+            //window.location= "http://spyrun.heroku.com";
           });
         });
       }
 
-      function logout() {
-          //gapi.auth.signOut();
-          gapi.auth.setToken(null);
-          stage.visible = false; 
-          window.location= "http://spyrun.heroku.com";
-      }
+      
 
       function pausecomp(millis) {
         var date = new Date();
