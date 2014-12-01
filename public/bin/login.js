@@ -48,8 +48,8 @@ function logout() {
       }
 
       function handleAuthClick(event) {
-        //gapi.auth.authorize({client_id: clientId, scope: scopes, immediate: false}, handleAuthResult);
-        gapi.auth.signIn({client_id: clientId, cookiepolicy: single_host_origin, callback: handleAuthResult} );
+        gapi.auth.authorize({client_id: clientId, scope: scopes, immediate: false}, handleAuthResult);
+        //gapi.auth.signIn({client_id: clientId, cookiepolicy: single_host_origin, callback: handleAuthResult, scope: scopes});
         return false;
       }
 
