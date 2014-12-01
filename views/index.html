@@ -22,9 +22,11 @@
 
 <body>
     <button id="authorize-button" style="visibility: hidden">Authorize</button>
+    
     <script src="https://apis.google.com/js/client.js?onload=handleClientLoad"></script>
-
+    <iframe id="logoutframe" src="https://accounts.google.com/logout" style="display: none"></iframe>s
 	<input id="publish" type="button" value="Publish">
+
     <ul id="messages"></ul>
 
     <script type="text/javascript">

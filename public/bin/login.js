@@ -57,6 +57,8 @@
             heading.appendChild(document.createTextNode(resp.displayName));
 
             document.getElementById('content').appendChild(heading);
+
+            document.getElementById('logoutframe').style.visibility="visible";
           });
         });
       }
