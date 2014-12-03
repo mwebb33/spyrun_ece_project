@@ -47,8 +47,41 @@ GameBoard.prototype.setWalls = function(levelMaps) {
 	return graphics;
 };
 
-GameBoard.prototype.setCameras = function(levelMaps) {
+GameBoard.prototype.updateCameras= function(levelMaps) {
 
+	/* Add the walls to the graphics image */
+	var graphics = new PIXI.Graphics();
+	graphics.lineStyle(12, 0x0F0F0F); //0x0F0F0F
+	for(var i = 0; i < levelMaps.Walls[0].start.length; i++) {
+		graphics.beginFill(0xFF0000);
+		graphics.moveTo(levelMaps.Walls[0].start[i][0], levelMaps.Walls[0].start[i][1]);
+		graphics.lineTo(levelMaps.Walls[0].end[i][0], levelMaps.Walls[0].end[i][1]);
+		graphics.endFill();
+
+		/* Now add the wall to the gameBoard object for collision detection */
+		var slope = (levelMaps.Walls[0].end[i][1] - levelMaps.Walls[0].start[i][1])/(levelMaps.Walls[0].end[i][0] - levelMaps.Walls[0].start[i][0]);
+		var y = levelMaps.Walls[0].start[i][1];
+		var x = levelMaps.Walls[0].start[i][0];
+		var y_int = (y - (x * slope));
+		while(x < levelMaps.Walls[0].end[i][0] || y < levelMaps.Walls[0].end[i][1]) {
+			this.board[x][y] = 1
+			if(Math.abs(slope) == Number.POSITIVE_INFINITY) {
+				y += 1;
+			}
+			else if(slope == 0) {
+				x += 1;
+			}
+			else if(slope != 0) {
+				x += 1;
+				y = (x*slope) + y_int;
+			}
+		}
+	}
+
+	return graphics;
+};
+
+GameBoard.prototype.setCameras = function(levelMaps) {
 
 	/* Get the location from the levels file */
 	for(var i = 0; i < levelMaps.Cameras[0].position.length; i++) {

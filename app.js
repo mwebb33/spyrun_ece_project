@@ -66,7 +66,6 @@ app.use('/', routes);
 app.use('/publish', publish); //not sure? 
 app.use('/users', users)
 
-
 app.post('/publish', function(req, res) {
   var client = mqtt.createClient(mqtt_url.port, mqtt_url.hostname, {
     username: auth[0],
@@ -80,7 +79,6 @@ app.post('/publish', function(req, res) {
     });
   });
 });
-
 
 app.get('/stream', function(req, res) {
   // set timeout as high as possible
