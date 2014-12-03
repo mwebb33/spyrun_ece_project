@@ -47,8 +47,9 @@ GameBoard.prototype.setWalls = function(levelMaps) {
 	return graphics;
 };
 
-GameBoard.prototype.setCameras = function(levelMaps) {
+GameBoard.prototype.setCameras = function(levelMaps, shadowList) {
 
+	
 
 	/* Get the location from the levels file */
 	for(var i = 0; i < levelMaps.Cameras[0].position.length; i++) {
@@ -58,6 +59,15 @@ GameBoard.prototype.setCameras = function(levelMaps) {
 		camera.sprite.position.x = levelMaps.Cameras[0].position[i][0];
 		camera.sprite.position.y = levelMaps.Cameras[0].position[i][1];
 		gameContainer.addChild(camera.sprite);
+	
+		var graphics = new PIXI.Graphics();
+		graphics.beginFill(0xFFFF0B, 0.5);
+		graphics.moveTo(levelMaps.Cameras[0].position[i][0] + 70, levelMaps.Cameras[0].position[i][1]);
+		graphics.lineTo(levelMaps.Cameras[0].position[i][0] + 200, levelMaps.Cameras[0].position[i][1] + 50);
+		graphics.lineTo(levelMaps.Cameras[0].position[i][0] + 200, levelMaps.Cameras[0].position[i][1] - 50);
+		graphics.endFill();
+
+		shadowList.push(graphics);
 	}
 };
 

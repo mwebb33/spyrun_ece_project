@@ -24,7 +24,7 @@
 <body>
     <button id="authorize-button" style="visibility: hidden">Authorize</button>
 
-    <script src="https://apis.google.com/js/client.js?onload=handleClientLoad"></script>
+	<!-- <script src="https://apis.google.com/js/client.js?onload=handleClientLoad"></script> -->
     
     <button id="logoutbutton">Log out</button>
 
@@ -118,7 +118,9 @@ function onTilesLoaded(){
 	gameContainer.addChild(background);
 
 	/* Draw the walls on the screen */
-	var graphics = gameBoard.setWalls(levelMaps);
+	var shadowList = [];
+	gameBoard.setWalls(levelMaps, shadowList);
+	for(var i = 0; i < 
 	gameContainer.addChild(graphics);
 
 	/* Initialize the main character sprite */
@@ -131,12 +133,13 @@ function onTilesLoaded(){
 	gameContainer.addChild(character.sprite);
 
 	/* Add the cameras to the screen */
-	gameBoard.setCameras(levelMaps);
+	graphics = gameBoard.setCameras(levelMaps);
+	gameContainer.addChild(graphics);
 
 	// draw a circle
-	graphics.lineStyle(0);
-	graphics.beginFill(0xFFFF0B, 0.5);
-	graphics.drawCircle(470, 200,100);
+	//graphics.lineStyle(0);
+	//graphics.beginFill(0xFFFF0B, 0.5);
+	//graphics.drawCircle(470, 200, 100);
 
 	/* Add the event listeners for the button pushes */
 	window.addEventListener('keydown', function(event) { 
