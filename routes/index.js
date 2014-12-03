@@ -15,4 +15,5 @@ router.get('/', function(req, res) {
   res.render('index' , {loginMessage: req.flash('loginMessage') });
 });
 
+
 module.exports = router;

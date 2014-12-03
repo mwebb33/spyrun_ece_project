@@ -49,8 +49,6 @@ GameBoard.prototype.setWalls = function(levelMaps) {
 
 GameBoard.prototype.setCameras = function(levelMaps, shadowList) {
 
-	
-
 	/* Get the location from the levels file */
 	for(var i = 0; i < levelMaps.Cameras[0].position.length; i++) {
 		/* Load the camera image */
