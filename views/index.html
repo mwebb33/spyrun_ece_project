@@ -102,10 +102,6 @@
 	var loader_new = new PIXI.AssetLoader(bground);
 	loader_new.onComplete = test;
 	loader_new.load();
- 
-
-	console.log('this is running in index.html');
-
 
 	function test() {
 		/* This can be empty for now since it is taken care of below */
@@ -118,10 +114,7 @@ function onTilesLoaded(){
 	gameContainer.addChild(background);
 
 	/* Draw the walls on the screen */
-	var shadowList = [];
-	gameBoard.setWalls(levelMaps, shadowList);
-	for(var i = 0; i < 
-	gameContainer.addChild(graphics);
+	gameBoard.setWalls(levelMaps);
 
 	/* Initialize the main character sprite */
 	character = new Character(PIXI.Sprite.fromFrame(2));
@@ -133,8 +126,9 @@ function onTilesLoaded(){
 	gameContainer.addChild(character.sprite);
 
 	/* Add the cameras to the screen */
-	graphics = gameBoard.setCameras(levelMaps);
-	gameContainer.addChild(graphics);
+	var shadowList = [];
+	graphics = gameBoard.setCameras(levelMaps, gameContainer, shadowList);
+	//gameContainer.addChild(graphics);
 
 	// draw a circle
 	//graphics.lineStyle(0);
@@ -178,7 +172,7 @@ function animate() {
 		/* Get the current character and the one to switch with
 		   and set the new characters location to the same as the one
 		   we're replacing  */	
-		var orig = gameContainer.getChildAt(2);
+		var orig = gameContainer.getChildAt(1);
 		character.updateSprite(PIXI.Sprite.fromFrame(spriteNum+1));
 
 		character.setPosition(orig.position.x, orig.position.y);
@@ -186,7 +180,7 @@ function animate() {
 		/* Now swap the two characters on the screen */
 		gameContainer.removeChild(orig);
 		gameContainer.addChild(character.sprite);
-		gameContainer.setChildIndex(character.sprite, 2);
+		gameContainer.setChildIndex(character.sprite, 1);
 
 		/* Update the cameras */
 		for(var i = 0; i < cameraList.length; i++) {

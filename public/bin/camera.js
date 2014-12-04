@@ -49,4 +49,5 @@ Camera.prototype.updatePosition = function() {
 		this.rotationAmount = -this.rotationAmount;
 		this.rotationNum = 0;
 	}
+	this.shadow.rotation += this.rotationAmount;
 };

@@ -47,8 +47,9 @@ GameBoard.prototype.setWalls = function(levelMaps) {
 	return graphics;
 };
 
-GameBoard.prototype.setCameras = function(levelMaps, shadowList) {
+GameBoard.prototype.setCameras = function(levelMaps, gameContainer, shadowList) {
 
+	
 	/* Get the location from the levels file */
 	for(var i = 0; i < levelMaps.Cameras[0].position.length; i++) {
 		/* Load the camera image */
@@ -60,13 +61,25 @@ GameBoard.prototype.setCameras = function(levelMaps, shadowList) {
 	
 		var graphics = new PIXI.Graphics();
 		graphics.beginFill(0xFFFF0B, 0.5);
-		graphics.moveTo(levelMaps.Cameras[0].position[i][0] + 70, levelMaps.Cameras[0].position[i][1]);
-		graphics.lineTo(levelMaps.Cameras[0].position[i][0] + 200, levelMaps.Cameras[0].position[i][1] + 50);
-		graphics.lineTo(levelMaps.Cameras[0].position[i][0] + 200, levelMaps.Cameras[0].position[i][1] - 50);
+		if(levelMaps.Cameras[0].pivot[i] == 0) {
+			graphics.moveTo(levelMaps.Cameras[0].position[i][0] + 70, levelMaps.Cameras[0].position[i][1]);
+			graphics.lineTo(levelMaps.Cameras[0].position[i][0] + 200, levelMaps.Cameras[0].position[i][1] + 50);
+			graphics.lineTo(levelMaps.Cameras[0].position[i][0] + 200, levelMaps.Cameras[0].position[i][1] - 50);
+		}
+		else if(levelMaps.Cameras[0].pivot[i] == 70) {
+			camera.sprite.pivot.x = 70;
+			graphics.moveTo(levelMaps.Cameras[0].position[i][0]	- 70, levelMaps.Cameras[0].position[i][1]);
+			graphics.lineTo(levelMaps.Cameras[0].position[i][0] - 200, levelMaps.Cameras[0].position[i][1] + 50);
+			graphics.lineTo(levelMaps.Cameras[0].position[i][0] - 200, levelMaps.Cameras[0].position[i][1] - 50);
+			graphics.pivot.x = 0;
+		}
+		graphics.pivot.y = 5;
+		camera.shadow = graphics;
 		graphics.endFill();
-
 		shadowList.push(graphics);
+		gameContainer.addChild(graphics);
 	}
+	//return graphics;
 };
 
 GameBoard.prototype.detectCollision = function(x, y, width, height) {
