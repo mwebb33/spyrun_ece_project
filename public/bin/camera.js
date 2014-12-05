@@ -3,21 +3,24 @@ var Camera = function(cameraSprite) {
 	this.sprite = cameraSprite;
 	this.sprite.buttonMode = false;
 	this.sprite.interactive = true;
-	this.rotationNum = 7;
+	this.rotationNum = 28;
 	this.rotationDirection = true;
-	this.rotationTicks = 14;
-	this.rotationAmount = 0.1;
+	this.rotationTicks = 56;
+	this.rotationAmount = 0.025;
 	this.sprite.pivot.y =  (this.sprite.height/2);
 };
+
 
 Camera.prototype.updateSprite = function(characterSprite) {
 	this.sprite = characterSprite;
 };
 
+
 Camera.prototype.setPosition = function(x, y) {
 		this.sprite.position.x = x;
 		this.sprite.position.y = y;
 };
+
 
 Camera.prototype.translation = function(xAmount, yAmount) {
 
@@ -33,20 +36,20 @@ Camera.prototype.translation = function(xAmount, yAmount) {
 	}
 };
 
+
 Camera.prototype.getPosition_x = function() {
 	return this.sprite.position.x;
 };
+
 
 Camera.prototype.getPosition_y = function() {
 	return this.sprite.position.y;
 };
 
-Camera.prototype.updateShadow = function() {
-
-}
 
 Camera.prototype.updatePosition = function() {
 
+	/* Update the shadow and camera position on the map */	
 	this.sprite.rotation += this.rotationAmount;
 	this.shadow.rotation += this.rotationAmount;
 	this.rotationNum += 1;
@@ -56,3 +59,22 @@ Camera.prototype.updatePosition = function() {
 	}
 	
 };
+
+Camera.prototype.getShadowLines = function() {
+
+	/* Create a point to reference the camera's position */
+	var reference = new PIXI.Point(0,0);
+
+	/* Find the new end points for the shadow */
+	var shadowAngle = Math.tan(this.shadow.width/this.shadow.height);
+	console.log(Math.sin(this.shadow.rotation));
+
+
+
+};
+
+
+
+
+
+

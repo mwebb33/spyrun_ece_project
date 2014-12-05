@@ -44,7 +44,7 @@ GameBoard.prototype.setWalls = function(levelMaps) {
 		}
 	}
 
-	//alert(levelMaps.FinishLine[0].end[0][0])
+	/* Set the finish line on the map next */
 	for(var i = 0; i < levelMaps.FinishLine[0].start.length; i++) {
 		graphics.beginFill(0xFF0000);
 		graphics.moveTo(levelMaps.FinishLine[0].start[i][0], levelMaps.FinishLine[0].start[i][1]);
@@ -73,11 +73,12 @@ GameBoard.prototype.setWalls = function(levelMaps) {
 	return graphics;
 };
 
-GameBoard.prototype.setCameras = function(levelMaps, gameContainer, shadowList) {
 
+GameBoard.prototype.setCameras = function(levelMaps, gameContainer, shadowList) {
 	
 	/* Get the location from the levels file */
 	for(var i = 0; i < levelMaps.Cameras[0].position.length; i++) {
+
 		/* Load the camera image */
 		var camera = new Camera(PIXI.Sprite.fromImage("/images/camera.png"));
 		cameraList.push(camera);
@@ -85,31 +86,35 @@ GameBoard.prototype.setCameras = function(levelMaps, gameContainer, shadowList) 
 		camera.sprite.position.y = levelMaps.Cameras[0].position[i][1];
 		gameContainer.addChild(camera.sprite);
 	
+		/* Now set the shadow that is associated with the camera */
 		var graphics = new PIXI.Graphics();
+		var cameraInfo = levelMaps.Cameras[0]; 
 		graphics.beginFill(0xFFFF0B, .5);
 		if(levelMaps.Cameras[0].pivot[i] == 0) {
-			graphics.position.x = levelMaps.Cameras[0].position[i][0];
-			graphics.position.y = levelMaps.Cameras[0].position[i][1];
-			graphics.moveTo(levelMaps.Cameras[0].position[i][0] + 70, levelMaps.Cameras[0].position[i][1]);
-			graphics.lineTo(levelMaps.Cameras[0].position[i][0] + 200, levelMaps.Cameras[0].position[i][1] + 50);
-			graphics.lineTo(levelMaps.Cameras[0].position[i][0] + 200, levelMaps.Cameras[0].position[i][1] - 50);
-			graphics.pivot.x = levelMaps.Cameras[0].position[i][0];
-			graphics.pivot.y = levelMaps.Cameras[0].position[i][1];
+			graphics.position.x = cameraInfo.position[i][0];
+			graphics.position.y = cameraInfo.position[i][1];
+			graphics.moveTo(cameraInfo.position[i][0] + camera.sprite.width, cameraInfo.position[i][1]);
+			graphics.lineTo(cameraInfo.position[i][0] + cameraInfo.height[i], cameraInfo.position[i][1] + cameraInfo.width[i]);
+			graphics.lineTo(cameraInfo.position[i][0] + cameraInfo.height[i], cameraInfo.position[i][1] - cameraInfo.width[i]);
+			graphics.pivot.x = cameraInfo.position[i][0];
+			graphics.pivot.y = cameraInfo.position[i][1];
 		}
-		else if(levelMaps.Cameras[0].pivot[i] == 70) {
-			camera.sprite.pivot.x = 70;
-			graphics.position.x = levelMaps.Cameras[0].position[i][0];
-			graphics.position.y = levelMaps.Cameras[0].position[i][1];
-			graphics.moveTo(levelMaps.Cameras[0].position[i][0]	- 70, levelMaps.Cameras[0].position[i][1]);
-			graphics.lineTo(levelMaps.Cameras[0].position[i][0] - 200, levelMaps.Cameras[0].position[i][1] + 50);
-			graphics.lineTo(levelMaps.Cameras[0].position[i][0] - 200, levelMaps.Cameras[0].position[i][1] - 50);
-			graphics.pivot.x = levelMaps.Cameras[0].position[i][0];
-			graphics.pivot.y = levelMaps.Cameras[0].position[i][1];
+		else if(levelMaps.Cameras[0].pivot[i] == camera.sprite.width) {
+			camera.sprite.pivot.x = camera.sprite.width;
+			graphics.position.x = cameraInfo.position[i][0];
+			graphics.position.y = cameraInfo.position[i][1];
+			graphics.moveTo(cameraInfo.position[i][0]	- camera.sprite.width, cameraInfo.position[i][1]);
+			graphics.lineTo(cameraInfo.position[i][0] - cameraInfo.height[i], cameraInfo.position[i][1] + cameraInfo.width[i]);
+			graphics.lineTo(cameraInfo.position[i][0] - cameraInfo.height[i], cameraInfo.position[i][1] - cameraInfo.width[i]);
+			graphics.pivot.x = cameraInfo.position[i][0];
+			graphics.pivot.y = cameraInfo.position[i][1];
 		}
 		//graphics.pivot.y = 0;
 		camera.shadow = graphics;
+		camera.shadowHeight = cameraInfo.height[i];
+		camera.shadowWidth = cameraInfo.width[i];
 		graphics.endFill();
-		shadowList.push(graphics);
+		//shadowList.push(graphics);
 		gameContainer.addChild(graphics);
 	}
 	//return graphics;
@@ -151,20 +156,19 @@ GameBoard.prototype.detectCollision = function(x, y, width, height) {
 	for(var i = x; i < x + width; i++) {
 		for(var j = y; j < y + height; j++) {
 
-
-			/* If we hit anything but an empty space */
+			/* If we hit a wall */
 			if(this.board[i][j] == 1) {
 				return 1;
 			}
-
+			/* If we hit a camera */
 			else if(this.board[i][j] == 2) {
 				return 2;
 			}
-
+			/* If we hit the finish line */
 			else if(this.board[i][j] == 3) {
 				return 3;
 			}
 		}
 	}
-	return 0;
+	return 0; //We are clear to move
 };

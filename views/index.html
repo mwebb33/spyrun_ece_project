@@ -163,7 +163,7 @@ function animate() {
 
 	/* Use a timeout for updating the Link sprite */
 	timeout++;
-	if((timeout%25) == 0) {	
+	if((timeout%8) == 0) {	
 
 		/* Increment through all of the spite images of Link */
 		if(spriteNum >= 3)
@@ -185,6 +185,7 @@ function animate() {
 		/* Update the cameras */
 		for(var i = 0; i < cameraList.length; i++) {
 			cameraList[i].updatePosition();
+			cameraList[i].getShadowLines();
 		}
 
 		spriteNum++;
