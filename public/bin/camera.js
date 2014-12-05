@@ -1,7 +1,7 @@
 var Camera = function(cameraSprite) {
 
 	this.sprite = cameraSprite;
-	this.sprite.buttonMode = true;
+	this.sprite.buttonMode = false;
 	this.sprite.interactive = true;
 	this.rotationNum = 7;
 	this.rotationDirection = true;
