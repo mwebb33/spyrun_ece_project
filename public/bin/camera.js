@@ -41,13 +41,18 @@ Camera.prototype.getPosition_y = function() {
 	return this.sprite.position.y;
 };
 
+Camera.prototype.updateShadow = function() {
+
+}
+
 Camera.prototype.updatePosition = function() {
 
 	this.sprite.rotation += this.rotationAmount;
+	this.shadow.rotation += this.rotationAmount;
 	this.rotationNum += 1;
 	if(this.rotationNum > this.rotationTicks) {
 		this.rotationAmount = -this.rotationAmount;
 		this.rotationNum = 0;
 	}
-	this.shadow.rotation += this.rotationAmount;
+	
 };

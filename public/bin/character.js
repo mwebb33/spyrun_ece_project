@@ -23,8 +23,16 @@ Character.prototype.translation = function(xAmount, yAmount) {
 	var collisionDetected = gameBoard.detectCollision(this.sprite.position.x + xAmount, this.sprite.position.y + yAmount, bounds.width, bounds.height);
 
 	/* Only move if no collision was detected */
-	if(!collisionDetected) {
+	if(collisionDetected == 0) {
 		this.setPosition(this.sprite.position.x + xAmount, this.sprite.position.y + yAmount);
+	}
+
+	else if(collisionDetected == 2) {
+		this.setPostion(125,95);
+	}
+
+	else if(collisionDetected == 3) {
+		this.setPosition(125,95);
 	}
 };
 

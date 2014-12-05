@@ -44,6 +44,32 @@ GameBoard.prototype.setWalls = function(levelMaps) {
 		}
 	}
 
+	//alert(levelMaps.FinishLine[0].end[0][0])
+	for(var i = 0; i < levelMaps.FinishLine[0].start.length; i++) {
+		graphics.beginFill(0xFF0000);
+		graphics.moveTo(levelMaps.FinishLine[0].start[i][0], levelMaps.FinishLine[0].start[i][1]);
+		graphics.lineTo(levelMaps.FinishLine[0].end[i][0], levelMaps.FinishLine[0].end[i][1]);
+		graphics.endFill();
+
+		var slope = (levelMaps.FinishLine[0].end[i][1] - levelMaps.FinishLine[0].start[i][1])/(levelMaps.FinishLine[0].end[i][0] - levelMaps.FinishLine[0].start[i][0]);
+		var y = levelMaps.FinishLine[0].start[i][1];
+		var x = levelMaps.FinishLine[0].start[i][0];
+		var y_int = (y - (x * slope));
+		while(x < levelMaps.FinishLine[0].end[i][0] || y < levelMaps.FinishLine[0].end[i][1]) {
+			this.board[x][y] = 3
+			if(Math.abs(slope) == Number.POSITIVE_INFINITY) {
+				y += 1;
+			}
+			else if(slope == 0) {
+				x += 1;
+			}
+			else if(slope != 0) {
+				x += 1;
+				y = (x*slope) + y_int;
+			}
+		}
+	}
+
 	return graphics;
 };
 
@@ -60,20 +86,27 @@ GameBoard.prototype.setCameras = function(levelMaps, gameContainer, shadowList) 
 		gameContainer.addChild(camera.sprite);
 	
 		var graphics = new PIXI.Graphics();
-		graphics.beginFill(0xFFFF0B, 0.5);
+		graphics.beginFill(0xFFFF0B, .5);
 		if(levelMaps.Cameras[0].pivot[i] == 0) {
+			graphics.position.x = levelMaps.Cameras[0].position[i][0];
+			graphics.position.y = levelMaps.Cameras[0].position[i][1];
 			graphics.moveTo(levelMaps.Cameras[0].position[i][0] + 70, levelMaps.Cameras[0].position[i][1]);
 			graphics.lineTo(levelMaps.Cameras[0].position[i][0] + 200, levelMaps.Cameras[0].position[i][1] + 50);
 			graphics.lineTo(levelMaps.Cameras[0].position[i][0] + 200, levelMaps.Cameras[0].position[i][1] - 50);
+			graphics.pivot.x = levelMaps.Cameras[0].position[i][0];
+			graphics.pivot.y = levelMaps.Cameras[0].position[i][1];
 		}
 		else if(levelMaps.Cameras[0].pivot[i] == 70) {
 			camera.sprite.pivot.x = 70;
+			graphics.position.x = levelMaps.Cameras[0].position[i][0];
+			graphics.position.y = levelMaps.Cameras[0].position[i][1];
 			graphics.moveTo(levelMaps.Cameras[0].position[i][0]	- 70, levelMaps.Cameras[0].position[i][1]);
 			graphics.lineTo(levelMaps.Cameras[0].position[i][0] - 200, levelMaps.Cameras[0].position[i][1] + 50);
 			graphics.lineTo(levelMaps.Cameras[0].position[i][0] - 200, levelMaps.Cameras[0].position[i][1] - 50);
-			graphics.pivot.x = 0;
+			graphics.pivot.x = levelMaps.Cameras[0].position[i][0];
+			graphics.pivot.y = levelMaps.Cameras[0].position[i][1];
 		}
-		graphics.pivot.y = 5;
+		//graphics.pivot.y = 0;
 		camera.shadow = graphics;
 		graphics.endFill();
 		shadowList.push(graphics);
@@ -82,16 +115,56 @@ GameBoard.prototype.setCameras = function(levelMaps, gameContainer, shadowList) 
 	//return graphics;
 };
 
+/*GameBoard.prototype.updateShadows = function(levelMaps, gameContainer, shadowList) {
+
+	for(var i = 0; i < levelMaps.Cameras[0].position.length; i++) {
+		var camera = new Camera(PIXI.Sprite.fromImage("/images/camera.png"));
+		camera.sprite.position.x = levelMaps.Cameras[0].position[i][0];
+		camera.sprite.position.y = levelMaps.Cameras[0].position[i][1];
+		gameContainer.addChild(camera.sprite);
+
+		var graphics = new PIXI.Graphics();
+		graphics.beginFill(0xFFFF0B, 0.5);
+		if(levelMaps.Cameras[0].pivot[i] == 0) {
+			graphics.moveTo(levelMaps.Cameras[0].position[i][0] + 70, levelMaps.Cameras[0].position[i][1]);
+			graphics.lineTo(levelMaps.Cameras[0].position[i][0] + 200, levelMaps.Cameras[0].position[i][1] + 50);
+			graphics.lineTo(levelMaps.Cameras[0].position[i][0] + 200, levelMaps.Cameras[0].position[i][1] - 50);
+			graphics.pivot.x = 0;
+		}
+		else if(levelMaps.Cameras[0].pivot[i] == 70) {
+			camera.sprite.pivot.x = 70;
+			graphics.moveTo(levelMaps.Cameras[0].position[i][0]	- 70, levelMaps.Cameras[0].position[i][1]);
+			graphics.lineTo(levelMaps.Cameras[0].position[i][0] - 200, levelMaps.Cameras[0].position[i][1] + 50);
+			graphics.lineTo(levelMaps.Cameras[0].position[i][0] - 200, levelMaps.Cameras[0].position[i][1] - 50);
+			graphics.pivot.x = 0;
+		}
+		graphics.pivot.y = 0;
+		camera.shadow = graphics;
+		graphics.endFill();
+		shadowList.push(graphics);
+		gameContainer.addChild(graphics);
+	}
+}*/
+
 GameBoard.prototype.detectCollision = function(x, y, width, height) {
 
 	for(var i = x; i < x + width; i++) {
 		for(var j = y; j < y + height; j++) {
 
+
 			/* If we hit anything but an empty space */
-			if(this.board[i][j] != 0) {
-				return true;
+			if(this.board[i][j] == 1) {
+				return 1;
+			}
+
+			else if(this.board[i][j] == 2) {
+				return 2;
+			}
+
+			else if(this.board[i][j] == 3) {
+				return 3;
 			}
 		}
 	}
-	return false;
+	return 0;
 };
