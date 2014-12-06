@@ -28,11 +28,18 @@ Character.prototype.translation = function(xAmount, yAmount) {
 	}
 
 	else if(collisionDetected == 2) {
-		this.setPostion(125,95);
+		this.setPosition(125,95);
 	}
 
 	else if(collisionDetected == 3) {
-		this.setPosition(125,95);
+
+		var style = {font:"70px Arial", fill:"red"};
+		var score = new PIXI.Text("Your Score Is 4,000!!!",style);
+		score.position.x = 350;
+		score.position.y = 200;
+		gameContainer.addChild(score);
+		//this.setPosition(125,95);
+		//this.setPosition(125,95);
 	}
 };
 
