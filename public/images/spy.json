@@ -1,36 +1,37 @@
-{"frames": [
+{"frames": {
 
+"Spy 1.png":
 {
-	"filename": "1.png",
 	"frame": {"x":0,"y":0,"w":50,"h":62},
 	"rotated": false,
 	"trimmed": false,
 	"spriteSourceSize": {"x":0,"y":0,"w":32,"h":32},
 	"sourceSize": {"w":32,"h":32}
-}, {
-	"filename": "2.png",
+}, 
+"Spy 2.png":
+{
 	"frame": {"x":50,"y":0,"w":50,"h":62},
 	"rotated": false,
 	"trimmed": false,
 	"spriteSourceSize": {"x":0,"y":0,"w":32,"h":32},
 	"sourceSize": {"w":32,"h":32}
-}, {
-	"filename": "3.png",
+}, 
+"Spy 3.png":
+{
 	"frame": {"x":100,"y":0,"w":50,"h":62},
 	"rotated": false,
 	"trimmed": false,
 	"spriteSourceSize": {"x":0,"y":0,"w":32,"h":32},
 	"sourceSize": {"w":32,"h":32}
-}, {
-	"filename": "4.png",
+}, 
+"Spy 4.png":
+{
 	"frame": {"x":150,"y":0,"w":50,"h":62},
 	"rotated": false,
 	"trimmed": false,
 	"spriteSourceSize": {"x":0,"y":0,"w":32,"h":32},
 	"sourceSize": {"w":32,"h":32}
-}
-
-],
+}},
 "meta": {
 	"app": "http://www.codeandweb.com/texturepacker ",
 	"version": "1.0",

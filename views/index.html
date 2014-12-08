@@ -1,6 +1,5 @@
 <!DOCTYPE HTML>
 <html>
-
 <head>
     <title>SpyRun</title>
     <style>
@@ -10,12 +9,14 @@
             background-color: #000000;
         }
     </style>
+
     <script src="/bin/pixi.dev.js"></script>
 	<script src="/bin/gameboard.js"> </script>
 	<script src="/bin/levels.json"> </script>
 	<script src="/bin/character.js"> </script>
 	<script src="/bin/key.js"> </script>
 	<script src="/bin/login.js"> </script>
+
 	<script src="https://apis.google.com/js/client:platform.js" async defer> </script>
 	<script src="/bin/camera.js"> </script>
 	<script src="/lib/jquery.min.js" type="text/javascript"></script>
@@ -50,204 +51,90 @@
 		ws.send(Date.now().toString(), {mask: true});
 	}
 
-	/* Globals */
+	//game setup code//
+
+	// instance
 	var HEIGHT = 720;
 	var WIDTH = 1080;
-
-	/* Set a timeout for animation */
 	var spriteNum = 1;
-	var timeout = 0;
-	var character; //Declare character here for global scope
-	var cameraList = [];
 
-	// create an new instance of a pixi stage with a grey background
-	var stage = new PIXI.Stage(0x888888);
+    var assetsToLoader = ["images/spy.json","images/camera.json", "images/background.json","images/Level.png"];
+    
+    loader = new PIXI.AssetLoader(assetsToLoader);
+    loader.onComplete = onAssetsLoaded;
+    loader.load();
 
-	// create a renderer instance width=640 height=480
+	var stage = new PIXI.Stage(0xF8F8F8);
 	var renderer = PIXI.autoDetectRenderer(WIDTH, HEIGHT);
 
-	// importing Link's images
-	var characterJSON = ["/images/spy.json"];
+    var character;
+    var charSpriteContainer = new PIXI.DisplayObjectContainer();
+    var gameContainer = new PIXI.DisplayObjectContainer();
+    var gameBoard = new GameBoard();
 
-	// create a new loader
-	var loader = new PIXI.AssetLoader(characterJSON);
+    var key = new Key();
+    var levelMaps = JSON.parse(Levels);
 
-	/* Create the camera object */
-	var cameraJSON = ["/images/camera.json"];
-	var cameraLoader = new PIXI.AssetLoader(cameraJSON);
-	cameraLoader.load();
+    stage.addChild(gameContainer);
+    stage.addChild(charSpriteContainer);
 
-	// create an empty container
-	var gameContainer = new PIXI.DisplayObjectContainer();
+    document.body.appendChild(renderer.view);
 
-	// add the container to the stage
-	stage.addChild(gameContainer);
+	function onAssetsLoaded() {
+		/* Get the background image */
+		var background = PIXI.Sprite.fromImage("/images/Level.png");
+		gameContainer.addChild(background);
 
-	// add the renderer view element to the DOM
-	document.body.appendChild(renderer.view);
-
-	// use callback
-	loader.onComplete = onTilesLoaded
-
-	//begin load
-	loader.load();	
-
-	// importing a texture atlas created with texturepacker
-	var bground = ["/images/background.json"];
-
-	// create a new loader
-	var loader = new PIXI.AssetLoader(bground);
-
-	/* Create the game board */
-	var gameBoard = new GameBoard();
-
-	/* Get the maps object */
-	var levelMaps = JSON.parse(Levels);
-
-	/* Create the key handling object */	
-	var key = new Key();
-
-	/* Finally load the assests */
-	var loader_new = new PIXI.AssetLoader(bground);
-	loader_new.onComplete = test;
-	loader_new.load();
-
-	function test() {
-		/* This can be empty for now since it is taken care of below */
-	}
-
-function onTilesLoaded(){
-
-	/* Get the background image */
-	var background = PIXI.Sprite.fromImage("/images/Level.png");
-	gameContainer.addChild(background);
-
-	/* Draw the walls on the screen */
-	gameBoard.setWalls(levelMaps, gameContainer);
-	gameBoard.setFinish(levelMaps, gameContainer);
-
-	/* Initialize the main character sprite */
-	character = new Character(PIXI.Sprite.fromFrame(2));
-
-	/* Set the character's starting position */
-	character.setPosition(125, 95);
-
-	/* Add the character sprite to the screen */
-	gameContainer.addChild(character.sprite);
-
-	/* Add the cameras to the screen */
-	var shadowList = [];
-	graphics = gameBoard.setCameras(levelMaps, gameContainer, shadowList);
-	//gameContainer.addChild(graphics);
-
-	// draw a circle
-	//graphics.lineStyle(0);
-	//graphics.beginFill(0xFFFF0B, 0.5);
-	//graphics.drawCircle(470, 200, 100);
-
-	/* Add the event listeners for the button pushes */
-	window.addEventListener('keydown', function(event) { 
-		key.onKeyDown(event.keyCode);
-	});
-	window.addEventListener('keyup', function(event) { 
-		key.onKeyUp(event.keyCode); 
-	});
-
-//	character.mousedown = character.touchstart = function(data) {
-//		gameContainer.removeChild(this);
-//		var character = PIXI.Sprite.fromFrame(1);
-//		gameContainer.addChild(character);
-//	}
-
-	requestAnimFrame(animate);
-}
-
-/* This method gets called repeatedly by the Pixi driver */
-function animate() {
-
-	/* Get the animation frame (required by Pixi) */
-	requestAnimFrame(animate);
-
-	/* Update the character's position */
-	character.updatePosition();
-
-	/* Use a timeout for updating the Link sprite */
-	timeout++;
-	if((timeout%8) == 0) {	
-
-		/* Increment through all of the spite images of Link */
-		if(spriteNum >= 3)
-			spriteNum = 0;
-
-		/* Get the current character and the one to switch with
-		   and set the new characters location to the same as the one
-		   we're replacing  */	
-		var orig = gameContainer.getChildAt(3);
-		character.updateSprite(PIXI.Sprite.fromFrame(spriteNum+1));
-		character.setPosition(orig.position.x, orig.position.y);
-
-		/* Now swap the two characters on the screen */
-		gameContainer.removeChild(orig);
-		gameContainer.addChild(character.sprite);
-		gameContainer.setChildIndex(character.sprite, 3);
-
-		/* Update the cameras */
-		for(var i = 0; i < cameraList.length; i++) {
-			cameraList[i].updatePosition();
-			cameraList[i].getShadowLines();
+		//Looking into movies//
+		var spyWalkB = [];
+		for (var i = 0; i < 4; i++){
+			var texture = PIXI.Texture.fromFrame("Spy " + (i+1) +".png");
+			spyWalkB.push(texture);
 		}
 
-		spriteNum++;
+		var spyWalkMovB = new PIXI.MovieClip(spyWalkB);
+			spyWalkMovB.animationSpeed = .1;
+			spyWalkMovB.gotoAndPlay(1);
+
+		//var charSprite = PIXI.Sprite.fromFrame("Spy 1.png");
+		charSpriteContainer.addChild(spyWalkMovB);
+		character = new Character(charSpriteContainer);
+
+		/* Set the character's starting position */
+		character.setPosition(125, 95);
+
+		/* Add the character sprite to the screen */
+		gameContainer.addChild(character.charSprite);
+
+		/* Draw the walls on the screen */
+		gameBoard.setWalls(levelMaps, gameContainer);
+		gameBoard.setFinish(levelMaps, gameContainer);
+
+		/* Add the event listeners for the button pushes */
+		window.addEventListener('keydown', function(event) { 
+			key.onKeyDown(event.keyCode);
+		});
+		window.addEventListener('keyup', function(event) { 
+			key.onKeyUp(event.keyCode); 
+		});
+
+		// spyWalkMovB.gotoAndPlay(1);
+
+		// stage.addChild(spyWalkMovB);
+
+		requestAnimFrame(animate);
 	}
 
-	renderer.render(stage);
-}
+	// This method gets called repeatedly by the Pixi driver 
+	function animate() {
+		requestAnimFrame(animate);
 
+		character.updatePosition();
 
-//	var renderer = new PIXI.CanvasRenderer(1024, 768, null, true, true);
-//	document.body.appendChild(renderer.view);	
-//	//var imgUrl = 'http://upload.wikimedia.org/wikipedia/commons/thumb/0/0d/Ski_trail_rating_symbol-blue_square.svg/600px-Ski_trail_rating_symbol-blue_square.svg.png';
-////
-////
-////
-////
-////	
-//	var sprite = PIXI.Sprite.fromImage(imgUrl);
-//	sprite.position.set(50, 50);
-//	sprite.pivot.set(sprite.width/2, sprite.height/2);
-//	
-//	stage.addChild(sprite);
-//
-//	/* Register key movements for the player */	
-//	document.addEventListener('keydown', function(event) {
-//		/* Left */
-//		if(event.keyCode == 37) {
-//		    sprite.position.set(sprite.x-5,sprite.y);
-//		}
-//		/* Up */
-//		if(event.keyCode == 38) {
-//			sprite.position.set(sprite.x,sprite.y-5);
-//		}
-//		/* Right */
-//		if(event.keyCode == 39) {
-//			sprite.position.set(sprite.x+5,sprite.y);
-//		}
-//		/* Down */
-//		if(event.keyCode == 40) {
-//			sprite.position.set(sprite.x,sprite.y+5);
-//		}
-//	});
-//
-//
-//	requestAnimFrame(animate);
-//	function animate() {
-//	    requestAnimFrame(animate);
-//	   
-//	   // sprite.rotation += 0.1;
-//	    
-//	    renderer.render(stage);
-//	}
+		character.rotation += 0.01;
 
+		renderer.render(stage);
+	}
 
     </script>
 
