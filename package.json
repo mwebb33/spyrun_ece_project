@@ -25,6 +25,8 @@
     "passport-local": "*",
     "process": "*",
     "static-favicon": "~1.0.0",
-    "mqtt": "*"
+    "mqtt": "*",
+    "ws": "0.4.x"
+
   }
 }
