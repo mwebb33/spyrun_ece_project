@@ -34,26 +34,21 @@
     
     <button id="logoutbutton">Log out</button>
 
-	<input id="publish" type="button" value="Publish">
+    <script>
 
-    <ul id="messages"></ul>
+    var host = location.origin.replace(/^http/, 'ws')
+	var ws = new WebSocket(host);
 
-    <script type="text/javascript">
-      var es = new EventSource('/stream');
-      es.onmessage = function(e) { 
-        $('#messages').append("<li>" + e.data + "</li>") 
-      }
-      $("#publish").click(function () {
-        $.post("/publish")
-      })
+	ws.onmessage = function (event) {
+	  var li = document.createElement('li');
+	  li.innerHTML = JSON.parse(event.data);
+	  console.log(li.innerHTML)
+	};
 
-  	$("#countdown").countdown360({
-	   	radius      : 60,
-	    seconds     : 10,
-	    fontColor   : '#FFFFFF',
-	    autostart   : false,
-	    onComplete  : function () { console.log('done') }
-		  }).start()
+	ws.onopen = function open() {
+		console.log('connected here' + JSON.stringify(new Date()));
+		ws.send(Date.now().toString(), {mask: true});
+	}
 
 	/* Globals */
 	var HEIGHT = 720;
