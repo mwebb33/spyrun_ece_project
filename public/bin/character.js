@@ -1,5 +1,7 @@
 var Character = function(container) {
 	this.charSprite = container;
+	this.charSprite.children[0].x = 0;
+	this.charSprite.children[0].y = 0;
 	this.charSprite.pivot = new PIXI.Point(32,32);
 	this.charSprite.buttonMode = true;
 	this.charSprite.interactive = true;
@@ -17,10 +19,10 @@ Character.prototype.setPosition = function(x, y) {
 Character.prototype.translation = function(xAmount, yAmount) {
 
 	/* Get the rectangle object that defines our coordinates */
-	var bounds = this.charSprite.getLocalBounds();
+	//var bounds = this.charSprite.getLocalBounds();
 
 	/* Let the Game Board detect the entire rectangle for collision */
-	var collisionDetected = gameBoard.detectCollision(this.charSprite.position.x + xAmount, this.charSprite.position.y + yAmount, bounds.width, bounds.height);
+	var collisionDetected = gameBoard.detectCollision(this.charSprite.position.x + xAmount -  22, this.charSprite.position.y + yAmount - 20, 46, 50);
 
 	/* Only move if no collision was detected */
 	if(collisionDetected == 0) {
@@ -38,9 +40,6 @@ Character.prototype.translation = function(xAmount, yAmount) {
 		score.position.x = 350;
 		score.position.y = 200;
 		gameContainer.addChild(score);
-
-		//this.setPosition(125,95);
-		//this.setPosition(125,95);
 	}
 };
 
@@ -76,11 +75,11 @@ Character.prototype.rotateCardinal = function(dirLeft,dirRight,dirDown,dirUp) {
 };
 
 Character.prototype.getPosition_x = function() {
-	return this.charSprite.position.x;
+	return this.charSprite.children[0].position.x;
 };
 
 Character.prototype.getPosition_y = function() {
-	return this.charSprite.position.y;
+	return this.charSprite.children[0].position.y;
 };
 
 Character.prototype.updatePosition = function() {
