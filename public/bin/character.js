@@ -3,7 +3,7 @@ var Character = function(spyWalk , render) {
 
 	spyWalkMovB = new PIXI.MovieClip(spyWalk);
 		spyWalkMovB.animationSpeed = .1;
-		spyWalkMovB.gotoAndStop(1);
+		spyWalkMovB.gotoAndPlay(1);
 
 	charSpriteContainer.addChild(spyWalkMovB);
 	this.charSprite = charSpriteContainer;
@@ -24,33 +24,8 @@ var Character = function(spyWalk , render) {
 		stage.addChild(this.charSprite);
 		stage.addChild(this.thisName);
 	}
-	ws.send(this.getState(), {mask: true});
-};
-
-var Character = function(spyWalk , render) {
-	var charSpriteContainer = new PIXI.DisplayObjectContainer();
-
-	spyWalkMovB = new PIXI.MovieClip(spyWalk);
-
-	charSpriteContainer.addChild(spyWalkMovB);
-	this.charSprite = charSpriteContainer;
-
-	this.charSprite.children[0].x = 0;
-	this.charSprite.children[0].y = 0;
-	this.charSprite.pivot = new PIXI.Point(32,32);
-	this.charSprite.buttonMode = true;
-	this.charSprite.interactive = true;
-
-	this.thisName = new PIXI.Text(clientName, {font:"16px Consolas", fill:"white", align:"center"});
-	this.thisName.position.x = 120;
-	this.thisName.position.y = 50;
-	this.thisName.anchor.set(0.5, 0);
-	this.thisName.style.align = "center";
-
-	if( render ){
-		stage.addChild(this.charSprite);
-		stage.addChild(this.thisName);
-	}
+	this.setPosition(125, 95);
+	this.moving = false; 
 	ws.send(this.getState(), {mask: true});
 };
 
@@ -65,6 +40,8 @@ Character.prototype.JSONupdate = function(json) {
 	this.thisName.position.y = json.y - 45;
 	this.charSprite.rotation = parseFloat(json.rot); 
 	this.thisName.setText(json.name);
+	console.log(json.name + "moving? :" + json.moving);
+	this.charSprite.children[0].playing = json.moving; 
 }
 
 Character.prototype.updateSprite = function(characterSprite) {
@@ -86,8 +63,8 @@ Character.prototype.getState= function() {
 	obj.x = this.charSprite.position.x;
 	obj.y = this.charSprite.position.y;
 	obj.rot = this.charSprite.rotation.toFixed(2);
+	obj.moving = this.moving; 
 	var charState = JSON.stringify(obj);
-	
 	return charState;
 };
 
@@ -97,9 +74,6 @@ Character.prototype.translation = function(xAmount, yAmount) {
 
 	/* Let the Game Board detect the entire rectangle for collision */
 	var collisionDetected = gameBoard.detectCollision(this.charSprite.position.x + xAmount -  22, this.charSprite.position.y + yAmount - 20, 46, 50);
-
-	//Send update//
-	ws.send(character.getState(), {mask: true});
 
 	/* Only move if no collision was detected */
 	if(collisionDetected == 0) {
@@ -118,6 +92,10 @@ Character.prototype.translation = function(xAmount, yAmount) {
 		gameContainer.addChild(score);
 	}
 };
+
+Character.prototype.sendState = function () {
+	ws.send(this.getState(), {mask: true});
+}
 
 Character.prototype.rotateCardinal = function(dirLeft,dirRight,dirDown,dirUp) {
 
@@ -184,10 +162,12 @@ Character.prototype.updateAnimationState = function(dirLeft,dirRight,dirDown,dir
 
 	if(dirRight || dirLeft || dirDown || dirUp)
 	{
+		this.moving = true;
 		this.charSprite.children[0].playing = true;
-	} 
+	}
 	else 
 	{
+		this.moving = false;
 		this.charSprite.children[0].playing = false;
 	}
 }

@@ -52,7 +52,6 @@
 
 	ws.onopen = function open() {
 		console.log('connected here' + JSON.stringify(new Date()));
-		ws.send(Date.now().toString(), {mask: true});
 	}
 
 	//game setup code//
@@ -85,7 +84,6 @@
 
     document.body.appendChild(renderer.view);
 
-
     function enteredName() {
 		clientName = document.getElementById("myText").value;
 		console.log("Changed name to: " + clientName);
@@ -110,8 +108,6 @@
 		}
 	}
 
-	//character.addOthers(characters, charState, gameContainer);
-
 	function onAssetsLoaded() {
 		/* Get the background image */
 		var background = PIXI.Sprite.fromImage("/images/Level.png");
@@ -124,11 +120,7 @@
 			spyWalkB.push(texture);
 		}
 
-		//var charSprite = PIXI.Sprite.fromFrame("Spy 1.png");
 		character = new Character(spyWalkB , false);
-
-		/* Set the character's starting position */
-		character.setPosition(125, 95);
 
 		/* Draw the walls on the screen */
 		gameBoard.setWalls(levelMaps, gameContainer);
@@ -152,6 +144,8 @@
 		character.updatePosition();
 
 		addCharacters();
+
+		character.sendState();
 
 		renderer.render(stage);
 	}
