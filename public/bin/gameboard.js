@@ -120,7 +120,7 @@ GameBoard.prototype.setFinish = function(levelMaps, gameContainer) {
 };
 
 
-GameBoard.prototype.setCameras = function(levelMaps, gameContainer, shadowList) {
+GameBoard.prototype.setCameras = function(levelMaps, gameContainer, cameraList) {
 	
 	/* Get the location from the levels file */
 	for(var i = 0; i < levelMaps.Cameras[0].position.length; i++) {

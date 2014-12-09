@@ -69,6 +69,9 @@
     loader.onComplete = onAssetsLoaded;
     loader.load();
 
+    /* Array for all of the camera objects */
+    var cameraList = [];
+
 	var stage = new PIXI.Stage(0xF8F8F8);
 	var renderer = PIXI.autoDetectRenderer(WIDTH, HEIGHT);
 
@@ -125,6 +128,7 @@
 		/* Draw the walls on the screen */
 		gameBoard.setWalls(levelMaps, gameContainer);
 		gameBoard.setFinish(levelMaps, gameContainer);
+		gameBoard.setCameras(levelMaps, gameContainer, cameraList);
 
 		/* Add the event listeners for the button pushes */
 		window.addEventListener('keydown', function(event) { 
@@ -144,6 +148,12 @@
 		character.updatePosition();
 
 		addCharacters();
+
+		/* Update the cameras */
+		for(var i = 0; i < cameraList.length; i++) {
+			cameraList[i].updatePosition();
+			cameraList[i].getShadowLines();
+		}
 
 		character.sendState();
 
