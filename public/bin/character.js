@@ -5,24 +5,42 @@ var Character = function(container) {
 	this.charSprite.pivot = new PIXI.Point(32,32);
 	this.charSprite.buttonMode = true;
 	this.charSprite.interactive = true;
+
+	this.thisName = new PIXI.Text(clientName, {font:"16px Consolas", fill:"white", align:"center"});
+	this.thisName.position.x = 120;
+	this.thisName.position.y = 50;
+	this.thisName.anchor.set(0.5, 0);
+	this.thisName.style.align = "center";
+};
+
+Character.prototype.updateName = function(name) {
+	this.thisName.setText(name);
 };
 
 Character.prototype.updateSprite = function(characterSprite) {
 	this.charSprite = characterSprite;
 };
 
-Character.prototype.setPosition = function(x, y) {
+Character.prototype.setPosition= function(x, y) {
 		this.charSprite.position.x = x;
 		this.charSprite.position.y = y;
+		this.thisName.position.x = x - 5;
+		this.thisName.position.y = y - 45;
+};
+
+Character.prototype.getState= function() { 
+	return String(name + "," + this.charSprite.position.x + "," + this.charSprite.position.y + "," + this.charSprite.rotation.toFixed(2));
 };
 
 Character.prototype.translation = function(xAmount, yAmount) {
-
 	/* Get the rectangle object that defines our coordinates */
 	//var bounds = this.charSprite.getLocalBounds();
 
 	/* Let the Game Board detect the entire rectangle for collision */
 	var collisionDetected = gameBoard.detectCollision(this.charSprite.position.x + xAmount -  22, this.charSprite.position.y + yAmount - 20, 46, 50);
+
+	//Send update//
+	ws.send(character.getState(), {mask: true});
 
 	/* Only move if no collision was detected */
 	if(collisionDetected == 0) {

@@ -35,15 +35,27 @@
     
     <button id="logoutbutton">Log out</button>
 
+    <form id="myForm"> <input type="text" id="myText" value="Please enter name"> </form>
+    <button onclick="enteredName()">Submit</button>
+
+	<br>
+
     <script>
 
+    var clientName = "New Player";
     var host = location.origin.replace(/^http/, 'ws')
 	var ws = new WebSocket(host);
 
 	ws.onmessage = function (event) {
-	  var li = document.createElement('li');
-	  li.innerHTML = JSON.parse(event.data);
-	  console.log(li.innerHTML)
+		//parse JSON
+		try {
+            var json = JSON.parse(event.data);
+        } catch (e) {
+            console.log('Not valid JSON: ', event.data);
+            return;
+        }
+
+	  console.log(event.data)
 	};
 
 	ws.onopen = function open() {
@@ -80,6 +92,13 @@
 
     document.body.appendChild(renderer.view);
 
+
+    function enteredName() {
+		clientName = document.getElementById("myText").value;
+		console.log("Changed name to: " + clientName);
+		character.updateName(clientName);
+	}
+
 	function onAssetsLoaded() {
 		/* Get the background image */
 		var background = PIXI.Sprite.fromImage("/images/Level.png");
@@ -105,6 +124,7 @@
 
 		/* Add the character sprite to the screen */
 		gameContainer.addChild(character.charSprite);
+		gameContainer.addChild(character.thisName);
 
 		/* Draw the walls on the screen */
 		gameBoard.setWalls(levelMaps, gameContainer);

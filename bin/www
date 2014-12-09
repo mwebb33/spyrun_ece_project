@@ -10,24 +10,34 @@ var server = app.listen(app.get('port'), function() {
   debug('Express server listening on port ' + server.address().port);
 });
 
-
 //Setup server handling of websockets
 var wss = new WebSocketServer({server: server})
 console.log("websocket server created")
 
+var connections = {};
+var connectionIDCounter = 0;
+
 wss.on("connection", function(ws) {
+  //some kind of origin check would be good
+  
+  ws.id = connectionIDCounter ++;
+  connections[ws.id] = ws;
+
+  console.log("clientID:" + ws.id + " connected");
+
+  //Will send camera syncronization information
   var id = setInterval(function() {
     ws.send(JSON.stringify(new Date()), function() {  })
   }, 1000)
-
-  console.log("websocket connection open")
   
   ws.on('message', function incoming(message) {
-    console.log('received: %s', message);
+      console.log('received: %s', message);
   });
 
   ws.on("close", function() {
     console.log("websocket connection close")
     clearInterval(id)
+    console.log("clientID:" + ws.id + " disconnected");
+    delete connections[ws.id];
   })
 })
