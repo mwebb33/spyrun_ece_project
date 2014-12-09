@@ -29,15 +29,15 @@
 		<div id="countdown"></div>
 	</div>
 
+	<!-- 
     <button id="authorize-button" style="visibility: hidden">Authorize</button>
-
-	<!-- <script src="https://apis.google.com/js/client.js?onload=handleClientLoad"></script> -->
+	<script src="https://apis.google.com/js/client.js?onload=handleClientLoad"></script>
     
     <button id="logoutbutton">Log out</button>
+    -->
 
-    <form id="myForm"> <input type="text" id="myText" value="Please enter name"> </form>
+    <form id="myForm"> <input type="text" id="myText" value=""></form>
     <button onclick="enteredName()">Submit</button>
-
 	<br>
 
     <script>
@@ -47,15 +47,7 @@
 	var ws = new WebSocket(host);
 
 	ws.onmessage = function (event) {
-		//parse JSON
-		try {
-            var json = JSON.parse(event.data);
-        } catch (e) {
-            console.log('Not valid JSON: ', event.data);
-            return;
-        }
-
-	  console.log(event.data)
+		charState = event.data;
 	};
 
 	ws.onopen = function open() {
@@ -69,6 +61,8 @@
 	var HEIGHT = 720;
 	var WIDTH = 1080;
 	var spriteNum = 1;
+	var charState; 
+	var spyWalkB;
 
     var assetsToLoader = ["images/spy.json","images/camera.json", "images/background.json","images/Level.png"];
     
@@ -79,8 +73,8 @@
 	var stage = new PIXI.Stage(0xF8F8F8);
 	var renderer = PIXI.autoDetectRenderer(WIDTH, HEIGHT);
 
+    var characters = {};
     var character;
-    var charSpriteContainer = new PIXI.DisplayObjectContainer();
     var gameContainer = new PIXI.DisplayObjectContainer();
     var gameBoard = new GameBoard();
 
@@ -88,7 +82,6 @@
     var levelMaps = JSON.parse(Levels);
 
     stage.addChild(gameContainer);
-    stage.addChild(charSpriteContainer);
 
     document.body.appendChild(renderer.view);
 
@@ -99,32 +92,43 @@
 		character.updateName(clientName);
 	}
 
+	function addCharacters() {
+		var json = JSON.parse(charState);
+
+		for (prop in json ) {
+		    if (!json.hasOwnProperty(prop)) {
+		        continue;
+		    }
+			//console.log(json[prop]);
+		    var charJson = JSON.parse(json[prop]);
+
+		    if(character[prop] == undefined){
+		    	character[prop] = new Character(spyWalkB,true);
+			}
+
+		    character[prop].JSONupdate(charJson);
+		}
+	}
+
+	//character.addOthers(characters, charState, gameContainer);
+
 	function onAssetsLoaded() {
 		/* Get the background image */
 		var background = PIXI.Sprite.fromImage("/images/Level.png");
 		gameContainer.addChild(background);
 
 		//Looking into movies//
-		var spyWalkB = [];
+		spyWalkB = [];
 		for (var i = 0; i < 4; i++){
 			var texture = PIXI.Texture.fromFrame("Spy " + (i+1) +".png");
 			spyWalkB.push(texture);
 		}
 
-		var spyWalkMovB = new PIXI.MovieClip(spyWalkB);
-			spyWalkMovB.animationSpeed = .1;
-			spyWalkMovB.gotoAndPlay(1);
-
 		//var charSprite = PIXI.Sprite.fromFrame("Spy 1.png");
-		charSpriteContainer.addChild(spyWalkMovB);
-		character = new Character(charSpriteContainer);
+		character = new Character(spyWalkB , false);
 
 		/* Set the character's starting position */
 		character.setPosition(125, 95);
-
-		/* Add the character sprite to the screen */
-		gameContainer.addChild(character.charSprite);
-		gameContainer.addChild(character.thisName);
 
 		/* Draw the walls on the screen */
 		gameBoard.setWalls(levelMaps, gameContainer);
@@ -138,10 +142,6 @@
 			key.onKeyUp(event.keyCode); 
 		});
 
-		// spyWalkMovB.gotoAndPlay(1);
-
-		// stage.addChild(spyWalkMovB);
-
 		requestAnimFrame(animate);
 	}
 
@@ -151,7 +151,7 @@
 
 		character.updatePosition();
 
-		character.rotation += 0.01;
+		addCharacters();
 
 		renderer.render(stage);
 	}

@@ -2,7 +2,9 @@
 var debug = require('debug')('test');
 var app = require('../app');
 var WebSocketServer = require("ws").Server
-
+//Create JSON for state
+var obj = new Object();
+var charState; 
 
 app.set('port', process.env.PORT || 5000);
 
@@ -27,11 +29,16 @@ wss.on("connection", function(ws) {
 
   //Will send camera syncronization information
   var id = setInterval(function() {
-    ws.send(JSON.stringify(new Date()), function() {  })
+    //ws.send(JSON.stringify(new Date()), function() {  })
   }, 1000)
   
   ws.on('message', function incoming(message) {
-      console.log('received: %s', message);
+      //console.log('received: %s', message);
+      var clientMsg = JSON.parse(message);
+      obj[ws.id] = message;
+      charState = JSON.stringify(obj);
+      //console.log(charState);
+      propigate();
   });
 
   ws.on("close", function() {
@@ -39,5 +46,17 @@ wss.on("connection", function(ws) {
     clearInterval(id)
     console.log("clientID:" + ws.id + " disconnected");
     delete connections[ws.id];
+    delete obj[ws.id];
+    charState = JSON.stringify(obj);
   })
 })
+
+function propigate() {
+  //console.log("hi");
+  for (index = 0; index < connectionIDCounter; index++){
+    if(connections[index] != undefined){
+      connections[index].send(charState);
+    }
+  //console.log("sending to" + connections[0]);
+  }
+}

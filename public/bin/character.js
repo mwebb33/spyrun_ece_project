@@ -1,5 +1,13 @@
-var Character = function(container) {
-	this.charSprite = container;
+var Character = function(spyWalk , render) {
+	var charSpriteContainer = new PIXI.DisplayObjectContainer();
+
+	spyWalkMovB = new PIXI.MovieClip(spyWalk);
+		spyWalkMovB.animationSpeed = .1;
+		spyWalkMovB.gotoAndStop(1);
+
+	charSpriteContainer.addChild(spyWalkMovB);
+	this.charSprite = charSpriteContainer;
+
 	this.charSprite.children[0].x = 0;
 	this.charSprite.children[0].y = 0;
 	this.charSprite.pivot = new PIXI.Point(32,32);
@@ -11,11 +19,53 @@ var Character = function(container) {
 	this.thisName.position.y = 50;
 	this.thisName.anchor.set(0.5, 0);
 	this.thisName.style.align = "center";
+	
+	if( render ){
+		stage.addChild(this.charSprite);
+		stage.addChild(this.thisName);
+	}
+	ws.send(this.getState(), {mask: true});
+};
+
+var Character = function(spyWalk , render) {
+	var charSpriteContainer = new PIXI.DisplayObjectContainer();
+
+	spyWalkMovB = new PIXI.MovieClip(spyWalk);
+
+	charSpriteContainer.addChild(spyWalkMovB);
+	this.charSprite = charSpriteContainer;
+
+	this.charSprite.children[0].x = 0;
+	this.charSprite.children[0].y = 0;
+	this.charSprite.pivot = new PIXI.Point(32,32);
+	this.charSprite.buttonMode = true;
+	this.charSprite.interactive = true;
+
+	this.thisName = new PIXI.Text(clientName, {font:"16px Consolas", fill:"white", align:"center"});
+	this.thisName.position.x = 120;
+	this.thisName.position.y = 50;
+	this.thisName.anchor.set(0.5, 0);
+	this.thisName.style.align = "center";
+
+	if( render ){
+		stage.addChild(this.charSprite);
+		stage.addChild(this.thisName);
+	}
+	ws.send(this.getState(), {mask: true});
 };
 
 Character.prototype.updateName = function(name) {
 	this.thisName.setText(name);
 };
+
+Character.prototype.JSONupdate = function(json) {
+	this.charSprite.position.x = json.x; 
+	this.charSprite.position.y = json.y; 
+	this.thisName.position.x = json.x - 5;
+	this.thisName.position.y = json.y - 45;
+	this.charSprite.rotation = parseFloat(json.rot); 
+	this.thisName.setText(json.name);
+}
 
 Character.prototype.updateSprite = function(characterSprite) {
 	this.charSprite = characterSprite;
@@ -29,7 +79,16 @@ Character.prototype.setPosition= function(x, y) {
 };
 
 Character.prototype.getState= function() { 
-	return String(name + "," + this.charSprite.position.x + "," + this.charSprite.position.y + "," + this.charSprite.rotation.toFixed(2));
+	
+	//Create JSON for char
+	var obj = new Object();
+	obj.name = this.thisName.text;
+	obj.x = this.charSprite.position.x;
+	obj.y = this.charSprite.position.y;
+	obj.rot = this.charSprite.rotation.toFixed(2);
+	var charState = JSON.stringify(obj);
+	
+	return charState;
 };
 
 Character.prototype.translation = function(xAmount, yAmount) {
@@ -52,7 +111,6 @@ Character.prototype.translation = function(xAmount, yAmount) {
 	}
 
 	else if(collisionDetected == 3) {
-
 		var style = {font:"70px Arial", fill:"red"};
 		var score = new PIXI.Text("Your Score Is 4,000!!!",style);
 		score.position.x = 350;
@@ -89,7 +147,7 @@ Character.prototype.rotateCardinal = function(dirLeft,dirRight,dirDown,dirUp) {
 	}
 	else if(dirRight && dirDown) {
 		this.charSprite.rotation = 0 + Math.PI/4;
-	}
+	} else {}
 };
 
 Character.prototype.getPosition_x = function() {
