@@ -25,14 +25,14 @@
 
 <body>
 
-	<div id="container" style="width: 50%; margin: 0 auto;">
+	<div id="container" style="width: 50%; margin: 0 auto; background-color: white;">
 		<div id="countdown"></div>
+		<p id="highscore_p">Previous Best: <%= highscore %></p>
 	</div>
 
-	<!-- 
-    <button id="authorize-button" style="visibility: hidden">Authorize</button>
+	
+    <!-- <button id="authorize-button" style="visibility: hidden">Authorize</button>
 	<script src="https://apis.google.com/js/client.js?onload=handleClientLoad"></script>
-    
     <button id="logoutbutton">Log out</button>
     -->
 
@@ -55,6 +55,11 @@
 	}
 
 	//game setup code//
+
+	/* First set up the players high score */
+	//alert(#{highscore});
+	//var highScore_p = document.getElementById("highscore").value;
+	//highScore_p.innerHTML = highScore;
 
 	// instance
 	var HEIGHT = 720;

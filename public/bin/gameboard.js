@@ -186,18 +186,18 @@ GameBoard.prototype.setCameras = function(levelMaps, gameContainer, cameraList) 
 
 GameBoard.prototype.drawLine = function(x1, y1, x2, y2, value) {
 
-	console.log(x1 + " " + y1 + " " + x2 + " " + y2 + " " + value);
+	//console.log(x1 + " " + y1 + " " + x2 + " " + y2 + " " + value);
 	var slope = (y2 - y1)/(x2 - x1);
 	var y = y1;
 	var x = x1;
 	var y_int = (y - (x * slope));
 	var offset = 1;
 
-	var line = new PIXI.Graphics();
+	/*var line = new PIXI.Graphics();
 	line.lineStyle(12, 0x0F0F0F);
 	line.moveTo(x1, y1);
 	line.lineTo(x2, y2);
-	gameContainer.addChild(line);
+	gameContainer.addChild(line);*/
 
 
 	if(Math.abs(slope) == Number.POSITIVE_INFINITY) {

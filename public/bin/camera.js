@@ -83,7 +83,7 @@ Camera.prototype.getShadowLines = function(GameBoard) {
 
 	var x = x - (Math.cos(this.shadow.rotation) * this.sprite.width);
 	var y = y - (Math.sin(this.shadow.rotation) * this.sprite.height);
-	console.log(x + " " + y);
+	//console.log(x + " " + y);
 
 	/* Find the new end points for the shadow */
 	var shadowAngle = Math.tan((this.shadowWidth/2)/this.shadowHeight);

@@ -3,6 +3,7 @@ var router = express.Router();
 var mqtt = require('mqtt')
 var url = require('url');
 
+var HighScore = require('../config/highScore');
 
 //not sure why these are here//
 var passport = require('passport');
@@ -17,7 +18,12 @@ router.get('/', function(req, res) {
 
 /* GET login page */
 router.get('/game', function(req, res) {
-	res.render('index', {});
+	res.render('index', {highscore: '4000'});
+});
+
+/* POST for adding high score */
+router.post('/addHighScore', function(req, res) {
+
 });
 
 
