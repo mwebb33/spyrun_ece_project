@@ -24,12 +24,21 @@ io.on('connection', function (socket) {
 
   console.log("socket.io client connected Id: " + socket.id);
 
-  socket.on('clientupdate', function (data) {
+  socket.on('client', function (data) {
       var clientMsg = JSON.parse(data);
       obj[socket.id] = data;
       charState = JSON.stringify(obj);
-      console.log("serverstate: " + charState)
+      console.log("state: " + charState)
       propigate();
+  });
+
+  socket.on('reqID', function (data) {
+      console.log(data);
+      var clientMsg = data;
+      clientMsg.id = socket.id; 
+      console.log("replying to ID with: " + socket.id); 
+      rspMsg = JSON.stringify(clientMsg);
+      socket.emit('resID', rspMsg);
   });
 
   socket.on('disconnect', function (data) {
@@ -38,14 +47,26 @@ io.on('connection', function (socket) {
     delete sockets[socket.id];
     delete obj[socket.id];
     charState = JSON.stringify(obj);
+    alertDrop(socket.id);
   });
+
 });
 
 function propigate() {
   //console.log("hi");
   for (var index = 0; index < connectionIDCounter; index++){
     if(sockets[index] != undefined){
-      sockets[index].emit('stateupdate', charState);
+      sockets[index].emit('state', charState);
     }
   }
 }
+
+function alertDrop(dropID) {
+  //console.log("hi");
+  for (var index = 0; index < connectionIDCounter; index++){
+    if(sockets[index] != undefined){
+      sockets[index].emit('playerleft', { id: dropID });
+    }
+  }
+}
+

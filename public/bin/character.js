@@ -33,10 +33,6 @@ Character.prototype.updateName = function(name) {
 	this.thisName.setText(name);
 };
 
-Character.prototype.setInvisible = function(name) {
-	this.thisName.setText(name);
-};
-
 Character.prototype.JSONupdate = function(json) {
 	this.charSprite.position.x = json.x; 
 	this.charSprite.position.y = json.y; 
@@ -44,7 +40,6 @@ Character.prototype.JSONupdate = function(json) {
 	this.thisName.position.y = json.y - 45;
 	this.charSprite.rotation = parseFloat(json.rot); 
 	this.thisName.setText(json.name);
-	//console.log(json.name + "moving? :" + json.moving);
 	this.charSprite.children[0].playing = json.moving; 
 }
 
@@ -52,7 +47,7 @@ Character.prototype.updateSprite = function(characterSprite) {
 	this.charSprite = characterSprite;
 };
 
-Character.prototype.remove = function(characterSprite) {
+Character.prototype.removeChar = function(characterSprite) {
 	stage.removeChild(this.charSprite);
 	stage.removeChild(this.thisName);
 };
@@ -107,7 +102,7 @@ Character.prototype.sendState = function () {
 	//ws.send(this.getState(), {mask: true});
 	//console.log(this.getState());
 	
-	socket.emit('clientupdate', this.getState());
+	socket.emit('client', this.getState());
 }
 
 Character.prototype.rotateCardinal = function(dirLeft,dirRight,dirDown,dirUp) {

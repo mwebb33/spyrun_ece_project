@@ -35,32 +35,57 @@
     <button id="logoutbutton">Log out</button>
     -->
 
-    <form id="myForm" autocomplete="off"> <input type="text" id="myText" value=""></form>
+    <form id="myForm" autocomplete="off" onkeypress="return event.keyCode != 13;"> <input type="text" id="myText" value=""></form>
     	<button onclick="enteredName()">Submit</button>
 	<br>
 
     <script>
 
-	var clientName = "New Player";
-	var init = true;
-	var charIDinit = [];
+    var localChar;
+    var otherChars = [];
+    var clientName = "New Player";
 	var state; 
+	var reqID = false;
+	var cID = -1; 
+	var otherChars2 = [];
 
     var host = location.origin.replace(/^http/, 'ws')
 	var socket = io.connect(host);
-	console.log("Connected to socket.io");
 
-	socket.on('connection', function (data) {
+	socket.on('connect', function () {
+		console.log("Connected to socket.io");
+		socket.emit('reqID', { id: cID });
+		reqID = true;
+		setTimeout(function(){
+			if(cID == -1) {
+				console.log("ID is blank");
+			}
+		} , 1000)
 	});
 
-	socket.on('stateupdate', function(data){
+	socket.on('state', function(data){
 		state = data;
-		//console.log("state: " + state);
+	});
+
+	socket.on('resID', function(data){
+		if(reqID == true){
+			cID = JSON.parse(data).id;
+			console.log('My id is: ' + cID)
+			reqID = false; 
+		}
+	});
+
+	socket.on('playerleft', function(data){
+		var dropped = data.id;
+		console.log("Client dropped: " + dropped)
+		otherChars[dropped].removeChar();
+		otherChars.splice(1, dropped);
 	});
 
 	//game setup code//
 
 	// instance
+
 	var HEIGHT = 720;
 	var WIDTH = 1080;
 	var spriteNum = 1;
@@ -75,9 +100,7 @@
 	var stage = new PIXI.Stage(0xF8F8F8);
 	var renderer = PIXI.autoDetectRenderer(WIDTH, HEIGHT);
 
-	var charIDNew = [];
-    var character;
-    var charIDArray = [];
+
     var gameContainer = new PIXI.DisplayObjectContainer();
     var gameBoard = new GameBoard();
 
@@ -91,43 +114,33 @@
     function enteredName() {
 		clientName = document.getElementById("myText").value;
 		console.log("Changed name to: " + clientName);
-		character.updateName(clientName);
+		localChar.updateName(clientName);
 	}
 
 	function addCharacters() {
-		var maxChar = -1; 
-		charIDNew.length = 0;
-
 		try{
-			console.log("State: " + state);
 			var json = JSON.parse(state);
 		} catch(err) {
-			console.log("Error JSON Parse: " + err.message);
+			console.log("Error JSON Parse");
 		}
 
-		for (prop in json ) {
-		    if (!json.hasOwnProperty(prop)) {
-		        continue;
+		for (prop in json) {
+		    if(prop != cID) {
+		    	try{
+		    		var charJson = JSON.parse(json[prop]);
+		    	} catch(err) {
+					console.log("Error JSON Parse");
+				}
+
+		    	if(otherChars[prop] == undefined){
+		    		otherChars[prop] = new Character(spyWalkB,true);
+				}
+
+		    	otherChars[prop].JSONupdate(charJson);
 		    }
-			
-			try{
-		    	var charJson = JSON.parse(json[prop]);
-		    } catch(err) {
-		    	console.log("Error JSON Parse: " + err.message);
-		    }
-
-		    if(character[prop] == undefined){
-		    	character[prop] = new Character(spyWalkB,true);
-		    	charIDArray.push(prop);
-			}
-
-		    character[prop].JSONupdate(charJson);
-
-		    charIDNew.push(prop);
 		}
 
-		//remove sprites
-		var remove = charIDArray.diff(charIDNew);
+		console.log(otherChars);
 	}
 
 	function onAssetsLoaded() {
@@ -142,7 +155,7 @@
 			spyWalkB.push(texture);
 		}
 
-		character = new Character(spyWalkB , false);
+		localChar = new Character(spyWalkB , true);
 
 		/* Draw the walls on the screen */
 		gameBoard.setWalls(levelMaps, gameContainer);
@@ -163,18 +176,14 @@
 	function animate() {
 		requestAnimFrame(animate);
 
-		character.updatePosition();
+		localChar.updatePosition();
 
 		addCharacters();
 
-		character.sendState();
+		localChar.sendState();
 
 		renderer.render(stage);
 	}
-
-	Array.prototype.diff = function(a) {
-    	return this.filter(function(i) {return a.indexOf(i) < 0;});
-	};
 
     </script>
 
