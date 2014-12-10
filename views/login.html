@@ -21,24 +21,27 @@ all the features of the game, please sign in below, or proceed anonymously. </p>
 
 <script>
 
+
     var host = location.origin;
 
 	function skipSignIn() {
 		window.location.href = host + "/game";
 	};
 	function signIn() {
+
 		var additionalParams = {
 			'callback': 'signinCallback',
 			'clientid': '110770941702-t6p9u2sohgv19a6ul9ebjfioj8n0a6gt.apps.googleusercontent.com',
 		};
+
 		gapi.auth.signIn(additionalParams); // Will use page level configuration
 	};
+
 	function signinCallback(authResult) {
 		if (authResult['status']['signed_in']) {
 			// Update the app to reflect a signed in user
 			// Hide the sign-in button now that the user is authorized, for example:
 			//document.getElementById('signinButton').setAttribute('style', 'display: none');
-
 
 			window.location.href = host + "/game";
 		} else {
@@ -51,5 +54,7 @@ all the features of the game, please sign in below, or proceed anonymously. </p>
 			console.log('Sign-in state: ' + authResult['error']);
 		}
 	}
+
 </script>
+
 </body>

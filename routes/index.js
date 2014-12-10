@@ -3,7 +3,11 @@ var router = express.Router();
 var mqtt = require('mqtt')
 var url = require('url');
 
+<<<<<<< HEAD
 //var HighScore = require('../bin/highscore.js');
+=======
+var HighScore = require('../config/highScore');
+>>>>>>> b49eefe6d2699d988bbafbeeb813603784e489a8
 
 //not sure why these are here//
 var passport = require('passport');
@@ -14,6 +18,19 @@ var querystring = require('querystring');
 /* GET home page. */
 router.get('/', function(req, res) {
 	res.render('login' , {loginMessage: req.flash('loginMessage') });
+<<<<<<< HEAD
+=======
+});
+
+/* GET login page */
+router.get('/game', function(req, res) {
+	res.render('index', {highscore: '4000'});
+});
+
+/* POST for adding high score */
+router.post('/addHighScore', function(req, res) {
+
+>>>>>>> b49eefe6d2699d988bbafbeeb813603784e489a8
 });
 
 /* GET login page */
