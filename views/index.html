@@ -42,19 +42,19 @@
     <script>
 
     var localChar;
-    var otherChars = [];
+    var otherChars = {};
+    var globalCharNames = {};
     var clientName = "New Player";
 	var state; 
 	var reqID = false;
 	var cID = -1; 
-	var otherChars2 = [];
 
     var host = location.origin.replace(/^http/, 'ws')
 	var socket = io.connect(host);
 
 	socket.on('connect', function () {
 		console.log("Connected to socket.io");
-		socket.emit('reqID', { id: cID });
+		socket.emit('init', { id: cID });
 		reqID = true;
 		setTimeout(function(){
 			if(cID == -1) {
@@ -67,24 +67,36 @@
 		state = data;
 	});
 
-	socket.on('resID', function(data){
+	socket.on('ack', function(data){
 		if(reqID == true){
 			cID = JSON.parse(data).id;
+			globalCharNames = JSON.parse(data).clients;
 			console.log('My id is: ' + cID)
 			reqID = false; 
 		}
 	});
 
-	socket.on('playerleft', function(data){
-		var dropped = data.id;
-		console.log("Client dropped: " + dropped)
-		otherChars[dropped].removeChar();
-		otherChars.splice(1, dropped);
+	socket.on('playerjoin', function(data){
+		var joined = data.id;
+		//var rename = data.name;
+		globalCharNames[joined] = joined;
+		console.log("player" + joined + "joined.")
 	});
 
-	//game setup code//
+	socket.on('playerleft', function(data){
+		var dropped = data.id;
+		delete globalCharNames[dropped];
+		console.log("player" + dropped + "dropped.")
+	});
 
-	// instance
+	// socket.on('playerrename', function(data){
+	// 	var id = data.id;
+	// 	var rename = data.name;
+	// 	globalCharNames[id] = rename;
+	// 	console.log("player" + id + "renamed to" + )
+	// });
+
+	//game setup code//
 
 	var HEIGHT = 720;
 	var WIDTH = 1080;
@@ -124,23 +136,37 @@
 			console.log("Error JSON Parse");
 		}
 
+		for(var x = 0; x < 20; x++) 
+		{
+			otherChars[x].removeChar();
+		}
+
+		if(globalCharNames.length >= 20) {
+			for(var x = 20; x < 60; x++) 
+			{
+				otherChars[x] = new Character(spyWalkB , false);
+			}
+		}
+
 		for (prop in json) {
 		    if(prop != cID) {
-		    	try{
-		    		var charJson = JSON.parse(json[prop]);
-		    	} catch(err) {
+				try{
+					var charJson = JSON.parse(json[prop]);
+				} catch(err) {
 					console.log("Error JSON Parse");
 				}
 
-		    	if(otherChars[prop] == undefined){
-		    		otherChars[prop] = new Character(spyWalkB,true);
-				}
-
+				otherChars[prop].addChar();
 		    	otherChars[prop].JSONupdate(charJson);
 		    }
 		}
+	}
 
-		console.log(otherChars);
+	function initCharacters() {
+		for(var x = 0; x < 20; x++) 
+		{
+			otherChars[x] = new Character(spyWalkB , false);
+		}
 	}
 
 	function onAssetsLoaded() {
@@ -169,11 +195,15 @@
 			key.onKeyUp(event.keyCode); 
 		});
 
+		initCharacters();
+
 		requestAnimFrame(animate);
 	}
 
 	// This method gets called repeatedly by the Pixi driver 
 	function animate() {
+		//console.log(globalCharNames)
+
 		requestAnimFrame(animate);
 
 		localChar.updatePosition();

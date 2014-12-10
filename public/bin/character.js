@@ -47,7 +47,12 @@ Character.prototype.updateSprite = function(characterSprite) {
 	this.charSprite = characterSprite;
 };
 
-Character.prototype.removeChar = function(characterSprite) {
+Character.prototype.addChar = function() {
+	stage.addChild(this.charSprite);
+	stage.addChild(this.thisName);
+};
+
+Character.prototype.removeChar = function() {
 	stage.removeChild(this.charSprite);
 	stage.removeChild(this.thisName);
 };

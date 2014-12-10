@@ -11,6 +11,7 @@ var obj = new Object();
 var charState; 
 
 var sockets = {};
+var serverClients = {};
 var connectionIDCounter = 0;
 
 app.get('/', function (req, res) {
@@ -21,35 +22,43 @@ io.on('connection', function (socket) {
 
   socket.id = connectionIDCounter++;
   sockets[socket.id] = socket;
+  serverClients[socket.id] = socket.id;
+  console.log("socket.io client connected ID: " + socket.id);
 
-  console.log("socket.io client connected Id: " + socket.id);
+  //send new client to other clients
+  alertJoin(socket.id);
 
   socket.on('client', function (data) {
-      var clientMsg = JSON.parse(data);
-      obj[socket.id] = data;
-      charState = JSON.stringify(obj);
-      console.log("state: " + charState)
-      propigate();
+    var clientMsg = JSON.parse(data);
+    obj[socket.id] = data;
+    charState = JSON.stringify(obj);
+
+    //send new state to clients
+    propigate();
   });
 
-  socket.on('reqID', function (data) {
-      console.log(data);
-      var clientMsg = data;
-      clientMsg.id = socket.id; 
-      console.log("replying to ID with: " + socket.id); 
-      rspMsg = JSON.stringify(clientMsg);
-      socket.emit('resID', rspMsg);
+  socket.on('init', function (data) {
+    var clientMsg = data;
+    clientMsg.id = socket.id; 
+    clientMsg.clients = serverClients; 
+    console.log("replying to ID with: " + socket.id); 
+    rspMsg = JSON.stringify(clientMsg);
+
+    //send response message
+    socket.emit('ack', rspMsg);
   });
 
   socket.on('disconnect', function (data) {
-    console.log("Socket.io connection closed Id: " + socket.id);
+    console.log("Socket.io connection closed ID: " + socket.id);
+    delete serverClients[socket.id];
     clearInterval(socket.id);
     delete sockets[socket.id];
     delete obj[socket.id];
     charState = JSON.stringify(obj);
+
+    //send drop message to remaining clients
     alertDrop(socket.id);
   });
-
 });
 
 function propigate() {
@@ -61,11 +70,20 @@ function propigate() {
   }
 }
 
-function alertDrop(dropID) {
+function alertDrop(ID) {
   //console.log("hi");
   for (var index = 0; index < connectionIDCounter; index++){
     if(sockets[index] != undefined){
-      sockets[index].emit('playerleft', { id: dropID });
+      sockets[index].emit('playerleft', { id: ID });
+    }
+  }
+}
+
+function alertJoin(ID) {
+  //console.log("hi");
+  for (var index = 0; index < connectionIDCounter; index++){
+    if(sockets[index] != undefined){
+      sockets[index].emit('playerjoin', { id: ID });
     }
   }
 }
