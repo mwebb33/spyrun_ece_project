@@ -20,8 +20,11 @@ all the features of the game, please sign in below, or proceed anonymously. </p>
 <button id="anonymousButton" onclick="skipSignIn()">Proceed Anonymously</button>
 
 <script>
+
+    var host = location.origin;
+
 	function skipSignIn() {
-		window.location.href = "http://localhost:5000/game";
+		window.location.href = host + "/game";
 	};
 	function signIn() {
 		var additionalParams = {
@@ -36,7 +39,8 @@ all the features of the game, please sign in below, or proceed anonymously. </p>
 			// Hide the sign-in button now that the user is authorized, for example:
 			//document.getElementById('signinButton').setAttribute('style', 'display: none');
 
-			window.location.href = "http://localhost:5000/game";
+
+			window.location.href = host + "/game";
 		} else {
 			
 			// Update the app to reflect a signed out user
