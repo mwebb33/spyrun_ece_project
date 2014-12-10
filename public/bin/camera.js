@@ -65,7 +65,6 @@ Camera.prototype.updatePosition = function() {
 		this.rotationAmount = -this.rotationAmount;
 		this.rotationNum = 0;
 	}
-	
 };
 
 /**
@@ -81,9 +80,9 @@ Camera.prototype.getShadowLines = function(GameBoard) {
 	var x = this.shadow.position.x;
 	var y = this.shadow.position.y;
 
-	var x = x + (Math.cos(this.shadow.rotation) * this.sprite.width);
-	var y = y + (Math.sin(this.shadow.rotation) * this.sprite.height);
-	console.log(x + " " + y);
+	var x = x - (Math.cos(this.shadow.rotation) * this.sprite.width);
+	var y = y - (Math.sin(this.shadow.rotation) * this.sprite.height);
+	//console.log(x + " " + y);
 
 	/* Find the new end points for the shadow */
 	var shadowAngle = Math.tan((this.shadowWidth/2)/this.shadowHeight);
@@ -156,7 +155,3 @@ Camera.prototype.drawCamera = function(cameraInfo, index) {
 
 	this.shadow.endFill();
 }
-
-
-
-

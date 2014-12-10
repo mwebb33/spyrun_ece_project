@@ -44,9 +44,12 @@
     var localChar;
     var otherChars = {};
     var globalCharNames = {};
-    var clientName = "New Player";
-	var state; 
+    var cameraList = [];
+    
+    var state; 
 	var reqID = false;
+
+    var clientName = "New Player";
 	var cID = -1; 
 
     var host = location.origin.replace(/^http/, 'ws')
@@ -89,12 +92,12 @@
 		console.log("player" + dropped + "dropped.")
 	});
 
-	// socket.on('playerrename', function(data){
-	// 	var id = data.id;
-	// 	var rename = data.name;
-	// 	globalCharNames[id] = rename;
-	// 	console.log("player" + id + "renamed to" + )
-	// });
+	socket.on('playerrename', function(data){
+		var id = data.id;
+		var rename = data.name;
+		globalCharNames[id] = rename;
+		console.log("player" + id + "renamed to");
+	});
 
 	//game setup code//
 
@@ -186,6 +189,7 @@
 		/* Draw the walls on the screen */
 		gameBoard.setWalls(levelMaps, gameContainer);
 		gameBoard.setFinish(levelMaps, gameContainer);
+		gameBoard.setCameras(levelMaps, gameContainer, cameraList);
 
 		/* Add the event listeners for the button pushes */
 		window.addEventListener('keydown', function(event) { 
@@ -209,6 +213,12 @@
 		localChar.updatePosition();
 
 		addCharacters();
+
+		/* Update the cameras */
+		for(var i = 0; i < cameraList.length; i++) {
+			cameraList[i].updatePosition();
+			cameraList[i].getShadowLines();
+		}
 
 		localChar.sendState();
 
