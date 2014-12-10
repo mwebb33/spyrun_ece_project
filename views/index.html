@@ -162,6 +162,13 @@
 			}
 		}
 
+		if(globalCharNames.length >= 60) {
+			for(var x = 60; x < 200; x++) 
+			{
+				otherChars[x] = new Character(spyWalkB , false);
+			}
+		}
+
 		for (prop in json) {
 		    if(prop != cID) {
 				try{
