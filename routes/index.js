@@ -12,7 +12,12 @@ var querystring = require('querystring');
 
 /* GET home page. */
 router.get('/', function(req, res) {
-  res.render('index' , {loginMessage: req.flash('loginMessage') });
+	res.render('login' , {loginMessage: req.flash('loginMessage') });
+});
+
+/* GET login page */
+router.get('/game', function(req, res) {
+	res.render('index', {});
 });
 
 
