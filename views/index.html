@@ -46,7 +46,8 @@
 	var charIDinit = [];
 	var state; 
 
-	var socket = io.connect('http://localhost');
+    var host = location.origin.replace(/^http/, 'ws')
+	var socket = io.connect(host);
 	console.log("Connected to socket.io");
 
 	socket.on('connection', function (data) {
