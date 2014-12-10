@@ -3,7 +3,7 @@ var Character = function(spyWalk , render) {
 
 	spyWalkMovB = new PIXI.MovieClip(spyWalk);
 		spyWalkMovB.animationSpeed = .1;
-		spyWalkMovB.gotoAndPlay(1);
+		spyWalkMovB.playing = true;
 
 	charSpriteContainer.addChild(spyWalkMovB);
 	this.charSprite = charSpriteContainer;
@@ -19,17 +19,21 @@ var Character = function(spyWalk , render) {
 	this.thisName.position.y = 50;
 	this.thisName.anchor.set(0.5, 0);
 	this.thisName.style.align = "center";
-	
+
 	if( render ){
 		stage.addChild(this.charSprite);
 		stage.addChild(this.thisName);
 	}
+
 	this.setPosition(125, 95);
 	this.moving = false; 
-	ws.send(this.getState(), {mask: true});
 };
 
 Character.prototype.updateName = function(name) {
+	this.thisName.setText(name);
+};
+
+Character.prototype.setInvisible = function(name) {
 	this.thisName.setText(name);
 };
 
@@ -40,12 +44,17 @@ Character.prototype.JSONupdate = function(json) {
 	this.thisName.position.y = json.y - 45;
 	this.charSprite.rotation = parseFloat(json.rot); 
 	this.thisName.setText(json.name);
-	console.log(json.name + "moving? :" + json.moving);
+	//console.log(json.name + "moving? :" + json.moving);
 	this.charSprite.children[0].playing = json.moving; 
 }
 
 Character.prototype.updateSprite = function(characterSprite) {
 	this.charSprite = characterSprite;
+};
+
+Character.prototype.remove = function(characterSprite) {
+	stage.removeChild(this.charSprite);
+	stage.removeChild(this.thisName);
 };
 
 Character.prototype.setPosition= function(x, y) {
@@ -65,6 +74,7 @@ Character.prototype.getState= function() {
 	obj.rot = this.charSprite.rotation.toFixed(2);
 	obj.moving = this.moving; 
 	var charState = JSON.stringify(obj);
+
 	return charState;
 };
 
@@ -94,7 +104,10 @@ Character.prototype.translation = function(xAmount, yAmount) {
 };
 
 Character.prototype.sendState = function () {
-	ws.send(this.getState(), {mask: true});
+	//ws.send(this.getState(), {mask: true});
+	//console.log(this.getState());
+	
+	socket.emit('clientupdate', this.getState());
 }
 
 Character.prototype.rotateCardinal = function(dirLeft,dirRight,dirDown,dirUp) {

@@ -16,13 +16,13 @@
 	<script src="/bin/character.js"> </script>
 	<script src="/bin/key.js"> </script>
 	<script src="/bin/login.js"> </script>
-
+	<script src="https://cdn.socket.io/socket.io-1.2.1.js"></script>
 	<script src="https://apis.google.com/js/client:platform.js" async defer> </script>
 	<script src="/bin/camera.js"> </script>
 	<script src="/lib/jquery.min.js" type="text/javascript"></script>
 	<script src="/bin/jquery.countdown360.js" type="text/javascript" charset="utf-8"></script>
-</head>
 
+</head>
 <body>
 
 	<div id="container" style="width: 50%; margin: 0 auto;">
@@ -32,27 +32,30 @@
 	<!-- 
     <button id="authorize-button" style="visibility: hidden">Authorize</button>
 	<script src="https://apis.google.com/js/client.js?onload=handleClientLoad"></script>
-    
     <button id="logoutbutton">Log out</button>
     -->
 
-    <form id="myForm"> <input type="text" id="myText" value=""></form>
-    <button onclick="enteredName()">Submit</button>
+    <form id="myForm" autocomplete="off"> <input type="text" id="myText" value=""></form>
+    	<button onclick="enteredName()">Submit</button>
 	<br>
 
     <script>
 
-    var clientName = "New Player";
-    var host = location.origin.replace(/^http/, 'ws')
-	var ws = new WebSocket(host);
+	var clientName = "New Player";
+	var init = true;
+	var charIDinit = [];
+	var state; 
 
-	ws.onmessage = function (event) {
-		charState = event.data;
-	};
+	var socket = io.connect('http://localhost');
+	console.log("Connected to socket.io");
 
-	ws.onopen = function open() {
-		console.log('connected here' + JSON.stringify(new Date()));
-	}
+	socket.on('connection', function (data) {
+	});
+
+	socket.on('stateupdate', function(data){
+		state = data;
+		//console.log("state: " + state);
+	});
 
 	//game setup code//
 
@@ -60,7 +63,6 @@
 	var HEIGHT = 720;
 	var WIDTH = 1080;
 	var spriteNum = 1;
-	var charState; 
 	var spyWalkB;
 
     var assetsToLoader = ["images/spy.json","images/camera.json", "images/background.json","images/Level.png"];
@@ -72,8 +74,9 @@
 	var stage = new PIXI.Stage(0xF8F8F8);
 	var renderer = PIXI.autoDetectRenderer(WIDTH, HEIGHT);
 
-    var characters = {};
+	var charIDNew = [];
     var character;
+    var charIDArray = [];
     var gameContainer = new PIXI.DisplayObjectContainer();
     var gameBoard = new GameBoard();
 
@@ -91,21 +94,39 @@
 	}
 
 	function addCharacters() {
-		var json = JSON.parse(charState);
+		var maxChar = -1; 
+		charIDNew.length = 0;
+
+		try{
+			console.log("State: " + state);
+			var json = JSON.parse(state);
+		} catch(err) {
+			console.log("Error JSON Parse: " + err.message);
+		}
 
 		for (prop in json ) {
 		    if (!json.hasOwnProperty(prop)) {
 		        continue;
 		    }
-			//console.log(json[prop]);
-		    var charJson = JSON.parse(json[prop]);
+			
+			try{
+		    	var charJson = JSON.parse(json[prop]);
+		    } catch(err) {
+		    	console.log("Error JSON Parse: " + err.message);
+		    }
 
 		    if(character[prop] == undefined){
 		    	character[prop] = new Character(spyWalkB,true);
+		    	charIDArray.push(prop);
 			}
 
 		    character[prop].JSONupdate(charJson);
+
+		    charIDNew.push(prop);
 		}
+
+		//remove sprites
+		var remove = charIDArray.diff(charIDNew);
 	}
 
 	function onAssetsLoaded() {
@@ -149,6 +170,10 @@
 
 		renderer.render(stage);
 	}
+
+	Array.prototype.diff = function(a) {
+    	return this.filter(function(i) {return a.indexOf(i) < 0;});
+	};
 
     </script>
 

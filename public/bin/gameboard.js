@@ -186,7 +186,7 @@ GameBoard.prototype.setCameras = function(levelMaps, gameContainer, shadowList) 
 
 GameBoard.prototype.drawLine = function(x1, y1, x2, y2, value) {
 
-	console.log(x1 + " " + y1 + " " + x2 + " " + y2 + " " + value);
+	//console.log(x1 + " " + y1 + " " + x2 + " " + y2 + " " + value);
 	var slope = (y2 - y1)/(x2 - x1);
 	var y = y1;
 	var x = x1;

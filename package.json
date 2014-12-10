@@ -21,12 +21,12 @@
     "method-override": "~1.0.0",
     "mongoose": "*",
     "morgan": "~1.0.0",
+    "mqtt": "*",
     "passport": "*",
     "passport-local": "*",
     "process": "*",
+    "socket.io": "^1.2.1",
     "static-favicon": "~1.0.0",
-    "mqtt": "*",
     "ws": "0.4.x"
-
   }
 }

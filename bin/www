@@ -1,62 +1,51 @@
 #!/usr/bin/env nodejs
-var debug = require('debug')('test');
 var app = require('../app');
-var WebSocketServer = require("ws").Server
-//Create JSON for state
+var debug = require('debug')('test');
+var server = require('http').createServer(app);
+var io = require('socket.io').listen(server);  //pass a http.Server instance
+console.log("socket.io started")
+
+server.listen(app.get('port'));
+
 var obj = new Object();
 var charState; 
 
-app.set('port', process.env.PORT || 5000);
-
-var server = app.listen(app.get('port'), function() {
-  debug('Express server listening on port ' + server.address().port);
-});
-
-//Setup server handling of websockets
-var wss = new WebSocketServer({server: server})
-console.log("websocket server created")
-
-var connections = {};
+var sockets = {};
 var connectionIDCounter = 0;
 
-wss.on("connection", function(ws) {
-  //some kind of origin check would be good
-  
-  ws.id = connectionIDCounter ++;
-  connections[ws.id] = ws;
+app.get('/', function (req, res) {
+  res.sendfile(__dirname + '/index.html');
+});
 
-  console.log("clientID:" + ws.id + " connected");
+io.on('connection', function (socket) {
 
-  //Will send camera syncronization information
-  var id = setInterval(function() {
-    //ws.send(JSON.stringify(new Date()), function() {  })
-  }, 1000)
-  
-  ws.on('message', function incoming(message) {
-      //console.log('received: %s', message);
-      var clientMsg = JSON.parse(message);
-      obj[ws.id] = message;
+  socket.id = connectionIDCounter++;
+  sockets[socket.id] = socket;
+
+  console.log("socket.io client connected Id: " + socket.id);
+
+  socket.on('clientupdate', function (data) {
+      var clientMsg = JSON.parse(data);
+      obj[socket.id] = data;
       charState = JSON.stringify(obj);
-      //console.log(charState);
+      console.log("serverstate: " + charState)
       propigate();
   });
 
-  ws.on("close", function() {
-    console.log("websocket connection close")
-    clearInterval(id)
-    console.log("clientID:" + ws.id + " disconnected");
-    delete connections[ws.id];
-    delete obj[ws.id];
+  socket.on('disconnect', function (data) {
+    console.log("Socket.io connection closed Id: " + socket.id);
+    clearInterval(socket.id);
+    delete sockets[socket.id];
+    delete obj[socket.id];
     charState = JSON.stringify(obj);
-  })
-})
+  });
+});
 
 function propigate() {
   //console.log("hi");
-  for (index = 0; index < connectionIDCounter; index++){
-    if(connections[index] != undefined){
-      connections[index].send(charState);
+  for (var index = 0; index < connectionIDCounter; index++){
+    if(sockets[index] != undefined){
+      sockets[index].emit('stateupdate', charState);
     }
-  //console.log("sending to" + connections[0]);
   }
 }
