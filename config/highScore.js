@@ -24,7 +24,7 @@ this.add = function(req, res, done) {
 
 this.get = function(req, res, done) {
 
-	HighScore.findOne('username': req.session.username, function(err, highscore) {
+	HighScore.findOne('username', req.session.username, function(err, highscore) {
 
 		if(err)
 			throw err;

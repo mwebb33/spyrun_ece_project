@@ -16,7 +16,7 @@ var db = {
 }
 
 /* Create our connections */
-db.HighScore = mongoose.createConnection('mongodb://'+ address + ':' + port + '/highscore')
+//db.HighScore = mongoose.createConnection('mongodb://'+ address + ':' + port + '/highscore')
 
 /* Create the model for users and expose it to the app */
 module.exports = db
