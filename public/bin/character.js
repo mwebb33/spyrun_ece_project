@@ -62,8 +62,6 @@ Character.prototype.setPosition= function(x, y) {
 		this.charSprite.position.y = y;
 		this.thisName.position.x = x - 5;
 		this.thisName.position.y = y - 45;
-		this.moving = false;
-		this.charSprite.children[0].playing = false;
 };
 
 Character.prototype.getState= function() { 

@@ -14,8 +14,12 @@ var cameraClock;
 var sockets = {};
 var serverClients = {};
 var connectionIDCounter = 0;
+var curVal = 3/2 * Math.PI;
+var reverse = false;
+
 cameraRotArray = [];
 cameraRotArrayString = [];
+camerasInitPosition();
 
 app.get('/', function (req, res) {
   res.sendfile(__dirname + '/index.html');
@@ -30,7 +34,6 @@ io.on('connection', function (socket) {
 
   //send new client to other clients
   alertJoin(socket.id);
-  camerasInitPosition();
   nIntervId = setInterval(camerasRotate, 33);
 
   socket.on('client', function (data) {
@@ -68,20 +71,36 @@ io.on('connection', function (socket) {
  
 function camerasRotate() {
   for(var x = 0; x < 10; x++) {
-    if(cameraRotArray[x] + 0.314159265 < Math.PI*2){
-      cameraRotArray[x] += 0.0104719/2;
-      cameraRotArrayString[x] = cameraRotArray[x].toFixed(2).toString();
+    if(reverse == false){
+      if(curVal < Math.PI){
+        curVal += 0.0104719/8;
+        cameraRotArray[x] = curVal - Math.PI/2 - .1;
+        cameraRotArrayString[x] = cameraRotArray[x].toFixed(2).toString();
+      } else {
+        reverse = true; 
+        curVal = 0;
+        cameraRotArray[x] = 3/2 * Math.PI;
+        cameraRotArrayString[x] = cameraRotArray[x].toFixed(2).toString();
+      }
     } else {
-      cameraRotArray[x]  = 0;
-      cameraRotArrayString[x] = cameraRotArray[x].toFixed(2).toString();
+      if(curVal < Math.PI){
+        curVal += 0.0104719/8;
+        cameraRotArray[x] = Math.PI/2 - .1 - curVal ;
+        cameraRotArrayString[x] = cameraRotArray[x].toFixed(2).toString();
+      } else {
+        reverse = false; 
+        curVal = 0;
+        cameraRotArray[x] = 3/2 * Math.PI;
+        cameraRotArrayString[x] = cameraRotArray[x].toFixed(2).toString();
+      }
     }
   }
 }
 
 function camerasInitPosition() {
   for(var x = 0; x < 10; x++) {
-    cameraRotArray[x] = 0;
-    cameraRotArrayString[x] = "0"
+    cameraRotArray[x] = 3/2 * Math.PI;
+    cameraRotArrayString[x] = cameraRotArray[x].toString();
   }
 }
 
