@@ -253,6 +253,7 @@
 		}
 
 		stage.addChild(consoleT);
+		stage.addChild(consoleTT);
 
 		initCharacters();
 
@@ -269,11 +270,11 @@
 
 		updateState();
 
-		consoleT.setText((stage.getMousePosition().x).toFixed(2) + ", " + (stage.getMousePosition().y).toFixed(2));
+		//consoleT.setText((stage.getMousePosition().x).toFixed(2) + ", " + (stage.getMousePosition().y).toFixed(2));
 
 
 		consoleT.setText(currentMousePos.x.toFixed(2)  + ", " + currentMousePos.y.toFixed(2));
-		consoleTT.setText("local" + localChar.position.x  + ", " + localChar.position.y);
+		consoleTT.setText("local" + localChar.charSprite.position.x  + ", " + localChar.charSprite.position.y);
 
 		/* Update the cameras */
 		for(var i = 0; i < cameraList.length; i++) {

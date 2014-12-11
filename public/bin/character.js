@@ -64,6 +64,7 @@ Character.prototype.setPosition= function(x, y) {
 		this.thisName.position.y = y - 45;
 };
 
+
 Character.prototype.getState= function() { 
 	
 	//Create JSON for char
