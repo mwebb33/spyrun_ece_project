@@ -26,6 +26,6 @@
     "passport-local": "*",
     "process": "*",
     "socket.io": "^1.2.1",
-    "static-favicon": "~1.0.0",
+    "static-favicon": "~1.0.0"
   }
 }
