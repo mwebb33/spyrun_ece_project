@@ -223,7 +223,8 @@
 		window.addEventListener("touchend", onTouchEnd, true);
 		window.addEventListener("touchmove", onTouchMove, true);
 		
-
+		console.log(stage.getMousePosition());
+		
 		function onTouchStart(event){
 			currentMousePos.x = event.pageX;
 			currentMousePos.y = event.pageY;
@@ -257,7 +258,7 @@
 		updateState();
 
 		console.log(currentMousePos);
-		
+
 		/* Update the cameras */
 		for(var i = 0; i < cameraList.length; i++) {
 			cameraList[i].setCameraRotation(cameraRotArray[i]);
