@@ -190,9 +190,9 @@ Character.prototype.updatePosition = function() {
 				}
 			} else {
 				if(currentMousePos.y - this.charSprite.position.y){
-					this.translation(0,-2);
-				} else {
 					this.translation(0,2);
+				} else {
+					this.translation(0,-2);
 				}
 			}
 		}
