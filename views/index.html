@@ -231,6 +231,11 @@
 			cameraList[i].getShadowLines();
 		}
 
+		var collision = gameBoard.detectCollision(localChar.charSprite.position.x, localChar.charSprite.position.y, 75, 75);	
+		if(collision == 2) {
+			localChar.setPosition(125,95);
+		}
+
 		localChar.sendState();
 
 		renderer.render(stage);

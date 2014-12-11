@@ -193,11 +193,21 @@ GameBoard.prototype.drawLine = function(x1, y1, x2, y2, value) {
 	var y_int = (y - (x * slope));
 	var offset = 1;
 
-	/*var line = new PIXI.Graphics();
-	line.lineStyle(12, 0x0F0F0F);
-	line.moveTo(x1, y1);
-	line.lineTo(x2, y2);
-	gameContainer.addChild(line);*/
+	/*if(value == 2){
+		var line = new PIXI.Graphics();
+		line.lineStyle(12, 0x0F0F0F);
+		line.moveTo(x1, y1);
+		line.lineTo(x2, y2);
+		gameContainer.addChild(line);
+	}	
+
+	else if(value == 0){
+		var line = new PIXI.Graphics();
+		line.lineStyle(12, 0xFFFFFF);
+		line.moveTo(x1, y1);
+		line.lineTo(x2, y2);
+		gameContainer.addChild(line);
+	}*/
 
 
 	if(Math.abs(slope) == Number.POSITIVE_INFINITY) {

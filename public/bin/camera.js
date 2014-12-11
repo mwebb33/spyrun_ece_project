@@ -13,8 +13,11 @@ var Camera = function(cameraSprite) {
 
 	this.old_x;
 	this.old_y;
-	this.old_mid_x;
-	this.old_mid_y;
+	this.old_mid_x1;
+	this.old_mid_y1;
+	this.old_mid_x2;
+	this.old_mid_y2;
+	this.num = 0;
 };
 
 
@@ -75,29 +78,77 @@ Camera.prototype.getShadowLines = function(GameBoard) {
 	/* Create a point to reference the camera's position */
 	var reference = new PIXI.Point(0,0);
 	var diff = this.shadow.toGlobal(reference);
+	
+	if (this.sprite.pivot.x == 0) {
+		/* Get the current point of the shadow */
+		var x = this.shadow.position.x;
+		var y = this.shadow.position.y;
+		//var x = diff.x + x;
+		//var y = diff.y + y;
 
-	/* Get the current point of the shadow */
-	var x = this.shadow.position.x;
-	var y = this.shadow.position.y;
+		var x = x + (Math.cos(this.shadow.rotation) * this.sprite.width);
+		var y = y + (Math.sin(this.shadow.rotation) * this.sprite.width);
 
-	var x = x - (Math.cos(this.shadow.rotation) * this.sprite.width);
-	var y = y - (Math.sin(this.shadow.rotation) * this.sprite.height);
-	//console.log(x + " " + y);
+		//console.log(x + " " + y);
 
-	/* Find the new end points for the shadow */
-	var shadowAngle = Math.tan((this.shadowWidth/2)/this.shadowHeight);
-	//shadowAngle = (shadowAngle * Math.PI)/180; //Convert to radians -- already in radians!
-	var mid_x = (Math.cos(shadowAngle + this.shadow.rotation) * this.shadowHeight) + x;
- 	var mid_y = (Math.sin(shadowAngle + this.shadow.rotation) * this.shadowWidth) + y;
+		/* Find the new end points for the shadow */
+		var shadowAngle = Math.atan((this.shadowWidth/2)/this.shadowHeight);
+		//shadowAngle = (shadowAngle * Math.PI)/180; //Convert to radians -- already in radians!
 
- 	/* Now update the GameBoard */
- 	gameBoard.drawLine(Math.floor(this.old_x), Math.floor(this.old_y), Math.floor(this.old_mid_x), Math.floor(this.old_mid_y), 0);
- 	gameBoard.drawLine(Math.floor(x), Math.floor(y), Math.floor(mid_x), Math.floor(mid_y), 2);
+
+		var mid_x1 = (Math.cos(shadowAngle + this.shadow.rotation) * this.shadowHeight) + x;
+ 		var mid_y1 = (Math.sin(shadowAngle + this.shadow.rotation) * this.shadowHeight) + y;
+
+ 		var mid_x2 = (Math.cos(-shadowAngle + this.shadow.rotation) * this.shadowHeight) + x;
+ 		var mid_y2 = (Math.sin(-shadowAngle + this.shadow.rotation) * this.shadowHeight) + y;
+
+ 	}
+
+ 	else if(this.sprite.pivot.x == this.sprite.width){
+
+		///Get the current point of the shadow 
+		var x = this.shadow.position.x;
+		var y = this.shadow.position.y;
+		//var x = diff.x + x;
+		//var y = diff.y + y;
+
+		var x = x - (Math.cos(this.shadow.rotation) * this.sprite.width);
+		var y = y - (Math.sin(this.shadow.rotation) * this.sprite.width);
+
+		//console.log(x + " " + y);
+
+		// Find the new end points for the shadow 
+		var shadowAngle = -Math.tan((this.shadowWidth/2)/this.shadowHeight);
+		//shadowAngle = (shadowAngle * Math.PI)/180; //Convert to radians -- already in radians!
+
+
+		var mid_x1 = -(Math.cos(shadowAngle + this.shadow.rotation) * this.shadowHeight) + x;
+ 		var mid_y1 = -(Math.sin(shadowAngle + this.shadow.rotation) * this.shadowHeight) + y;
+
+ 		var mid_x2 = -(Math.cos(-shadowAngle + this.shadow.rotation) * this.shadowHeight) + x;
+ 		var mid_y2 = -(Math.sin(-shadowAngle + this.shadow.rotation) * this.shadowHeight) + y;
+ 	}
+
+
+
+ 		if(this.num % 2 == 0){
+ 			gameBoard.drawLine(Math.floor(x), Math.floor(y), Math.floor(mid_x1), Math.floor(mid_y1), 2);
+ 			gameBoard.drawLine(Math.floor(x), Math.floor(y), Math.floor(mid_x2), Math.floor(mid_y2), 2);
+ 			this.num += 1;
+ 		}
+ 		else{
+ 			gameBoard.drawLine(Math.floor(this.old_x), Math.floor(this.old_y), Math.floor(this.old_mid_x1), Math.floor(this.old_mid_y1), 0);
+ 			gameBoard.drawLine(Math.floor(this.old_x), Math.floor(this.old_y), Math.floor(this.old_mid_x2), Math.floor(this.old_mid_y2), 0);
+			this.num -= 1; 	
+ 		}
+
 
  	this.old_x = x;
  	this.old_y = y;
- 	this.old_mid_x = mid_x;
- 	this.old_mid_y = mid_y;
+ 	this.old_mid_x1 = mid_x1;
+ 	this.old_mid_y1 = mid_y1;
+ 	this.old_mid_x2 = mid_x2;
+ 	this.old_mid_y2 = mid_y2;
 };
 
 
@@ -124,10 +175,19 @@ Camera.prototype.drawCamera = function(cameraInfo, index) {
 		this.shadow.pivot.y = cameraInfo.position[index][1];
 
 		/* Now add the shadow lines for detection */
-		gameBoard.drawLine(this.shadow.position.x, this.shadow.position.y, this.shadow.position.x + this.shadowHeight, this.shadow.position.y + this.shadowWidth, 2);
+		//gameBoard.drawLine(this.shadow.position.x, this.shadow.position.y, this.shadow.position.x + this.shadowHeight, this.shadow.position.y + this.shadowWidth, 2);
+		//gameBoard.drawLine(this.shadow.position.x, this.shadow.position.y, this.shadow.position.x + this.shadowHeight, this.shadow.position.y - this.shadowWidth, 2);
+
+		this.old_x = this.shadow.position.x;
+		this.old_y = this.shadow.position.y;
+		this.old_mid_x1 = this.shadow.position.x + this.shadowHeight;
+		this.old_mid_y1 = this.shadow.position.y + this.shadowWidth;
+		this.old_mid_x2 = this.shadow.position.x + this.shadowHeight;
+		this.old_mid_y2 = this.shadow.position.y - this.shadowWidth;
 	}
 	else if(levelMaps.Cameras[0].pivot[index] == this.sprite.width) {
 
+		//this.rotationAmount = -this.rotationAmount;
 		/* Change the camera's pivot point since we're looking to the left */
 		this.sprite.pivot.x = this.sprite.width;
 		
@@ -143,15 +203,26 @@ Camera.prototype.drawCamera = function(cameraInfo, index) {
 		this.shadow.pivot.y = cameraInfo.position[index][1];
 
 		/* Now add the shadow lines for detection */
-		gameBoard.drawLine(this.shadow.position.x + this.shadowHeight, this.shadow.position.y + this.shadowWidth, this.shadow.position.x, this.shadow.position.y, 2);
+		//gameBoard.drawLine(this.shadow.position.x, this.shadow.position.y, this.shadow.position.x - this.shadowHeight, this.shadow.position.y + this.shadowWidth, 2);
+		//gameBoard.drawLine(this.shadow.position.x, this.shadow.position.y, this.shadow.position.x - this.shadowHeight, this.shadow.position.y - this.shadowWidth, 2);
+
+		/*this.old_x = this.shadow.position.x;
+		this.old_y = this.shadow.position.y;
+		this.old_mid_x1 = this.shadow.position.x - this.shadowHeight;
+		this.old_mid_y1 = this.shadow.position.y + this.shadowWidth;
+		this.old_mid_x2 = this.shadow.position.x - this.shadowHeight;
+		this.old_mid_y2 = this.shadow.position.y - this.shadowWidth;*/
 	}
 	console.log(this.shadowWidth)
 
 	/* Remember the old coordinates so we can remove them later */
-	this.old_x = this.shadow.position.x;
+	/*this.old_x = this.shadow.position.x;
 	this.old_y = this.shadow.position.y;
-	this.old_mid_x = this.shadow.position.x + this.shadowHeight;
-	this.old_mid_y = this.shadow.position.y + this.shadowWidth;
+	this.old_mid_x1 = this.shadow.position.x + this.shadowHeight;
+	this.old_mid_y1 = this.shadow.position.y + this.shadowWidth;
+	this.old_mid_x2 = this.shadow.position.x + this.shadowHeight;
+	this.old_mid_y2 = this.shadow.position.y + this.shadowWidth;*/
+
 
 	this.shadow.endFill();
 }
