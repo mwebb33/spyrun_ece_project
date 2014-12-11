@@ -162,13 +162,13 @@ Character.prototype.updatePosition = function() {
 		key.isDown(key.DOWN),key.isDown(key.UP));
 
 	if(dirRight && dirUp){
-		this.translation(1,-1);
+		this.translation(2,-2);
 	} else if(dirLeft && dirUp) {
-		this.translation(-1,-1);
+		this.translation(-2,-2);
 	} else if(dirLeft && dirDown) {
-		this.translation(-1,1);
+		this.translation(-2,2);
 	} else if(dirRight && dirDown) {
-		this.translation(1,1);
+		this.translation(2,2);
 	} else if(dirLeft){
 		this.translation(-2,0);
 	} else if(dirUp) {
