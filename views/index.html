@@ -133,6 +133,8 @@
     var key = new Key();
     var levelMaps = JSON.parse(Levels);
 
+    var temp = 0;
+
     stage.addChild(gameContainer);
 
     document.body.appendChild(renderer.view);
@@ -226,12 +228,15 @@
 		addCharacters();
 
 		/* Update the cameras */
-		for(var i = 0; i < cameraList.length; i++) {
-			cameraList[i].updatePosition();
-			cameraList[i].getShadowLines();
+		if(temp % 2) {
+			for(var i = 0; i < cameraList.length; i++) {
+				cameraList[i].updatePosition();
+				cameraList[i].getShadowLines();
+			}
 		}
+		temp++;
 
-		var collision = gameBoard.detectCollision(localChar.charSprite.position.x, localChar.charSprite.position.y, 75, 75);	
+		var collision = gameBoard.detectCollision(localChar.charSprite.position.x, localChar.charSprite.position.y, 35, 40);	
 		if(collision == 2) {
 			localChar.setPosition(125,95);
 		}
