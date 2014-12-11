@@ -229,13 +229,10 @@
 
 
 		/* Update the cameras */
-		if(temp % 2) {
-			for(var i = 0; i < cameraList.length; i++) {
-				cameraList[i].setCameraRotation(cameraRotArray[i]);
-				cameraList[i].getShadowLines();
-			}
+		for(var i = 0; i < cameraList.length; i++) {
+			cameraList[i].setCameraRotation(cameraRotArray[i]);
+			cameraList[i].getShadowLines();
 		}
-		temp++;
 
 		var collision = gameBoard.detectCollision(localChar.charSprite.position.x, localChar.charSprite.position.y, 35, 40);	
 		if(collision == 2) {
