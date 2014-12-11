@@ -56,7 +56,7 @@ Camera.prototype.getPosition_y = function() {
 	return this.sprite.position.y;
 };
 
-
+//DEPERCIATED//
 Camera.prototype.updatePosition = function() {
 
 	/* Update the shadow and camera position on the map */	
@@ -68,6 +68,14 @@ Camera.prototype.updatePosition = function() {
 		this.rotationAmount = -this.rotationAmount;
 		this.rotationNum = 0;
 	}
+};
+
+Camera.prototype.setCameraRotation = function(rotationAngle) {
+
+	/* Update the shadow and camera position on the map */	
+	//console.log(this.shadow.position);
+	this.sprite.rotation = rotationAngle;
+	this.shadow.rotation = rotationAngle;
 };
 
 /**

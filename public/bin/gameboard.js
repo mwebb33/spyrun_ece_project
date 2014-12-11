@@ -145,9 +145,6 @@ GameBoard.prototype.setCameras = function(levelMaps, gameContainer, cameraList) 
 		camera.drawCamera(cameraInfo, i);
 		gameContainer.addChild(camera.shadow);
 
-
-
-
 		//graphics.beginFill(0xFFFF0B, .5);
 
 		/* Check the starting orientation of the camera (right/left) */
@@ -227,8 +224,10 @@ GameBoard.prototype.drawLine = function(x1, y1, x2, y2, value) {
 			offset = -1;
 
 		while(x != x2) {
-			this.board[x][y] = value;
-			x += 1;
+			//if((x < WIDTH - 1) && (x >= 0) && (y < HEIGHT) && (y >= 0)){
+				this.board[x][y] = value;
+				x += 1;
+			//}
 		}
 	}
 	else {

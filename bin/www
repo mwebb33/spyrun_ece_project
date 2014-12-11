@@ -9,10 +9,13 @@ server.listen(app.get('port'));
 
 var obj = new Object();
 var charState; 
+var cameraClock; 
 
 var sockets = {};
 var serverClients = {};
 var connectionIDCounter = 0;
+cameraRotArray = [];
+cameraRotArrayString = [];
 
 app.get('/', function (req, res) {
   res.sendfile(__dirname + '/index.html');
@@ -27,12 +30,14 @@ io.on('connection', function (socket) {
 
   //send new client to other clients
   alertJoin(socket.id);
+  camerasInitPosition();
+  nIntervId = setInterval(camerasRotate, 33);
 
   socket.on('client', function (data) {
     var clientMsg = JSON.parse(data);
     obj[socket.id] = data;
+    obj.cameras = cameraRotArrayString;
     charState = JSON.stringify(obj);
-
     //send new state to clients
     propigate();
   });
@@ -60,6 +65,25 @@ io.on('connection', function (socket) {
     alertDrop(socket.id);
   });
 });
+ 
+function camerasRotate() {
+  for(var x = 0; x < 10; x++) {
+    if(cameraRotArray[x] + 0.314159265 < Math.PI*2){
+      cameraRotArray[x] += 0.0104719/2;
+      cameraRotArrayString[x] = cameraRotArray[x].toFixed(2).toString();
+    } else {
+      cameraRotArray[x]  = 0;
+      cameraRotArrayString[x] = cameraRotArray[x].toFixed(2).toString();
+    }
+  }
+}
+
+function camerasInitPosition() {
+  for(var x = 0; x < 10; x++) {
+    cameraRotArray[x] = 0;
+    cameraRotArrayString[x] = "0"
+  }
+}
 
 function propigate() {
   //console.log("hi");

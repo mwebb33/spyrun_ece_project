@@ -30,11 +30,6 @@
 		<p id="highscore_p">Previous Best: <%= highscore %></p>
 	</div>
 
-    <!-- <button id="authorize-button" style="visibility: hidden">Authorize</button>
-	<script src="https://apis.google.com/js/client.js?onload=handleClientLoad"></script>
-    <button id="logoutbutton">Log out</button>
-    -->
-
     <form id="myForm" autocomplete="off" onkeypress="return event.keyCode != 13;"> <input type="text" id="myText" value=""></form>
     	<button onclick="enteredName()">Submit</button>
 	<br>
@@ -42,8 +37,8 @@
     <script>
 
     var localChar;
-    var otherChars = {};
-    var globalCharNames = {};
+    var otherChars = [];
+    var globalCharNames = [];
     var cameraList = [];
     
     var state; 
@@ -121,6 +116,8 @@
 
     /* Array for all of the camera objects */
     var cameraList = [];
+    var cameraRotArrayStrings = [];
+    var cameraRotArray = [];
 
 	var stage = new PIXI.Stage(0xF8F8F8);
 	var renderer = PIXI.autoDetectRenderer(WIDTH, HEIGHT);
@@ -142,50 +139,47 @@
 		localChar.updateName(clientName);
 	}
 
-	function addCharacters() {
+	function updateState() {
+		updating = true;
 		try{
 			var json = JSON.parse(state);
 		} catch(err) {
 			console.log("Error JSON Parse");
 		}
 
-		for(var x = 0; x < 20; x++) 
-		{
-			otherChars[x].removeChar();
-		}
-
-		if(globalCharNames.length >= 20) {
-			for(var x = 20; x < 60; x++) 
-			{
-				otherChars[x] = new Character(spyWalkB , false);
-			}
-		}
-
-		if(globalCharNames.length >= 60) {
-			for(var x = 60; x < 200; x++) 
-			{
-				otherChars[x] = new Character(spyWalkB , false);
-			}
-		}
+		otherChars.forEach( function(entry) {
+			entry.removeChar();
+		}); 
 
 		for (prop in json) {
-		    if(prop != cID) {
+		    if(prop != cID && prop != "cameras") {
 				try{
 					var charJson = JSON.parse(json[prop]);
 				} catch(err) {
 					console.log("Error JSON Parse");
 				}
 
+				if (otherChars[prop] == undefined) {
+					otherChars[prop] = new Character(spyWalkB , false);
+				}
+
 				otherChars[prop].addChar();
 		    	otherChars[prop].JSONupdate(charJson);
+		    } else if (prop == "cameras"){
+				cameraRotArrayStrings = json[prop];
+				cameraRotArray = cameraRotArrayStrings.map(parseFloat)
 		    }
 		}
+		updating = false;
 	}
 
 	function initCharacters() {
-		for(var x = 0; x < 20; x++) 
+		for(var x = 0; x < 5; x++) 
 		{
 			otherChars[x] = new Character(spyWalkB , false);
+		}
+		for(var x = 0; x < 20; x++) {
+			cameraRotArray[x] = 0; 
 		}
 	}
 
@@ -229,12 +223,14 @@
 
 		localChar.updatePosition();
 
-		addCharacters();
+		updateState();
 
-		/* Update the cameras */
-		for(var i = 0; i < cameraList.length; i++) {
-			cameraList[i].updatePosition();
-			cameraList[i].getShadowLines();
+		if(updating == false){
+			/* Update the cameras */
+			for(var i = 0; i < cameraList.length; i++) {
+				cameraList[i].setCameraRotation(cameraRotArray[i]);
+				cameraList[i].getShadowLines();
+			}
 		}
 
 		var collision = gameBoard.detectCollision(localChar.charSprite.position.x, localChar.charSprite.position.y, 75, 75);	
