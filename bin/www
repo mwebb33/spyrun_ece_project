@@ -35,6 +35,7 @@ io.on('connection', function (socket) {
   //send new client to other clients
   alertJoin(socket.id);
   nIntervId = setInterval(camerasRotate, 33);
+  nIntervIdProp = setInterval(propigate, 33);
 
   socket.on('client', function (data) {
     var clientMsg = JSON.parse(data);
@@ -42,7 +43,6 @@ io.on('connection', function (socket) {
     obj.cameras = cameraRotArrayString;
     charState = JSON.stringify(obj);
     //send new state to clients
-    propigate();
   });
 
   socket.on('init', function (data) {
