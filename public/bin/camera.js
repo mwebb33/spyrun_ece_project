@@ -86,6 +86,7 @@ Camera.prototype.getShadowLines = function(GameBoard) {
 	/* Create a point to reference the camera's position */
 	var reference = new PIXI.Point(0,0);
 	var diff = this.shadow.toGlobal(reference);
+	var height = this.shadowHeight - 70;
 	
 	if (this.sprite.pivot.x == 0) {
 		/* Get the current point of the shadow */
@@ -104,11 +105,12 @@ Camera.prototype.getShadowLines = function(GameBoard) {
 		//shadowAngle = (shadowAngle * Math.PI)/180; //Convert to radians -- already in radians!
 
 
-		var mid_x1 = (Math.cos(shadowAngle + this.shadow.rotation) * this.shadowHeight) + x;
- 		var mid_y1 = (Math.sin(shadowAngle + this.shadow.rotation) * this.shadowHeight) + y;
+		var mid_x1 = (Math.cos(shadowAngle + this.shadow.rotation) * height) + x;
+ 		var mid_y1 = (Math.sin(shadowAngle + this.shadow.rotation) * height) + y;
 
- 		var mid_x2 = (Math.cos(-shadowAngle + this.shadow.rotation) * this.shadowHeight) + x;
- 		var mid_y2 = (Math.sin(-shadowAngle + this.shadow.rotation) * this.shadowHeight) + y;
+
+ 		var mid_x2 = (Math.cos(-shadowAngle + this.shadow.rotation) * height) + x;
+ 		var mid_y2 = (Math.sin(-shadowAngle + this.shadow.rotation) * height) + y;
 
  	}
 
@@ -130,11 +132,11 @@ Camera.prototype.getShadowLines = function(GameBoard) {
 		//shadowAngle = (shadowAngle * Math.PI)/180; //Convert to radians -- already in radians!
 
 
-		var mid_x1 = -(Math.cos(shadowAngle + this.shadow.rotation) * this.shadowHeight) + x;
- 		var mid_y1 = -(Math.sin(shadowAngle + this.shadow.rotation) * this.shadowHeight) + y;
+		var mid_x1 = -(Math.cos(shadowAngle + this.shadow.rotation) * height) + x;
+ 		var mid_y1 = -(Math.sin(shadowAngle + this.shadow.rotation) * height) + y;
 
- 		var mid_x2 = -(Math.cos(-shadowAngle + this.shadow.rotation) * this.shadowHeight) + x;
- 		var mid_y2 = -(Math.sin(-shadowAngle + this.shadow.rotation) * this.shadowHeight) + y;
+ 		var mid_x2 = -(Math.cos(-shadowAngle + this.shadow.rotation) * height) + x;
+ 		var mid_y2 = -(Math.sin(-shadowAngle + this.shadow.rotation) * height) + y;
  	}
 
 
@@ -171,6 +173,8 @@ Camera.prototype.drawCamera = function(cameraInfo, index) {
 	/* Check the starting orientation of the camera (right/left) */
 	if(cameraInfo.pivot[index] == 0) {
 		
+		this.rotationNum = 56;
+		this.rotationTicks = 112
 		/* Draw the shadow on the map */
 		this.shadow.moveTo(cameraInfo.position[index][0] + this.sprite.width, cameraInfo.position[index][1]);
 		this.shadow.lineTo(cameraInfo.position[index][0] + cameraInfo.height[index], cameraInfo.position[index][1] + cameraInfo.width[index]);

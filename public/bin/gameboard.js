@@ -204,7 +204,13 @@ GameBoard.prototype.drawLine = function(x1, y1, x2, y2, value) {
 		line.moveTo(x1, y1);
 		line.lineTo(x2, y2);
 		gameContainer.addChild(line);
-	}*/
+	}
+
+	/*var line = new PIXI.Graphics();
+	line.lineStyle(12, 0x0F0F0F);
+	line.moveTo(x1, y1);
+	line.lineTo(x2, y2);
+	gameContainer.addChild(line);*/
 
 
 	if(Math.abs(slope) == Number.POSITIVE_INFINITY) {
@@ -224,10 +230,8 @@ GameBoard.prototype.drawLine = function(x1, y1, x2, y2, value) {
 			offset = -1;
 
 		while(x != x2) {
-			//if((x < WIDTH - 1) && (x >= 0) && (y < HEIGHT) && (y >= 0)){
-				this.board[x][y] = value;
-				x += 1;
-			//}
+			this.board[x][y] = value;
+			x += offset;
 		}
 	}
 	else {
@@ -236,6 +240,7 @@ GameBoard.prototype.drawLine = function(x1, y1, x2, y2, value) {
 			offset = -1;
 
 		while(x != x2) {
+			this.board[x][y] = value;
 			x += offset;
 			y = Math.floor((x*slope) + y_int);
 		}
