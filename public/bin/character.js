@@ -150,6 +150,10 @@ Character.prototype.getPosition_y = function() {
 };
 
 Character.prototype.updatePosition = function() {
+	var dirLeft = key.isDown(key.LEFT);
+	var dirRight = key.isDown(key.RIGHT);
+	var dirDown = key.isDown(key.DOWN);
+	var dirUp = key.isDown(key.UP);
 
 	this.rotateCardinal(key.isDown(key.LEFT),key.isDown(key.RIGHT),
 		key.isDown(key.DOWN),key.isDown(key.UP));
@@ -157,16 +161,21 @@ Character.prototype.updatePosition = function() {
 	this.updateAnimationState(key.isDown(key.LEFT),key.isDown(key.RIGHT),
 		key.isDown(key.DOWN),key.isDown(key.UP));
 
-	if(key.isDown(key.LEFT)){
+	if(dirRight && dirUp){
+		this.translation(1,-1);
+	} else if(dirLeft && dirUp) {
+		this.translation(-1,-1);
+	} else if(dirLeft && dirDown) {
+		this.translation(-1,1);
+	} else if(dirRight && dirDown) {
+		this.translation(1,1);
+	} else if(dirLeft){
 		this.translation(-2,0);
-	}
-	if(key.isDown(key.UP)) {
+	} else if(dirUp) {
 		this.translation(0,-2);
-	}
-	if(key.isDown(key.DOWN)) {
+	} else if(dirDown) {
 		this.translation(0,2);
-	}
-	if(key.isDown(key.RIGHT)) {
+	} else if(dirRight) {
 		this.translation(2,0);
 	}
 };
