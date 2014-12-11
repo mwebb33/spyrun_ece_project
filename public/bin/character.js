@@ -163,11 +163,11 @@ Character.prototype.updatePosition = function() {
 		if(this.charSprite.position.y - currentMousePos.y < -3) dirDown = true;
 	}
 
-	this.rotateCardinal(key.isDown(key.LEFT),key.isDown(key.RIGHT),
-		key.isDown(key.DOWN),key.isDown(key.UP));
+	this.rotateCardinal(dirLeft,dirRight,
+		dirDown,dirUp);
 
-	this.updateAnimationState(key.isDown(key.LEFT),key.isDown(key.RIGHT),
-		key.isDown(key.DOWN),key.isDown(key.UP));
+	this.updateAnimationState(dirLeft,dirRight,
+		dirDown,dirUp);
 
 	if(dirRight && dirUp){
 		this.translation(2,-2);

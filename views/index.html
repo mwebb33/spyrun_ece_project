@@ -7,6 +7,7 @@
             margin: 0;
             padding: 0;
             background-color: #000000;
+            orient="landscape";
         }
     </style>
 
@@ -230,6 +231,8 @@
 			key.onKeyUp(event.keyCode); 
 		});
 
+		//for ipad
+		window.scrollTo(0, 1);
 	
 		window.addEventListener("touchstart", onTouchStart, true);
 		window.addEventListener("touchend", onTouchEnd, true);
@@ -252,8 +255,9 @@
 			touched = false;
 		}
 
-		stage.addChild(consoleT);
-		stage.addChild(consoleTT);
+		//comment out console code
+		//stage.addChild(consoleT);
+		//stage.addChild(consoleTT);
 
 		initCharacters();
 
