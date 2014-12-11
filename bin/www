@@ -20,6 +20,8 @@ var reverse = false;
 cameraRotArray = [];
 cameraRotArrayString = [];
 camerasInitPosition();
+nIntervId = setInterval(camerasRotate, 33);
+nIntervIdProp = setInterval(propigate, 33);
 
 app.get('/', function (req, res) {
   res.sendfile(__dirname + '/index.html');
@@ -34,8 +36,6 @@ io.on('connection', function (socket) {
 
   //send new client to other clients
   alertJoin(socket.id);
-  nIntervId = setInterval(camerasRotate, 33);
-  nIntervIdProp = setInterval(propigate, 33);
 
   socket.on('client', function (data) {
     var clientMsg = JSON.parse(data);
