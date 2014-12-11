@@ -184,16 +184,16 @@ Character.prototype.updatePosition = function() {
 			if(Math.abs(this.charSprite.position.x - currentMousePos.x) > Math.abs(this.charSprite.position.y - currentMousePos.y))
 			{
 				//go x
-				if(currentMousePos.x - this.charSprite.position.x) {
+				if(currentMousePos.x - this.charSprite.position.x > 0) {
 					this.translation(2,0);
 				} else {
 					this.translation(-2,0);
 				}
 			} else {
-				if(currentMousePos.y - this.charSprite.position.y){
-					this.translation(0,2);
-				} else {
+				if(currentMousePos.y - this.charSprite.position.y > 0){
 					this.translation(0,-2);
+				} else {
+					this.translation(0, 2);
 				}
 			}
 		}
