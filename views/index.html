@@ -36,6 +36,11 @@
 
     <script>
 
+    //Code from http://www.html5gamedevs.com/topic/6447-getting-touch-position/
+    var currentMousePos = { x: -1, y: -1 };
+    var touched = false;
+	////
+
     var localChar;
     var otherChars = [];
     var globalCharNames = [];
@@ -208,9 +213,33 @@
 		window.addEventListener('keydown', function(event) { 
 			key.onKeyDown(event.keyCode);
 		});
+
 		window.addEventListener('keyup', function(event) { 
 			key.onKeyUp(event.keyCode); 
 		});
+
+	
+		window.addEventListener("touchstart", onTouchStart, true);
+		window.addEventListener("touchend", onTouchEnd, true);
+		window.addEventListener("touchmove", onTouchMove, true);
+		
+
+		function onTouchStart(event){
+			currentMousePos.x = event.pageX;
+			currentMousePos.y = event.pageY;
+			touched = true;
+		}
+
+		function onTouchMove(event){
+			currentMousePos.x = event.pageX;
+			currentMousePos.y = event.pageY;
+		}
+
+		function onTouchEnd(event){
+			currentMousePos.x = event.pageX;
+			currentMousePos.y = event.pageY;
+			touched = false;
+		}
 
 		initCharacters();
 
@@ -227,7 +256,8 @@
 
 		updateState();
 
-
+		console.log(currentMousePos);
+		
 		/* Update the cameras */
 		for(var i = 0; i < cameraList.length; i++) {
 			cameraList[i].setCameraRotation(cameraRotArray[i]);

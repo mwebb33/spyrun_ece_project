@@ -11,8 +11,8 @@ var Character = function(spyWalk , render) {
 	this.charSprite.children[0].x = 0;
 	this.charSprite.children[0].y = 0;
 	this.charSprite.pivot = new PIXI.Point(32,32);
-	this.charSprite.buttonMode = true;
-	this.charSprite.interactive = true;
+	this.charSprite.buttonMode = false;
+	this.charSprite.interactive = false;
 
 	this.thisName = new PIXI.Text(clientName, {font:"16px Consolas", fill:"white", align:"center"});
 	this.thisName.position.x = 120;
@@ -177,6 +177,25 @@ Character.prototype.updatePosition = function() {
 		this.translation(0,2);
 	} else if(dirRight) {
 		this.translation(2,0);
+	} else if(touched) {
+		if(Math.abs(this.charSprite.position.x - currentMousePos.x) > 2 && Math.abs(this.charSprite.position.y - currentMousePos.y) > 2)
+		{
+			if(Math.abs(this.charSprite.position.x - currentMousePos.x) > Math.abs(this.charSprite.position.y - currentMousePos.y))
+			{
+				//go x
+				if(currentMousePos.x - this.charSprite.position.x) {
+					this.translation(2,0);
+				} else {
+					this.translation(-2,0);
+				}
+			} else {
+				if(currentMousePos.y - this.charSprite.position.y){
+					this.translation(0,-2);
+				} else {
+					this.translation(0,2);
+				}
+			}
+		}
 	}
 };
 
