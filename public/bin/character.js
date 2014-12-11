@@ -156,6 +156,13 @@ Character.prototype.updatePosition = function() {
 	var dirDown = key.isDown(key.DOWN);
 	var dirUp = key.isDown(key.UP);
 
+	if(touched) {
+		if(this.charSprite.position.x - currentMousePos.x > 3)dirLeft = true;
+		if(this.charSprite.position.x - currentMousePos.x < -3)dirRight = true;
+		if(this.charSprite.position.y - currentMousePos.y > 3) dirUp = true;
+		if(this.charSprite.position.y - currentMousePos.y < -3) dirDown = true;
+	}
+
 	this.rotateCardinal(key.isDown(key.LEFT),key.isDown(key.RIGHT),
 		key.isDown(key.DOWN),key.isDown(key.UP));
 
@@ -178,25 +185,6 @@ Character.prototype.updatePosition = function() {
 		this.translation(0,2);
 	} else if(dirRight) {
 		this.translation(2,0);
-	} else if(touched) {
-		if(Math.abs(this.charSprite.position.x - currentMousePos.x) > 2 && Math.abs(this.charSprite.position.y - currentMousePos.y) > 2)
-		{
-			if(Math.abs(this.charSprite.position.x - currentMousePos.x) > Math.abs(this.charSprite.position.y - currentMousePos.y))
-			{
-				//go x
-				if(currentMousePos.x - this.charSprite.position.x > 0) {
-					this.translation(2,0);
-				} else {
-					this.translation(-2,0);
-				}
-			} else {
-				if(currentMousePos.y - this.charSprite.position.y > 0){
-					this.translation(0,2);
-				} else {
-					this.translation(0,-2);
-				}
-			}
-		}
 	}
 };
 
