@@ -236,19 +236,19 @@
 		window.addEventListener("touchmove", onTouchMove, true);
 
 		function onTouchStart(event){
-			currentMousePos.x = event.pageX;
-			currentMousePos.y = event.pageY + 100;
+			currentMousePos.x = event.pageX - 25;
+			currentMousePos.y = event.pageY - 160;
 			touched = true;
 		}
 
 		function onTouchMove(event){
-			currentMousePos.x = event.pageX;
-			currentMousePos.y = event.pageY + 100;
+			currentMousePos.x = event.pageX - 25;
+			currentMousePos.y = event.pageY - 160;
 		}
 
 		function onTouchEnd(event){
-			currentMousePos.x = event.pageX;
-			currentMousePos.y = event.pageY + 100;
+			currentMousePos.x = event.pageX - 25;
+			currentMousePos.y = event.pageY - 160;
 			touched = false;
 		}
 
