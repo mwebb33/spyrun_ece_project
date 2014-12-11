@@ -207,7 +207,7 @@ GameBoard.prototype.drawLine = function(x1, y1, x2, y2, value) {
 		line.moveTo(x1, y1);
 		line.lineTo(x2, y2);
 		gameContainer.addChild(line);
-	}*/
+	}
 
 	/*var line = new PIXI.Graphics();
 	line.lineStyle(12, 0x0F0F0F);
