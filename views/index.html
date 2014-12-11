@@ -264,7 +264,9 @@
 
 		updateState();
 
-		consoleT.setText((stage.getTouchPosition().x).toFixed(2) + ", " + (stage.getTouchPosition().y).toFixed(2));
+		//consoleT.setText((stage.getMousePosition().x).toFixed(2) + ", " + (stage.getMousePosition().y).toFixed(2));
+
+		consoleT.setText(currentMousePos.x.toFixed(2)  + ", " + currentMousePos.y.toFixed(2));
 
 		/* Update the cameras */
 		for(var i = 0; i < cameraList.length; i++) {
