@@ -100,6 +100,7 @@ Camera.prototype.getShadowLines = function(GameBoard) {
 		var mid_x1 = (Math.cos(shadowAngle + this.shadow.rotation) * height) + x;
  		var mid_y1 = (Math.sin(shadowAngle + this.shadow.rotation) * height) + y;
 
+
  		var mid_x2 = (Math.cos(-shadowAngle + this.shadow.rotation) * height) + x;
  		var mid_y2 = (Math.sin(-shadowAngle + this.shadow.rotation) * height) + y;
 
