@@ -191,9 +191,9 @@ Character.prototype.updatePosition = function() {
 				}
 			} else {
 				if(currentMousePos.y - this.charSprite.position.y > 0){
-					this.translation(0,-2);
+					this.translation(0,2);
 				} else {
-					this.translation(0, 2);
+					this.translation(0,-2);
 				}
 			}
 		}
