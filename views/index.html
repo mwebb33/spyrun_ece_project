@@ -36,6 +36,23 @@
 
     <script>
 
+
+    var consoleT = new PIXI.Text("Init", {font:"16px Consolas", fill:"white", align:"center"});
+		consoleT.position.x = 120;
+		consoleT.position.y = 20;
+		consoleT.anchor.set(0.5, 0);
+		consoleT.style.align = "center";
+	var consoleTT = new PIXI.Text("Init", {font:"16px Consolas", fill:"white", align:"center"});
+		consoleTT.position.x = 320;
+		consoleTT.position.y = 20;
+		consoleTT.anchor.set(0.5, 0);
+		consoleTT.style.align = "center";
+
+    //Code from http://www.html5gamedevs.com/topic/6447-getting-touch-position/
+    var currentMousePos = { x: -1, y: -1 };
+    var touched = false;
+	////
+
     var localChar;
     var otherChars = [];
     var globalCharNames = [];
@@ -215,9 +232,38 @@
 		window.addEventListener('keydown', function(event) { 
 			key.onKeyDown(event.keyCode);
 		});
+
 		window.addEventListener('keyup', function(event) { 
 			key.onKeyUp(event.keyCode); 
 		});
+
+		//for ipad
+		//window.scrollTo(0, 1);
+	
+		window.addEventListener("touchstart", onTouchStart, true);
+		window.addEventListener("touchend", onTouchEnd, true);
+		window.addEventListener("touchmove", onTouchMove, true);
+
+		function onTouchStart(event){
+			currentMousePos.x = event.pageX;
+			currentMousePos.y = event.pageY - 110;
+			touched = true;
+		}
+
+		function onTouchMove(event){
+			currentMousePos.x = event.pageX;
+			currentMousePos.y = event.pageY - 110;
+		}
+
+		function onTouchEnd(event){
+			currentMousePos.x = event.pageX;
+			currentMousePos.y = event.pageY - 110;
+			touched = false;
+		}
+
+		//comment out console code
+		//stage.addChild(consoleT);
+		//stage.addChild(consoleTT);
 
 		initCharacters();
 
@@ -235,6 +281,11 @@
 
 		localChar.updatePosition();
 		updateState();
+
+
+		//consoleT.setText((stage.getMousePosition().x).toFixed(2) + ", " + (stage.getMousePosition().y).toFixed(2));
+		//consoleT.setText(currentMousePos.x.toFixed(2)  + ", " + currentMousePos.y.toFixed(2));
+		//consoleTT.setText("local" + localChar.charSprite.position.x  + ", " + localChar.charSprite.position.y);
 
 		/* Update the cameras */
 		for(var i = 0; i < cameraList.length; i++) {

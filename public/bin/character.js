@@ -11,8 +11,8 @@ var Character = function(spyWalk , render) {
 	this.charSprite.children[0].x = 0;
 	this.charSprite.children[0].y = 0;
 	this.charSprite.pivot = new PIXI.Point(32,32);
-	this.charSprite.buttonMode = true;
-	this.charSprite.interactive = true;
+	this.charSprite.buttonMode = false;
+	this.charSprite.interactive = false;
 
 	this.thisName = new PIXI.Text(clientName, {font:"16px Consolas", fill:"white", align:"center"});
 	this.thisName.position.x = 120;
@@ -63,6 +63,7 @@ Character.prototype.setPosition= function(x, y) {
 		this.thisName.position.x = x - 5;
 		this.thisName.position.y = y - 45;
 };
+
 
 Character.prototype.getState= function() { 
 	
@@ -155,11 +156,18 @@ Character.prototype.updatePosition = function() {
 	var dirDown = key.isDown(key.DOWN);
 	var dirUp = key.isDown(key.UP);
 
-	this.rotateCardinal(key.isDown(key.LEFT),key.isDown(key.RIGHT),
-		key.isDown(key.DOWN),key.isDown(key.UP));
+	if(touched) {
+		if(this.charSprite.position.x - currentMousePos.x > 3)dirLeft = true;
+		if(this.charSprite.position.x - currentMousePos.x < -3)dirRight = true;
+		if(this.charSprite.position.y - currentMousePos.y > 3) dirUp = true;
+		if(this.charSprite.position.y - currentMousePos.y < -3) dirDown = true;
+	}
 
-	this.updateAnimationState(key.isDown(key.LEFT),key.isDown(key.RIGHT),
-		key.isDown(key.DOWN),key.isDown(key.UP));
+	this.rotateCardinal(dirLeft,dirRight,
+		dirDown,dirUp);
+
+	this.updateAnimationState(dirLeft,dirRight,
+		dirDown,dirUp);
 
 	if(dirRight && dirUp){
 		this.translation(2,-2);
