@@ -15,8 +15,11 @@ var sockets = {};
 var serverClients = {};
 var connectionIDCounter = 0;
 var curVal = 3/2 * Math.PI;
-var curValue = 3/2 * Math.PI;
+var curVal2 = 0;
+var curValue = 0;
 var reverse = false;
+var reverse2 = false;
+var reverse3 = false;
 
 cameraRotArray = [];
 cameraRotArrayString = [];
@@ -102,19 +105,65 @@ function camerasRotate() {
   }
   //console.log("hello");
   var x = 2;
-  if(curValue < Math.PI*2){
-    //console.log("hello");
-    curValue += 0.0104719*1.2;
-    cameraRotArray[x] = curValue - Math.PI/2 - .1;
-    cameraRotArrayString[x] = cameraRotArray[x].toFixed(2).toString();
-  }
-  else{
-    //console.log("hoooo");
-    curValue = 0;
-    cameraRotArray[x] = curValue ;
-    cameraRotArrayString[x] = cameraRotArray[x].toFixed(2).toString();
-  }
+    if(reverse2 == false){
+      if(curValue < Math.PI){
+        curValue += 0.0104719*2.5;
+        cameraRotArray[x] = Math.PI - .1 - curValue;
+        cameraRotArrayString[x] = cameraRotArray[x].toFixed(2).toString();
+      } 
+      else {
+        reverse2 = true; 
+        curValue = Math.PI;
+        cameraRotArray[x] = 0;
+        cameraRotArrayString[x] = cameraRotArray[x].toFixed(2).toString();
+      }
+    } 
+    else {
+      //console.log("hello");
+      if(curValue > 0){
+        curValue -= 0.0104719*2.5;
+        cameraRotArray[x] = Math.PI - .1 - curValue;
+        //cameraRotArray[x] = curValue - Math.PI - .1;
+        cameraRotArrayString[x] = cameraRotArray[x].toFixed(2).toString();
+      } 
+      else {
+        //console.log("hello");
+        reverse2 = false; 
+        curValue = 0;
+        cameraRotArray[x] = Math.PI;
+        cameraRotArrayString[x] = cameraRotArray[x].toFixed(2).toString();
+      }
+    }
 
+    var x = 3;
+    if(reverse3 == false){
+      if(curVal2 < Math.PI){
+        curVal2 += 0.0104719*2.5;
+        //cameraRotArray[x] = Math.PI - .1 - curVal2 ;
+        cameraRotArray[x] = curVal2 - Math.PI - .1;
+        cameraRotArrayString[x] = cameraRotArray[x].toFixed(2).toString();
+      } 
+      else {
+        reverse3 = true; 
+        curVal2 = Math.PI;
+        cameraRotArray[x] = 0;
+        cameraRotArrayString[x] = cameraRotArray[x].toFixed(2).toString();
+      }
+    } 
+    else {
+      if(curVal2 > 0){
+        curVal2 -= 0.0104719*2.5;
+        cameraRotArray[x] = curVal2 - Math.PI - .1;
+        //cameraRotArray[x] = Math.PI - .1 - curVal2 ;
+        cameraRotArrayString[x] = cameraRotArray[x].toFixed(2).toString();
+      } 
+      else {
+        reverse3 = false; 
+        curVal2 = 0;
+        cameraRotArray[x] = Math.PI;
+        cameraRotArrayString[x] = cameraRotArray[x].toFixed(2).toString();
+      }
+    }
 }
 
 function camerasInitPosition() {
