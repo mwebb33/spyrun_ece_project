@@ -74,7 +74,7 @@ function camerasRotate() {
   for(var x = 0; x < 2; x++) {
     if(reverse == false){
       if(curVal < Math.PI){
-        curVal += 0.0104719/3;
+        curVal += 0.0104719*1.2;
         cameraRotArray[x] = curVal - Math.PI/2 - .1;
         cameraRotArrayString[x] = cameraRotArray[x].toFixed(2).toString();
       } 
@@ -87,7 +87,7 @@ function camerasRotate() {
     } 
     else {
       if(curVal < Math.PI){
-        curVal += 0.0104719/3;
+        curVal += 0.0104719*1.2;
         cameraRotArray[x] = Math.PI/2 - .1 - curVal ;
         cameraRotArrayString[x] = cameraRotArray[x].toFixed(2).toString();
       } 
@@ -104,7 +104,7 @@ function camerasRotate() {
   var x = 2;
   if(curValue < Math.PI*2){
     //console.log("hello");
-    curValue += 0.0104719/3;
+    curValue += 0.0104719*1.2;
     cameraRotArray[x] = curValue - Math.PI/2 - .1;
     cameraRotArrayString[x] = cameraRotArray[x].toFixed(2).toString();
   }
