@@ -63,10 +63,12 @@ Camera.prototype.updatePosition = function() {
 	//console.log(this.shadow.position);
 	this.sprite.rotation += this.rotationAmount;
 	this.shadow.rotation += this.rotationAmount;
-	this.rotationNum += 1;
-	if(this.rotationNum > this.rotationTicks) {
-		this.rotationAmount = -this.rotationAmount;
-		this.rotationNum = 0;
+	if(this.sprite.pivot.x != 35){
+		this.rotationNum += 1;
+		if(this.rotationNum > this.rotationTicks) {
+			this.rotationAmount = -this.rotationAmount;
+			this.rotationNum = 0;
+		}
 	}
 };
 
@@ -139,6 +141,30 @@ Camera.prototype.getShadowLines = function(GameBoard) {
  		var mid_y2 = -(Math.sin(-shadowAngle + this.shadow.rotation) * height) + y;
  	}
 
+ 	else if(this.sprite.pivot.x == this.sprite.width/2){
+
+		///Get the current point of the shadow 
+		var x = this.shadow.position.x;
+		var y = this.shadow.position.y;
+		//var x = diff.x + x;
+		//var y = diff.y + y;
+
+		var x = x - (Math.cos(this.shadow.rotation) * this.sprite.width);
+		var y = y - (Math.sin(this.shadow.rotation) * this.sprite.width);
+
+		//console.log(x + " " + y);
+
+		// Find the new end points for the shadow 
+		var shadowAngle = Math.tan((this.shadowWidth/2)/this.shadowHeight);
+		//shadowAngle = (shadowAngle * Math.PI)/180; //Convert to radians -- already in radians!
+
+
+		var mid_x1 = -(Math.cos(shadowAngle + this.shadow.rotation) * height) + x;
+ 		var mid_y1 = -(Math.sin(shadowAngle + this.shadow.rotation) * height) + y;
+
+ 		var mid_x2 = -(Math.cos(-shadowAngle + this.shadow.rotation) * height) + x;
+ 		var mid_y2 = -(Math.sin(-shadowAngle + this.shadow.rotation) * height) + y;
+ 	}
 
 
  		if(this.num % 2 == 0){
@@ -171,10 +197,12 @@ Camera.prototype.drawCamera = function(cameraInfo, index) {
 
 	this.shadow.beginFill(0xFFFF0B, .5);
 	/* Check the starting orientation of the camera (right/left) */
-	if(cameraInfo.pivot[index] == 0) {
+	if(levelMaps.Cameras[0].pivot[index] == 0) {
+
+		console.log(this.sprite.pivot.x);
 		
 		this.rotationNum = 56;
-		this.rotationTicks = 112
+		this.rotationTicks = 112;
 		/* Draw the shadow on the map */
 		this.shadow.moveTo(cameraInfo.position[index][0] + this.sprite.width, cameraInfo.position[index][1]);
 		this.shadow.lineTo(cameraInfo.position[index][0] + cameraInfo.height[index], cameraInfo.position[index][1] + cameraInfo.width[index]);
@@ -190,21 +218,22 @@ Camera.prototype.drawCamera = function(cameraInfo, index) {
 		//gameBoard.drawLine(this.shadow.position.x, this.shadow.position.y, this.shadow.position.x + this.shadowHeight, this.shadow.position.y + this.shadowWidth, 2);
 		//gameBoard.drawLine(this.shadow.position.x, this.shadow.position.y, this.shadow.position.x + this.shadowHeight, this.shadow.position.y - this.shadowWidth, 2);
 
-		this.old_x = this.shadow.position.x;
+		/*this.old_x = this.shadow.position.x;
 		this.old_y = this.shadow.position.y;
 		this.old_mid_x1 = this.shadow.position.x + this.shadowHeight;
 		this.old_mid_y1 = this.shadow.position.y + this.shadowWidth;
 		this.old_mid_x2 = this.shadow.position.x + this.shadowHeight;
-		this.old_mid_y2 = this.shadow.position.y - this.shadowWidth;
+		this.old_mid_y2 = this.shadow.position.y - this.shadowWidth;*/
 	}
 	else if(levelMaps.Cameras[0].pivot[index] == this.sprite.width) {
 
 		//this.rotationAmount = -this.rotationAmount;
 		/* Change the camera's pivot point since we're looking to the left */
 		this.sprite.pivot.x = this.sprite.width;
-		
+		console.log(this.sprite.pivot.x);
+
 		/* Draw the shadow on the map */
-		this.shadow.moveTo(cameraInfo.position[index][0]	- this.sprite.width, cameraInfo.position[index][1]);
+		this.shadow.moveTo(cameraInfo.position[index][0] - this.sprite.width, cameraInfo.position[index][1]);
 		this.shadow.lineTo(cameraInfo.position[index][0] - cameraInfo.height[index], cameraInfo.position[index][1] + cameraInfo.width[index]);
 		this.shadow.lineTo(cameraInfo.position[index][0] - cameraInfo.height[index], cameraInfo.position[index][1] - cameraInfo.width[index]);
 
@@ -225,7 +254,40 @@ Camera.prototype.drawCamera = function(cameraInfo, index) {
 		this.old_mid_x2 = this.shadow.position.x - this.shadowHeight;
 		this.old_mid_y2 = this.shadow.position.y - this.shadowWidth;*/
 	}
-	console.log(this.shadowWidth)
+
+	else if(levelMaps.Cameras[0].pivot[index] == this.sprite.width/2) {
+
+		//this.rotationAmount = -this.rotationAmount;
+		this.rotationNum = 112;
+		this.rotationTicks = 224;
+		/* Change the camera's pivot point since we're looking to the left */
+		this.sprite.pivot.x = this.sprite.width/2;
+		console.log(this.sprite.pivot.x);
+		
+		/* Draw the shadow on the map */
+		this.shadow.moveTo(cameraInfo.position[index][0]	- this.sprite.width, cameraInfo.position[index][1]);
+		this.shadow.lineTo(cameraInfo.position[index][0] - cameraInfo.height[index], cameraInfo.position[index][1] + cameraInfo.width[index]);
+		this.shadow.lineTo(cameraInfo.position[index][0] - cameraInfo.height[index], cameraInfo.position[index][1] - cameraInfo.width[index]);
+
+		/* Set the properties for rotation */
+		this.shadow.position.x = cameraInfo.position[index][0];
+		this.shadow.position.y = cameraInfo.position[index][1];
+		this.shadow.pivot.x = cameraInfo.position[index][0]-35;
+		this.shadow.pivot.y = cameraInfo.position[index][1];
+
+		/* Now add the shadow lines for detection */
+		//gameBoard.drawLine(this.shadow.position.x, this.shadow.position.y, this.shadow.position.x - this.shadowHeight, this.shadow.position.y + this.shadowWidth, 2);
+		//gameBoard.drawLine(this.shadow.position.x, this.shadow.position.y, this.shadow.position.x - this.shadowHeight, this.shadow.position.y - this.shadowWidth, 2);
+
+		/*this.old_x = this.shadow.position.x;
+		this.old_y = this.shadow.position.y;
+		this.old_mid_x1 = this.shadow.position.x - this.shadowHeight;
+		this.old_mid_y1 = this.shadow.position.y + this.shadowWidth;
+		this.old_mid_x2 = this.shadow.position.x - this.shadowHeight;
+		this.old_mid_y2 = this.shadow.position.y - this.shadowWidth;*/
+	}
+
+	//console.log(this.shadowWidth)
 
 	/* Remember the old coordinates so we can remove them later */
 	/*this.old_x = this.shadow.position.x;

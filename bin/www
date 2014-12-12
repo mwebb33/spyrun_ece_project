@@ -15,6 +15,7 @@ var sockets = {};
 var serverClients = {};
 var connectionIDCounter = 0;
 var curVal = 3/2 * Math.PI;
+var curValue = 3/2 * Math.PI;
 var reverse = false;
 
 cameraRotArray = [];
@@ -70,31 +71,50 @@ io.on('connection', function (socket) {
 });
  
 function camerasRotate() {
-  for(var x = 0; x < 10; x++) {
+  for(var x = 0; x < 2; x++) {
     if(reverse == false){
       if(curVal < Math.PI){
         curVal += 0.0104719/3;
         cameraRotArray[x] = curVal - Math.PI/2 - .1;
         cameraRotArrayString[x] = cameraRotArray[x].toFixed(2).toString();
-      } else {
+      } 
+      else {
         reverse = true; 
         curVal = 0;
         cameraRotArray[x] = 3/2 * Math.PI;
         cameraRotArrayString[x] = cameraRotArray[x].toFixed(2).toString();
       }
-    } else {
+    } 
+    else {
       if(curVal < Math.PI){
         curVal += 0.0104719/3;
         cameraRotArray[x] = Math.PI/2 - .1 - curVal ;
         cameraRotArrayString[x] = cameraRotArray[x].toFixed(2).toString();
-      } else {
+      } 
+      else {
         reverse = false; 
         curVal = 0;
         cameraRotArray[x] = 3/2 * Math.PI;
         cameraRotArrayString[x] = cameraRotArray[x].toFixed(2).toString();
       }
     }
+    //console.log("hello");
   }
+  //console.log("hello");
+  var x = 2;
+  if(curValue < Math.PI*2){
+    //console.log("hello");
+    curValue += 0.0104719/3;
+    cameraRotArray[x] = curValue - Math.PI/2 - .1;
+    cameraRotArrayString[x] = cameraRotArray[x].toFixed(2).toString();
+  }
+  else{
+    //console.log("hoooo");
+    curValue = 0;
+    cameraRotArray[x] = curValue ;
+    cameraRotArrayString[x] = cameraRotArray[x].toFixed(2).toString();
+  }
+
 }
 
 function camerasInitPosition() {
