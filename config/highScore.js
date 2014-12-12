@@ -6,7 +6,7 @@ var db = require("../models/dbConnection")
 /* Create each of the models that we will be adding to the database */
 var HighScore = db.HighScore.model('HighScore', highScoreSchema);
 
-this.add = function(req, res, done) {
+this.add = function(req, res, level, done) {
 
 	var newHighScore = new HighScore();
 	newHighScore.username = req.session.username;

@@ -1,5 +1,6 @@
 var GameBoard = function() {
 
+	this.score = 10000;
 	this.board = [];
 	for(i = 0; i < WIDTH; i++) {
 		this.board.push([]);

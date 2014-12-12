@@ -3,11 +3,11 @@ var mongoose = require('mongoose');
 var Schema = mongoose.Schema;
 
 /* Define the schema for our model */
-var highScoreSchema = mongoose.Schema({
+var userSchema = mongoose.Schema({
 
-		level1:		[String],
-		level2: 	[String]
+		tokenid:	String,
+		highscore: 	[String],
 });
 
 /* Create the model for users and expose it to the app */
-module.exports = mongoose.model('HighScore', highScoreSchema);
+module.exports = mongoose.model('User', userSchema);
