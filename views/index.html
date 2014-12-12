@@ -159,6 +159,8 @@
 	}
 
 	function updateState() {
+
+		/* See if we can get the current state of the gameboard */
 		updating = true;
 		try{
 			var json = JSON.parse(state);
@@ -166,9 +168,11 @@
 			console.log("Error JSON Parse");
 		}
 
+		/* Remove all characters from the gameboard so they can be updated */
 		otherChars.forEach( function(entry) {
 			entry.removeChar();
 		}); 
+
 
 		for (prop in json) {
 		    if(prop != cID && prop != "cameras") {
@@ -202,6 +206,9 @@
 		}
 	}
 
+	/*
+	 * Called when Pixi has finished loading all images
+	 */
 	function onAssetsLoaded() {
 		/* Get the background image */
 		var background = PIXI.Sprite.fromImage("/images/Level.png");
@@ -263,21 +270,22 @@
 		requestAnimFrame(animate);
 	}
 
-	// This method gets called repeatedly by the Pixi driver 
+
+	/* 
+	 *	This method gets called repeatedly by the Pixi driver 
+	 */
 	function animate() {
 		//console.log(globalCharNames)
 
 		requestAnimFrame(animate);
 
 		localChar.updatePosition();
-
 		updateState();
 
+
 		//consoleT.setText((stage.getMousePosition().x).toFixed(2) + ", " + (stage.getMousePosition().y).toFixed(2));
-
-
-		consoleT.setText(currentMousePos.x.toFixed(2)  + ", " + currentMousePos.y.toFixed(2));
-		consoleTT.setText("local" + localChar.charSprite.position.x  + ", " + localChar.charSprite.position.y);
+		//consoleT.setText(currentMousePos.x.toFixed(2)  + ", " + currentMousePos.y.toFixed(2));
+		//consoleTT.setText("local" + localChar.charSprite.position.x  + ", " + localChar.charSprite.position.y);
 
 		/* Update the cameras */
 		for(var i = 0; i < cameraList.length; i++) {
