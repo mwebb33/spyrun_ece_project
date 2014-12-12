@@ -17,6 +17,7 @@ this.get = function(req, res, tokenid, done) {
 			var user = new User();
 			user.tokenid = tokenid;
 			user.highscore = [];
+			user.name = req.session.name;
 			
 			user.save(function(err) {
 				if(err)
@@ -39,6 +40,7 @@ this.addHighScore = function(req, res, tokenid, level, score, done) {
 	User.findOne({'tokenid': tokenid}, function(err, user) {
 		var current_index = user.highscore.indexOf('level' + level);
 		if(current_index == -1) {
+			console.log("SCORE: " + score);
 			user.highscore.push('level' + level);
 			user.highscore.push(score);
 		}
@@ -47,14 +49,20 @@ this.addHighScore = function(req, res, tokenid, level, score, done) {
 			if(parseInt(current_score) < parseInt(score)) 
 				user.highscore[current_index + 1] = score;
 		}
-		user.save(function(err) {
+		var newHighScores = user.highscore;
+		User.update({ _id: user._id }, { $set: { highscore: newHighScores }}, function() {
+			done(req, res);
+		});
+		/*user.save(function(err) {
 			if(err)
 				throw err;
 			else {
-				console.log("Added: " + user);
-				done(req, res, user);
+				User.findOne({'tokenid': tokenid}, function(err, user2) {
+				console.log("Added: " + user2);
+				done(req, res);
+			});
 			}
-		});
+		});*/
 	});
 };
 

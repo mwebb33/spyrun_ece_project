@@ -29,6 +29,7 @@
 		<div id="countdown"></div>
 		<p id="highscore_p">Previous Best: <%= highscore %></p>
 		<p id="current_score"></p>
+		<ul id="topTenList">Top Ten</ul>
 	</div>
 
     <form id="myForm" autocomplete="off" onkeypress="return event.keyCode != 13;"> <input type="text" id="myText" value=""></form>
@@ -43,7 +44,6 @@
 		consoleT.position.y = 20;
 		consoleT.anchor.set(0.5, 0);
 		consoleT.style.align = "center";
-		
 	var consoleTT = new PIXI.Text("Init", {font:"16px Consolas", fill:"white", align:"center"});
 		consoleTT.position.x = 320;
 		consoleTT.position.y = 20;
@@ -126,6 +126,7 @@
 	var WIDTH = 1080;
 	var spriteNum = 1;
 	var spyWalkB;
+	var killLoop = false;
 
     var assetsToLoader = ["images/spy.json","images/camera.json", "images/background.json","images/Level.png"];
     
@@ -148,7 +149,17 @@
     var key = new Key();
     var levelMaps = JSON.parse(Levels);
 
-    var temp = 0;
+    var topTen = '<%= topten %>'.split(",");
+
+    var topList = document.getElementById("topTenList");
+    for(var i = topTen.length - 1; i > 0; i -= 2) {
+    	var li = document.createElement('li');
+    	li.innerHTML = topTen[i-1] + ": " + topTen[i];
+    	topList.appendChild(li);
+    }
+
+
+
 
     stage.addChild(gameContainer);
 
@@ -279,6 +290,7 @@
 	function animate() {
 		//console.log(globalCharNames)
 
+		if(!killLoop) {
 		requestAnimFrame(animate);
 
 		localChar.updatePosition();
@@ -311,17 +323,21 @@
 		else if(collision == 3) {
 			/* Record their new high score and restart the level */
 			//setTimeout(function() { //Wait 3 seconds before the redirect so they can bask in the glory
-
-				var form = document.createElement("form");
-			    form.setAttribute("method", "post");
-			    form.setAttribute("action", "addHighScore?score=" + gameBoard.score + "&level=" + <%= level %>);
-			    form.submit();
+			
+			var url = "/addHighScore?score=" + gameBoard.score.toString() + "&level=" + <%= level %>;
+			/*var form = document.createElement("form");
+			form.setAttribute("method", "post");
+			form.setAttribute("action", url);
+			form.submit();*/
+			
+			window.location.href = url;
+			killLoop = true;
 			//}, 3000);
 		}
 
 		localChar.sendState();
-
 		renderer.render(stage);
+		}
 	}
 
     </script>

@@ -6,6 +6,7 @@ var Schema = mongoose.Schema;
 var userSchema = mongoose.Schema({
 
 		tokenid:	String,
+		name: 		String, 
 		highscore: 	[String],
 });
 

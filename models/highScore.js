@@ -5,8 +5,8 @@ var Schema = mongoose.Schema;
 /* Define the schema for our model */
 var highScoreSchema = mongoose.Schema({
 
-		level1:		[String],
-		level2: 	[String]
+		level: 		String,
+		scores:  	[String]  
 });
 
 /* Create the model for users and expose it to the app */
