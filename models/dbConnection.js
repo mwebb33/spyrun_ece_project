@@ -13,10 +13,12 @@ var mongoose = require('mongoose')
  * to create the connections once */
 var db = {
 	HighScore : mongoose.connection,
+	User: mongoose.connection,
 }
 
 /* Create our connections */
-//db.HighScore = mongoose.createConnection('mongodb://'+ address + ':' + port + '/highscore')
+db.HighScore = mongoose.createConnection('mongodb://'+ address + ':' + port + '/highscore');
+db.User = mongoose.createConnection('mongodb://'+ address + ':' + port + '/user');
 
 /* Create the model for users and expose it to the app */
 module.exports = db

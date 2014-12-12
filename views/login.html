@@ -25,7 +25,7 @@ all the features of the game, please sign in below, or proceed anonymously. </p>
     var host = location.origin;
 
 	function skipSignIn() {
-		window.location.href = host + "/game";
+		window.location.href = host + "/login";
 	};
 	function signIn() {
 
@@ -42,9 +42,26 @@ all the features of the game, please sign in below, or proceed anonymously. </p>
 			// Update the app to reflect a signed in user
 			// Hide the sign-in button now that the user is authorized, for example:
 			//document.getElementById('signinButton').setAttribute('style', 'display: none');
-			alert("Client ID: " + authResult['client_id']);
-			alert("Token ID: " + authResult['id_token']);
-			window.location.href = host + "/game";
+			//alert("Client ID: " + authResult['client_id']);
+			//alert("Token ID: " + authResult['id_token']);
+			//window.location.href = host + "/login?id=" + authResult['client_id'];
+			//window.location.href = host + "/login?id=" + authResult['client_id'];
+			gapi.client.load('plus', 'v1').then(function() {
+			    var request = gapi.client.plus.people.get({
+			        'userId': 'me'
+			    });
+			    request.then(function(resp) {
+			      //var heading = document.createElement('h4');
+			      //var image = document.createElement('img');
+			      //image.src = resp.result.image.url;
+			      //heading.appendChild(image);
+			      //heading.appendChild(document.createTextNode(resp.result.displayName));
+			      //document.getElementById('content').appendChild(heading);
+			      window.location.href = host + "/login?id=" + resp.result.id;
+			    }, function(reason) {
+			      console.log('Error: ' + reason.result.error.message);
+			    });
+  			});
 		} else {
 			
 			// Update the app to reflect a signed out user

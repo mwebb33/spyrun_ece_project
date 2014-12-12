@@ -28,6 +28,7 @@
 	<div id="container" style="width: 50%; margin: 0 auto; background-color: white;">
 		<div id="countdown"></div>
 		<p id="highscore_p">Previous Best: <%= highscore %></p>
+		<p id="current_score"></p>
 	</div>
 
     <form id="myForm" autocomplete="off" onkeypress="return event.keyCode != 13;"> <input type="text" id="myText" value=""></form>
@@ -295,9 +296,27 @@
 			cameraList[i].getShadowLines();
 		}
 
+		/* Update the score */
+		if(gameBoard.score > 0)
+			gameBoard.score--;
+		var score = document.getElementById("current_score");
+		score.innerHTML = "Current Score: " + gameBoard.score;
+
+
+		/* Detect for collisions */
 		var collision = gameBoard.detectCollision(localChar.charSprite.position.x, localChar.charSprite.position.y, 35, 40);	
 		if(collision == 2) {
 			localChar.setPosition(125,95);
+		}
+		else if(collision == 3) {
+			/* Record their new high score and restart the level */
+			//setTimeout(function() { //Wait 3 seconds before the redirect so they can bask in the glory
+
+				var form = document.createElement("form");
+			    form.setAttribute("method", "post");
+			    form.setAttribute("action", "addHighScore?score=" + gameBoard.score + "&level=" + <%= level %>);
+			    form.submit();
+			//}, 3000);
 		}
 
 		localChar.sendState();
