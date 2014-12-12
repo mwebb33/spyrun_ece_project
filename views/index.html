@@ -25,16 +25,38 @@
 </head>
 <body>
 
-	<div id="container" style="width: 50%; margin: 0 auto; background-color: white;">
-		<div id="countdown"></div>
-		<p id="highscore_p">Previous Best: <%= highscore %></p>
-		<p id="current_score"></p>
-		<ul id="topTenList">Top Ten</ul>
+	<div style="padding: 50px 0 0 120px;">
+	    	<input type="text" autocomplete="off" id="myText" placeholder="Enter a Nickname" onkeypress="if(event.keyCode == 13) enteredName();">
+	</div>
+    	
+
+	<div style="float:left; width: 120px; background-color: white; padding: 50px 0 0 0;">
+		
+	    <ul style="padding: 50px 0 0 0;">
+	    	<li>
+	    		<h3>Level Select</h3>
+	    	</li>
+	    	<li>
+	    		<a href="/game?level=1">Level 1</a>
+	    	</li>
+	    </ul>
 	</div>
 
-    <form id="myForm" autocomplete="off" onkeypress="return event.keyCode != 13;"> <input type="text" id="myText" value=""></form>
-    	<button onclick="enteredName()">Submit</button>
-	<br>
+	<div id="container" style="float:right; width: 200px; background-color: white;">
+		<p id="highscore_p">Previous Best: <%= highscore %></p>
+		<p id="current_score"></p>
+		<table id="topTenListTable">
+			<thhead>
+				<tr>
+					<th>Position</th>
+					<th>Name</th>
+					<th>Score</th>
+				</tr>
+			</thhead>
+			<tbody>
+			</tbody>
+		</table>
+	</div>
 
     <script>
 
@@ -149,13 +171,26 @@
     var key = new Key();
     var levelMaps = JSON.parse(Levels);
 
+    /* Populate the Top Ten Leaderboard */
     var topTen = '<%= topten %>'.split(",");
+    var topList = document.getElementById("topTenListTable");
+    var rowNum = 1;
+    for(var i = topTen.length - 1; i > 0; i -= 2) { //List is in reverse order
+    	var row = topList.insertRow(rowNum);
+    	rowNum++;
 
-    var topList = document.getElementById("topTenList");
-    for(var i = topTen.length - 1; i > 0; i -= 2) {
-    	var li = document.createElement('li');
-    	li.innerHTML = topTen[i-1] + ": " + topTen[i];
-    	topList.appendChild(li);
+    	var cell1 = row.insertCell(0);
+    	var cell2 = row.insertCell(1);
+    	var cell3 = row.insertCell(2);
+
+    	cell1.innerHTML = (rowNum-1).toString();
+    	cell2.innerHTML = topTen[i-1];
+    	cell3.innerHTML = topTen[i];
+
+
+    	//var li = document.createElement('li');
+    	//li.innerHTML = topTen[i-1] + ": " + topTen[i];
+    	//topList.appendChild(tr);
     }
 
 
@@ -243,6 +278,8 @@
 
 		/* Add the event listeners for the button pushes */
 		window.addEventListener('keydown', function(event) { 
+			if(event.keyCode >= 37 && event.KeyCode <= 40)
+				event.preventDefault();
 			key.onKeyDown(event.keyCode);
 		});
 
