@@ -91,13 +91,21 @@ Character.prototype.translation = function(xAmount, yAmount) {
 		this.setPosition(this.charSprite.position.x + xAmount, this.charSprite.position.y + yAmount);
 	}
 
+	//possible sliding code
+	// if(collisionDetected == 1) {
+	// 	if(xAmount > 0){
+	// 		gameBoard.detectCollision(
+	// 	}
+	// 	this.setPosition(this.charSprite.position.x + xAmount, this.charSprite.position.y + yAmount);
+	// }
+
 	else if(collisionDetected == 2) {
 		this.setPosition(125,95);
 	}
 
 	else if(collisionDetected == 3) {
-		var style = {font:"70px Arial", fill:"red"};
-		var score = new PIXI.Text("Your Score Is 4,000!!!",style);
+		var style = {font:"50px Arial", fill:"white"};
+		var score = new PIXI.Text("You Win! Your Score was: " + score ,style);
 		score.position.x = 350;
 		score.position.y = 200;
 		gameContainer.addChild(score);
