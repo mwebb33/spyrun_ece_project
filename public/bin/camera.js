@@ -199,7 +199,7 @@ Camera.prototype.drawCamera = function(cameraInfo, index) {
 	/* Check the starting orientation of the camera (right/left) */
 	if(levelMaps.Cameras[0].pivot[index] == 0) {
 
-		console.log(this.sprite.pivot.x);
+		//console.log(this.sprite.pivot.x);
 		
 		this.rotationNum = 56;
 		this.rotationTicks = 112;
@@ -230,7 +230,7 @@ Camera.prototype.drawCamera = function(cameraInfo, index) {
 		//this.rotationAmount = -this.rotationAmount;
 		/* Change the camera's pivot point since we're looking to the left */
 		this.sprite.pivot.x = this.sprite.width;
-		console.log(this.sprite.pivot.x);
+		//console.log(this.sprite.pivot.x);
 
 		/* Draw the shadow on the map */
 		this.shadow.moveTo(cameraInfo.position[index][0] - this.sprite.width, cameraInfo.position[index][1]);
@@ -262,10 +262,10 @@ Camera.prototype.drawCamera = function(cameraInfo, index) {
 		this.rotationTicks = 224;
 		/* Change the camera's pivot point since we're looking to the left */
 		this.sprite.pivot.x = this.sprite.width/2;
-		console.log(this.sprite.pivot.x);
+		//console.log(this.sprite.pivot.x);
 		
 		/* Draw the shadow on the map */
-		this.shadow.moveTo(cameraInfo.position[index][0]	- this.sprite.width, cameraInfo.position[index][1]);
+		this.shadow.moveTo(cameraInfo.position[index][0] - this.sprite.width, cameraInfo.position[index][1]);
 		this.shadow.lineTo(cameraInfo.position[index][0] - cameraInfo.height[index], cameraInfo.position[index][1] + cameraInfo.width[index]);
 		this.shadow.lineTo(cameraInfo.position[index][0] - cameraInfo.height[index], cameraInfo.position[index][1] - cameraInfo.width[index]);
 
