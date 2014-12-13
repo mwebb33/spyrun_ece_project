@@ -160,6 +160,7 @@
 	//highScore_p.innerHTML = highScore;
 
 	// instance
+	var laserText = new PIXI.Text("Lasers On");
 
 	var HEIGHT = 720;
 	var WIDTH = 1080;
@@ -178,6 +179,7 @@
 
     /* Array for all of the camera objects */
     var cameraList = [];
+    var laserList = [];
     var cameraRotArrayStrings = [];
     var cameraRotArray = [];
 
@@ -310,7 +312,13 @@
 		gameBoard.setFinish(levelMaps, gameContainer, level);
 		gameBoard.setPowerUps(levelMaps, gameContainer, level);
 		gameBoard.setCameras(levelMaps, gameContainer, cameraList, level);
-		//gameBoard.setLasers(levelMaps, gameContainer, level);
+		gameBoard.setLasers(levelMaps, gameContainer, laserList, level);
+
+		laserText.setStyle([fill='red']);
+		laserText.setStyle([font='bold 100pt Arial']);
+		laserText.position.x = 800;
+		laserText.position.y = 75;
+		gameContainer.addChild(laserText);
 
 		/* Add the event listeners for the button pushes */
 		window.addEventListener('keydown', function(event) { 
@@ -363,6 +371,15 @@
 	function animate() {
 		//console.log(globalCharNames)
 
+		gameBoard.updateLasers(levelMaps,laserList,level);
+		if(gameBoard.lasersOn == true){
+			laserText.setText("Lasers On");
+		}
+		else{
+			laserText.setText("Lasers Off")
+		}
+
+
 		if(!killLoop) {
 		requestAnimFrame(animate);
 		
@@ -374,6 +391,15 @@
 		}
 		else{
 			localChar.invisBool = false;
+		}
+		if(localChar.fastcount>0){
+			localChar.fastcount -= 1;
+		}
+		if(localChar.inviscount>0){
+			localChar.inviscount -= 1;
+		}
+		if(localChar.scorecount > 0){
+			localChar.scorecount -= 1;
 		}
 
 		localChar.updatePosition();
@@ -388,7 +414,6 @@
 			if(level == 1)
 				index = 4;
 			cameraList[i].setCameraRotation(cameraRotArray[index + i]);
-			//console.log(cameraList[i]);
 			cameraList[i].getShadowLines();
 		}
 

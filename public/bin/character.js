@@ -32,6 +32,9 @@ var Character = function(render) {
 	this.thisName.style.align = "center";
 	this.speed = false;
 	this.counter = 0;
+	this.fastcount = 0;
+	this.inviscount = 0;
+	this.scorecount = 0;
 
 	this.invisBool = false; 
 	this.runFastBool = false; 
@@ -141,21 +144,35 @@ Character.prototype.translation = function(xAmount, yAmount) {
 	}
 
 	else if(collisionDetected == 3) {
-		var style = {font:"70px Arial", fill:"red"};
-		var score = new PIXI.Text("Finished level!!!",style);
-		score.position.x = 350;
-		score.position.y = 200;
-		gameContainer.addChild(score);
+		//var style = {font:"70px Arial", fill:"red"};
+		//var score = new PIXI.Text("Finished level!!!",style);
+		//score.position.x = 350;
+		//score.position.y = 200;
+		//gameContainer.addChild(score);
 	}
 
 	else if(collisionDetected == 4) {
-		this.counter = 200;
+		if(this.fastcount == 0){
+			this.counter = 200;
+			this.fastcount = 1000;
+		}
 		this.setPosition(this.charSprite.position.x + xAmount, this.charSprite.position.y + yAmount);
 	}
 
 	else if(collisionDetected == 5) {
-		this.counter2 = 200;
-		this.invisBool = true;
+		if(this.inviscount == 0){
+			this.counter2 = 200;
+			this.inviscount = 1000;
+			this.invisBool = true;
+		}
+		this.setPosition(this.charSprite.position.x + xAmount, this.charSprite.position.y + yAmount);
+	}
+
+	else if(collisionDetected == 6) {
+		if(this.scorecount == 0){
+			gameBoard.score += 1000;
+			this.scorecount = 1000;
+		}
 		this.setPosition(this.charSprite.position.x + xAmount, this.charSprite.position.y + yAmount);
 	}
 };

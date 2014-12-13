@@ -1,5 +1,7 @@
 var GameBoard = function() {
 
+	this.lasersOn = true;
+	this.lasersCounter = 200;
 	this.score = 10000;
 	this.board = [];
 	for(i = 0; i < WIDTH; i++) {
@@ -29,7 +31,7 @@ GameBoard.prototype.setWalls = function(levelMaps, gameContainer, levelNum) {
 		this.drawLine(levelMaps.Walls[levelNum].start[i][0], levelMaps.Walls[levelNum].start[i][1], levelMaps.Walls[levelNum].end[i][0], levelMaps.Walls[levelNum].end[i][1], 1);
 	}
 
-	/* Set the finish line on the map next */
+	/* Set the finish line on the map next 
 	for(var i = 0; i < levelMaps.FinishLine[levelNum].start.length; i++) {
 		//graphics.beginFill(0xFF0000);
 		//graphics.moveTo(levelMaps.FinishLine[levelNum].start[i][0], levelMaps.FinishLine[levelNum].start[i][1]);
@@ -38,65 +40,80 @@ GameBoard.prototype.setWalls = function(levelMaps, gameContainer, levelNum) {
 
 		this.drawLine(levelMaps.FinishLine[levelNum].start[i][0], levelMaps.FinishLine[levelNum].start[i][1], levelMaps.FinishLine[levelNum].end[i][0], levelMaps.FinishLine[levelNum].end[i][1], 3);
 	}
-	//gameContainer.addChild(graphics);
+	//gameContainer.addChild(graphics);*/
 };
 
-GameBoard.prototype.setLasers = function(levelMaps, gameContainer, levelNum) {
+GameBoard.prototype.setLasers = function(levelMaps, gameContainer,laserList, levelNum) {
 
-	/* Add the walls to the graphics image */
-	var graphics = new PIXI.Graphics();
-	graphics.lineStyle(12, 0x0F0F0F); //0x0F0F0F
-	for(var i = 0; i < levelMaps.Walls[levelNum].start.length; i++) {
-		graphics.beginFill(0xFF0000);
-		graphics.moveTo(levelMaps.Walls[levelNum].start[i][0], levelMaps.Walls[0].start[i][1]);
-		graphics.lineTo(levelMaps.Walls[levelNum].end[i][0], levelMaps.Walls[0].end[i][1]);
-		graphics.endFill();
+
+	for(var i = 0; i < levelMaps.Lasers[levelNum].start.length; i++) {
+		var graphics = new PIXI.Graphics();
+		laserList.push(graphics);
+		graphics.lineStyle(2, 0x0FF0000); //0x0F0F0F
+		//graphics.lineColor = "red";
+		//graphics.lineWidth = 2;
+		graphics.moveTo(levelMaps.Lasers[levelNum].start[i][0], levelMaps.Lasers[levelNum].start[i][1]);
+		graphics.lineTo(levelMaps.Lasers[levelNum].end[i][0], levelMaps.Lasers[levelNum].end[i][1]);
+		gameContainer.addChild(graphics);
 
 		/* Now add the wall to the gameBoard object for collision detection */
-		this.drawLine(levelMaps.Walls[levelNum].start[i][0], levelMaps.Walls[levelNum].start[i][1], levelMaps.Walls[levelNum].end[i][0], levelMaps.Walls[levelNum].end[i][1], 1);
+		this.drawLine(levelMaps.Lasers[levelNum].start[i][0], levelMaps.Lasers[levelNum].start[i][1], levelMaps.Lasers[levelNum].end[i][0], levelMaps.Lasers[levelNum].end[i][1], 2);
 	}
 
-	return graphics;
 };
+
+GameBoard.prototype.updateLasers = function(levelMaps, laserList, levelNum) {
+	if(this.lasersCounter == 0){
+		if(this.lasersOn == true){
+			this.lasersOn = false;
+			this.lasersCounter = 200;
+		}
+		else{
+			this.lasersOn = true;
+			this.lasersCounter = 200;
+		}
+	}
+	else{
+		this.lasersCounter -= 1;
+	}
+	for(var i = 0; i < laserList.length; i++){
+		if(this.lasersOn == true){
+			laserList[i].lineStyle(2, 0xFF0000);
+			laserList[i].lineColor = "red";
+			this.drawLine(levelMaps.Lasers[levelNum].start[i][0], levelMaps.Lasers[levelNum].start[i][1], levelMaps.Lasers[levelNum].end[i][0], levelMaps.Lasers[levelNum].end[i][1], 2);
+		}
+		else{
+			laserList[i].lineStyle(2, 0x000000);
+			laserList[i].lineColor = "white";
+			this.drawLine(levelMaps.Lasers[levelNum].start[i][0], levelMaps.Lasers[levelNum].start[i][1], levelMaps.Lasers[levelNum].end[i][0], levelMaps.Lasers[levelNum].end[i][1], 0);
+		}
+	}
+}
 
 
 GameBoard.prototype.setFinish = function(levelMaps, gameContainer, levelNum) {
 	var graphics = new PIXI.Graphics();
-	graphics.lineStyle(1, 0x0F0F0F); //0x0F0F0F
+	//graphics.lineStyle(1, 0x0F0F0F); //0x0F0F0F
 
-	for(var i = 0; i < levelMaps.FinishLine[levelNum].start.length; i++) {
+	for(var i = 0; i < levelMaps.FinishLine[levelNum].TopL.length; i++) {
 		graphics.beginFill(0xFF0000);
-		graphics.moveTo(levelMaps.FinishLine[levelNum].start[i][0], levelMaps.FinishLine[levelNum].start[i][1]);
-		graphics.lineTo(levelMaps.FinishLine[levelNum].end[i][0], levelMaps.FinishLine[levelNum].end[i][1]);
-		graphics.lineTo(levelMaps.FinishLine[levelNum].end[i][0], levelMaps.FinishLine[levelNum].end[i][1] + 90);
-		graphics.lineTo(levelMaps.FinishLine[levelNum].start[i][0], levelMaps.FinishLine[levelNum].start[i][1] + 90);
+		graphics.moveTo(levelMaps.FinishLine[levelNum].TopL[i][0], levelMaps.FinishLine[levelNum].TopL[i][1]);
+		graphics.lineTo(levelMaps.FinishLine[levelNum].TopR[i][0], levelMaps.FinishLine[levelNum].TopR[i][1]);
+		graphics.lineTo(levelMaps.FinishLine[levelNum].BotR[i][0], levelMaps.FinishLine[levelNum].BotR[i][1]);
+		graphics.lineTo(levelMaps.FinishLine[levelNum].BotL[i][0], levelMaps.FinishLine[levelNum].BotL[i][1]);
 		graphics.endFill();
-
-
-		var slope = (levelMaps.FinishLine[levelNum].end[i][1] - levelMaps.FinishLine[levelNum].start[i][1])/(levelMaps.FinishLine[levelNum].end[i][0] - levelMaps.FinishLine[levelNum].start[i][0]);
-		var y = levelMaps.FinishLine[levelNum].start[i][1];
-		var x = levelMaps.FinishLine[levelNum].start[i][0];
-		var y_int = (y - (x * slope));
-		while(x < levelMaps.FinishLine[levelNum].end[i][0] || y < levelMaps.FinishLine[levelNum].end[i][1]) {
-			this.board[x][y] = 3
-			if(Math.abs(slope) == Number.POSITIVE_INFINITY) {
-				y += 1;
-			}
-			else if(slope == 0) {
-				x += 1;
-			}
-			else if(slope != 0) {
-				x += 1;
-				y = (x*slope) + y_int;
-			}
-		}
 		gameContainer.addChild(graphics);
+
+		this.drawLine(levelMaps.FinishLine[levelNum].TopL[i][0], levelMaps.FinishLine[levelNum].TopL[i][1], levelMaps.FinishLine[levelNum].TopR[i][0], levelMaps.FinishLine[levelNum].TopR[i][1], 3);
+		this.drawLine(levelMaps.FinishLine[levelNum].TopR[i][0], levelMaps.FinishLine[levelNum].TopR[i][1], levelMaps.FinishLine[levelNum].BotR[i][0], levelMaps.FinishLine[levelNum].BotR[i][1], 3);
+		this.drawLine(levelMaps.FinishLine[levelNum].BotR[i][0], levelMaps.FinishLine[levelNum].BotR[i][1], levelMaps.FinishLine[levelNum].BotL[i][0], levelMaps.FinishLine[levelNum].BotL[i][1], 3);
+		this.drawLine(levelMaps.FinishLine[levelNum].BotL[i][0], levelMaps.FinishLine[levelNum].BotL[i][1], levelMaps.FinishLine[levelNum].TopL[i][0], levelMaps.FinishLine[levelNum].TopL[i][1], 3);
 
 		var winner = new PIXI.Text("Finish");
 		winner.setStyle([fill='black']);
 		winner.setStyle([font='bold 100pt Arial']);
-		winner.position.x = 905;
-		winner.position.y = 645;
+		winner.position.x = levelMaps.FinishLine[levelNum].TopL[i][0]+50;
+		winner.position.y = levelMaps.FinishLine[levelNum].TopL[i][1]+35;
 		gameContainer.addChild(winner);
 	}
 };
@@ -122,10 +139,13 @@ GameBoard.prototype.setPowerUps = function(levelMaps, gameContainer, levelNum) {
 			gameContainer.addChild(graphics);
 
 			if(i == 0){
-				var power = new PIXI.Text("S");
+				var power = new PIXI.Text("F");
 			}
 			else if(i == 1){
 				var power = new PIXI.Text("I");
+			}
+			else if(i == 2){
+				var power = new PIXI.Text("S");
 			}
 			power.setStyle([fill='black']);
 			power.setStyle([font='bold 100pt Arial']);
@@ -337,6 +357,9 @@ GameBoard.prototype.detectCollision = function(x, y, width, height) {
 
 			else if(this.board[i][j] == 5) {
 				return 5;
+			}
+			else if(this.board[i][j] == 6) {
+				return 6;
 			}
 		}
 	}
