@@ -106,7 +106,6 @@ Character.prototype.setPosition= function(x, y) {
 
 
 Character.prototype.getState= function() { 
-	
 	//Create JSON for char
 	var obj = new Object();
 	obj.name = this.thisName.text;
@@ -118,7 +117,6 @@ Character.prototype.getState= function() {
 	obj.fast = this.runFastBool;
 	obj.lvl = this.level; 
 	var charState = JSON.stringify(obj);
-
 	return charState;
 };
 
@@ -228,7 +226,6 @@ Character.prototype.updatePosition = function() {
 		dirDown,dirUp);
 
 	if(this.counter <= 0){
-
 		this.runFastBool = false; 
 
 		if(dirRight && dirUp){
@@ -274,8 +271,6 @@ Character.prototype.updatePosition = function() {
 
 Character.prototype.updateAnimationState = function(dirLeft,dirRight,dirDown,dirUp) {
 	if(this.runFastBool){
-		this.charSprite.children[0].visible = false;
-		this.charSprite.children[1].visible = true;
 		this.charSprite.children[0].animationSpeed = 0.4;
 		this.charSprite.children[1].animationSpeed = 0.4;
 	} 
@@ -283,9 +278,19 @@ Character.prototype.updateAnimationState = function(dirLeft,dirRight,dirDown,dir
 	{
 		this.charSprite.children[0].animationSpeed = 0.1;
 		this.charSprite.children[1].animationSpeed = 0.1;
-		this.charSprite.children[0].visible = true;
-		this.charSprite.children[1].visible = false;
 	}
+
+
+	if(this.invisBool){
+		this.charSprite.children[0].visible = false; 
+		this.charSprite.children[1].visible = true;	//invis
+	}
+	else 
+	{
+		this.charSprite.children[0].visible = true; 
+		this.charSprite.children[1].visible = false; //invis 
+	}
+
 
 	if(dirRight || dirLeft || dirDown || dirUp)
 	{
