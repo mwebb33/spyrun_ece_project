@@ -196,21 +196,6 @@ Camera.prototype.getShadowLines = function(GameBoard) {
 **/
 Camera.prototype.drawCamera = function(cameraInfo, index) {
 
-	/*this.base.beginFill(0x000000, .5);
-	this.base.moveTo(cameraInfo.position[index][0],cameraInfo.position[index][1]-15);
-	this.base.lineTo(cameraInfo.position[index][0]+70,cameraInfo.position[index][1]-15);
-	this.base.lineTo(cameraInfo.position[index][0]+70,cameraInfo.position[index][1]+15);
-	this.base.lineTo(cameraInfo.position[index][0],cameraInfo.position[index][1]-15);
-	this.base.position.x = cameraInfo.position[index][0];
-	this.base.position.y = cameraInfo.position[index][1];
-	this.base.pivot.x = cameraInfo.position[index][0];
-	this.base.pivot.y = cameraInfo.position[index][1];
-	this.base.endFill;*/
-
-
-
-
-
 	this.shadow.beginFill(0xFFFF0B, .5);
 	/* Check the starting orientation of the camera (right/left) */
 	if(levelMaps.Cameras[0].pivot[index] == 0) {
