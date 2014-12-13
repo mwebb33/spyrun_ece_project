@@ -48,7 +48,7 @@
         var host = location.origin;
 
         function skipSignIn() {
-            window.location.href = host + "/login";
+           window.location.href = host + "/login?id=" + "-1" + "&name=" + "Anonymous";
         }
 
         function signIn() {
