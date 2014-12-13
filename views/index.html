@@ -19,19 +19,29 @@
 	<script src="https://cdn.socket.io/socket.io-1.2.1.js"></script>
 	<script src="https://apis.google.com/js/client:platform.js" async defer> </script>
 	<script src="/bin/camera.js"> </script>
+	<link rel="stylesheet" type="text/css" href="/stylesheets/table.css"></link>
+	<link rel="stylesheet" type="text/css" href="/stylesheets/select.css"></link>
+	<link rel="stylesheet" type="text/css" href="/stylesheets/input.css"></link>
 	<script src="/lib/jquery.min.js" type="text/javascript"></script>
 	<script src="/bin/jquery.countdown360.js" type="text/javascript" charset="utf-8"></script>
 </head>
 
 <body>
+	<div>
+		<center>
+			<h1>SpyRun</h1>
+		</center>
+	</div>
 
 	<div style="padding: 50px 0 0 120px;">
-	    	<input type="text" autocomplete="off" id="myText" placeholder="Enter a Nickname" onkeypress="if(event.keyCode == 13) enteredName();">
-	    	<select style="margin: 0 0 0 30px;" onchange="changeLevel(this)">
+	    	<input class="inputs" type="text" autocomplete="off" id="myText" placeholder="Enter a Nickname" onkeypress="if(event.keyCode == 13) enteredName();">
+	    	<select id="soflow" style="margin: 0 0 0 30px;" onchange="changeLevel(this)">
 	    		<option value="#">Select Level</option>
 	    		<option value="/game?level=1">Level 1</option>
 	    		<option value="/game?level=2">Level 2</option>
 	    	</select>
+	    	<h4 style="display: inline-block; margin: 0 0 0 80px;" id="highscore_p">Previous Best: <%= highscore %></h4>
+			<h4 style="display: inline-block; margin: 0 0 0 30px;" id="current_score"></h4>
 	</div>
     	
 
@@ -47,9 +57,9 @@
 	    </ul>
 	</div> -->
 
-	<div id="container" style="float:right; width: 200px; background-color: white;">
-		<p id="highscore_p">Previous Best: <%= highscore %></p>
-		<p id="current_score"></p>
+	<div id="container" style="float: right; margin: auto; width: 24%; background-color: black;">
+		<center>
+		<h4 style="margin: -10px 0 0 0;">Top Ten Leader Board</h4>
 		<table id="topTenListTable">
 			<thhead>
 				<tr>
@@ -61,6 +71,7 @@
 			<tbody>
 			</tbody>
 		</table>
+		</center>
 	</div>
 
     <script>
