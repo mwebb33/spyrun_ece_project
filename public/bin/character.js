@@ -64,8 +64,6 @@ Character.prototype.JSONupdate = function(json) {
 	this.level = json.lvl; 
 
 	if(this.runFastBool){
-		this.charSprite.children[0].visible = false;
-		this.charSprite.children[1].visible = true;
 		this.charSprite.children[0].animationSpeed = 0.4;
 		this.charSprite.children[1].animationSpeed = 0.4;
 	} 
@@ -73,11 +71,20 @@ Character.prototype.JSONupdate = function(json) {
 	{
 		this.charSprite.children[0].animationSpeed = 0.1;
 		this.charSprite.children[1].animationSpeed = 0.1;
+	}
+
+	if(this.invisBool){
+		this.charSprite.children[0].visible = false;
+		this.charSprite.children[1].visible = true;
+	}
+	else 
+	{
 		this.charSprite.children[0].visible = true;
 		this.charSprite.children[1].visible = false;
 	}
 
 	this.charSprite.children[0].playing = json.moving; 
+	this.charSprite.children[1].playing = json.moving; 
 }
 
 Character.prototype.addChar = function() {
