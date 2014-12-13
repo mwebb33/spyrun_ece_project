@@ -278,6 +278,7 @@
 		/* Draw the walls on the screen */
 		gameBoard.setWalls(levelMaps, gameContainer);
 		gameBoard.setFinish(levelMaps, gameContainer);
+		gameBoard.setPowerUps(levelMaps, gameContainer);
 		gameBoard.setCameras(levelMaps, gameContainer, cameraList);
 
 		/* Add the event listeners for the button pushes */
@@ -334,6 +335,9 @@
 
 		if(!killLoop) {
 		requestAnimFrame(animate);
+		if(localChar.counter >= 0){
+			localChar.counter -= 1;
+		}
 
 		localChar.updatePosition();
 		updateState();

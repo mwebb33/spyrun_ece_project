@@ -88,7 +88,7 @@ Camera.prototype.getShadowLines = function(GameBoard) {
 	/* Create a point to reference the camera's position */
 	var reference = new PIXI.Point(0,0);
 	var diff = this.shadow.toGlobal(reference);
-	var height = this.shadowHeight - 70;
+	var height = this.shadowHeight - 40;
 	
 	if (this.sprite.pivot.x == 0) {
 		/* Get the current point of the shadow */
@@ -97,8 +97,8 @@ Camera.prototype.getShadowLines = function(GameBoard) {
 		//var x = diff.x + x;
 		//var y = diff.y + y;
 
-		var x = x + (Math.cos(this.shadow.rotation) * this.sprite.width);
-		var y = y + (Math.sin(this.shadow.rotation) * this.sprite.width);
+		var x = x + (Math.cos(this.shadow.rotation) * this.sprite.width/2);
+		var y = y + (Math.sin(this.shadow.rotation) * this.sprite.width/2);
 
 		//console.log(x + " " + y);
 
@@ -124,8 +124,8 @@ Camera.prototype.getShadowLines = function(GameBoard) {
 		//var x = diff.x + x;
 		//var y = diff.y + y;
 
-		var x = x - (Math.cos(this.shadow.rotation) * this.sprite.width);
-		var y = y - (Math.sin(this.shadow.rotation) * this.sprite.width);
+		var x = x - (Math.cos(this.shadow.rotation) * this.sprite.width/2);
+		var y = y - (Math.sin(this.shadow.rotation) * this.sprite.width/2);
 
 		//console.log(x + " " + y);
 
@@ -143,14 +143,15 @@ Camera.prototype.getShadowLines = function(GameBoard) {
 
  	else if(this.sprite.pivot.x == this.sprite.width/2){
 
+ 		var height = this.shadowHeight - 70;
 		///Get the current point of the shadow 
 		var x = this.shadow.position.x;
 		var y = this.shadow.position.y;
 		//var x = diff.x + x;
 		//var y = diff.y + y;
 
-		var x = x - (Math.cos(this.shadow.rotation) * this.sprite.width);
-		var y = y - (Math.sin(this.shadow.rotation) * this.sprite.width);
+		var x = x - (Math.cos(this.shadow.rotation) * this.sprite.width/2);
+		var y = y - (Math.sin(this.shadow.rotation) * this.sprite.width/2);
 
 		//console.log(x + " " + y);
 
@@ -194,6 +195,21 @@ Camera.prototype.getShadowLines = function(GameBoard) {
 	attributes for the camera 
 **/
 Camera.prototype.drawCamera = function(cameraInfo, index) {
+
+	/*this.base.beginFill(0x000000, .5);
+	this.base.moveTo(cameraInfo.position[index][0],cameraInfo.position[index][1]-15);
+	this.base.lineTo(cameraInfo.position[index][0]+70,cameraInfo.position[index][1]-15);
+	this.base.lineTo(cameraInfo.position[index][0]+70,cameraInfo.position[index][1]+15);
+	this.base.lineTo(cameraInfo.position[index][0],cameraInfo.position[index][1]-15);
+	this.base.position.x = cameraInfo.position[index][0];
+	this.base.position.y = cameraInfo.position[index][1];
+	this.base.pivot.x = cameraInfo.position[index][0];
+	this.base.pivot.y = cameraInfo.position[index][1];
+	this.base.endFill;*/
+
+
+
+
 
 	this.shadow.beginFill(0xFFFF0B, .5);
 	/* Check the starting orientation of the camera (right/left) */

@@ -19,6 +19,8 @@ var Character = function(spyWalk , render) {
 	this.thisName.position.y = 50;
 	this.thisName.anchor.set(0.5, 0);
 	this.thisName.style.align = "center";
+	this.speed = false;
+	this.counter = 0;
 
 	if( render ){
 		stage.addChild(this.charSprite);
@@ -102,6 +104,11 @@ Character.prototype.translation = function(xAmount, yAmount) {
 		score.position.y = 200;
 		gameContainer.addChild(score);
 	}
+
+	if(collisionDetected == 4) {
+		this.counter = 750;
+		this.setPosition(this.charSprite.position.x + xAmount, this.charSprite.position.y + yAmount);
+	}
 };
 
 Character.prototype.sendState = function () {
@@ -169,22 +176,44 @@ Character.prototype.updatePosition = function() {
 	this.updateAnimationState(dirLeft,dirRight,
 		dirDown,dirUp);
 
-	if(dirRight && dirUp){
-		this.translation(2,-2);
-	} else if(dirLeft && dirUp) {
-		this.translation(-2,-2);
-	} else if(dirLeft && dirDown) {
-		this.translation(-2,2);
-	} else if(dirRight && dirDown) {
-		this.translation(2,2);
-	} else if(dirLeft){
-		this.translation(-2,0);
-	} else if(dirUp) {
-		this.translation(0,-2);
-	} else if(dirDown) {
-		this.translation(0,2);
-	} else if(dirRight) {
-		this.translation(2,0);
+	if(this.counter <= 0){
+		if(dirRight && dirUp){
+			this.translation(2,-2);
+		} else if(dirLeft && dirUp) {
+			this.translation(-2,-2);
+		} else if(dirLeft && dirDown) {
+			this.translation(-2,2);
+		} else if(dirRight && dirDown) {
+			this.translation(2,2);
+		} else if(dirLeft){
+			this.translation(-2,0);
+		} else if(dirUp) {
+			this.translation(0,-2);
+		} else if(dirDown) {
+			this.translation(0,2);
+		} else if(dirRight) {
+			this.translation(2,0);
+		}
+	}
+	else{
+		if(dirRight && dirUp){
+			this.translation(4,-4);
+		} else if(dirLeft && dirUp) {
+			this.translation(-4,-4);
+		} else if(dirLeft && dirDown) {
+			this.translation(-4,4);
+		} else if(dirRight && dirDown) {
+			this.translation(4,4);
+		} else if(dirLeft){
+			this.translation(-4,0);
+		} else if(dirUp) {
+			this.translation(0,-4);
+		} else if(dirDown) {
+			this.translation(0,4);
+		} else if(dirRight) {
+			this.translation(4,0);
+		}
+		this.counter -= 1;
 	}
 };
 
