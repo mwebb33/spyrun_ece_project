@@ -35,7 +35,7 @@ var Character = function(render) {
 
 	this.invisBool = false; 
 	this.runFastBool = false; 
-	this.level = 1; 
+	this.locLvl; 
 	this.counter2 = 0;
 
 
@@ -61,7 +61,7 @@ Character.prototype.JSONupdate = function(json) {
 	this.thisName.setText(json.name);
 	this.invisBool = json.invis; 
 	this.runFastBool = json.fast;
-	this.level = json.lvl; 
+	this.locLvl = json.lvl; 
 
 	if(this.runFastBool){
 		this.charSprite.children[0].animationSpeed = 0.4;
@@ -115,7 +115,7 @@ Character.prototype.getState= function() {
 	obj.moving = this.moving; 
 	obj.invis = this.invisBool; 
 	obj.fast = this.runFastBool;
-	obj.lvl = this.level; 
+	obj.lvl = level; 
 	var charState = JSON.stringify(obj);
 	return charState;
 };
@@ -135,8 +135,7 @@ Character.prototype.translation = function(xAmount, yAmount) {
 	else if(collisionDetected == 2) {
 		if(this.invisBool == false){
 			this.setPosition(125,95);
-		}
-		else{
+		} else {
 			this.setPosition(this.charSprite.position.x + xAmount, this.charSprite.position.y + yAmount);
 		}
 	}
