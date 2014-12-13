@@ -123,19 +123,24 @@ GameBoard.prototype.setFinish = function(levelMaps, gameContainer) {
 GameBoard.prototype.setPowerUps = function(levelMaps, gameContainer) {
 	var graphics = new PIXI.Graphics();
 	//graphics.lineStyle(1, 0x0F0F0F);
-	for(var i = 0; i < levelMaps.PowerUps[0].TopL.length; i++){
-		graphics.beginFill(0xFF0000);
-		graphics.moveTo(levelMaps.PowerUps[0].TopL[i][0],levelMaps.PowerUps[0].TopL[i][1]);
-		graphics.lineTo(levelMaps.PowerUps[0].TopR[i][0],levelMaps.PowerUps[0].TopR[i][1]);
-		graphics.lineTo(levelMaps.PowerUps[0].BotR[i][0],levelMaps.PowerUps[0].BotR[i][1]);
-		graphics.lineTo(levelMaps.PowerUps[0].BotL[i][0],levelMaps.PowerUps[0].BotL[i][1]);
-		graphics.endFill();
-		this.drawLine(levelMaps.PowerUps[0].TopL[i][0], levelMaps.PowerUps[0].TopL[i][1], levelMaps.PowerUps[0].BotL[i][0], levelMaps.PowerUps[0].BotL[i][1], 4);
-	this.drawLine(levelMaps.PowerUps[0].BotL[i][0], levelMaps.PowerUps[0].BotL[i][1], levelMaps.PowerUps[0].BotR[i][0], levelMaps.PowerUps[0].BotR[i][1], 4);
-	}
-	gameContainer.addChild(graphics);
+	//alert(levelMaps.PowerUps[0][0].TopL.length);
+	for(var i = 0; i < levelMaps.PowerUps[0].length; i++){
+		for(var x = 0; x < levelMaps.PowerUps[0][i].TopL.length; x++){
 
-	
+			graphics.beginFill(0xFF0000);
+			graphics.moveTo(levelMaps.PowerUps[0][i].TopL[x][0],levelMaps.PowerUps[0][i].TopL[x][1]);
+			graphics.lineTo(levelMaps.PowerUps[0][i].TopR[x][0],levelMaps.PowerUps[0][i].TopR[x][1]);
+			graphics.lineTo(levelMaps.PowerUps[0][i].BotR[x][0],levelMaps.PowerUps[0][i].BotR[x][1]);
+			graphics.lineTo(levelMaps.PowerUps[0][i].BotL[x][0],levelMaps.PowerUps[0][i].BotL[x][1]);
+			graphics.endFill();
+			this.drawLine(levelMaps.PowerUps[0][i].TopL[x][0], levelMaps.PowerUps[0][i].TopL[x][1], levelMaps.PowerUps[0][i].BotL[x][0], levelMaps.PowerUps[0][i].BotL[x][1], i+4);
+			this.drawLine(levelMaps.PowerUps[0][i].BotL[x][0], levelMaps.PowerUps[0][i].BotL[x][1], levelMaps.PowerUps[0][i].BotR[x][0], levelMaps.PowerUps[0][i].BotR[x][1], i+4);
+			this.drawLine(levelMaps.PowerUps[0][i].TopL[x][0], levelMaps.PowerUps[0][i].TopL[x][1], levelMaps.PowerUps[0][i].TopR[x][0], levelMaps.PowerUps[0][i].TopR[x][1], i+4);
+			this.drawLine(levelMaps.PowerUps[0][i].TopR[x][0], levelMaps.PowerUps[0][i].TopR[x][1], levelMaps.PowerUps[0][i].BotR[x][0], levelMaps.PowerUps[0][i].BotR[x][1], i+4);
+		}
+		gameContainer.addChild(graphics);
+
+	}
 }
 
 
@@ -334,6 +339,10 @@ GameBoard.prototype.detectCollision = function(x, y, width, height) {
 
 			else if(this.board[i][j] == 4) {
 				return 4;
+			}
+
+			else if(this.board[i][j] == 5) {
+				return 5;
 			}
 		}
 	}

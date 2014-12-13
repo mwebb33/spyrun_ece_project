@@ -21,6 +21,9 @@ var Character = function(spyWalk , render) {
 	this.thisName.style.align = "center";
 	this.speed = false;
 	this.counter = 0;
+	this.counter2 = 0;
+	this.invisBool = false;
+	this.runFastBool = false;
 
 	if( render ){
 		stage.addChild(this.charSprite);
@@ -94,7 +97,12 @@ Character.prototype.translation = function(xAmount, yAmount) {
 	}
 
 	else if(collisionDetected == 2) {
-		this.setPosition(125,95);
+		if(this.invisBool == false){
+			this.setPosition(125,95);
+		}
+		else{
+			this.setPosition(this.charSprite.position.x + xAmount, this.charSprite.position.y + yAmount);
+		}
 	}
 
 	else if(collisionDetected == 3) {
@@ -105,8 +113,14 @@ Character.prototype.translation = function(xAmount, yAmount) {
 		gameContainer.addChild(score);
 	}
 
-	if(collisionDetected == 4) {
-		this.counter = 1000;
+	else if(collisionDetected == 4) {
+		this.counter = 500;
+		this.setPosition(this.charSprite.position.x + xAmount, this.charSprite.position.y + yAmount);
+	}
+
+	else if(collisionDetected == 5) {
+		this.counter2 = 500;
+		this.invisBool = true;
 		this.setPosition(this.charSprite.position.x + xAmount, this.charSprite.position.y + yAmount);
 	}
 };
@@ -177,6 +191,7 @@ Character.prototype.updatePosition = function() {
 		dirDown,dirUp);
 
 	if(this.counter <= 0){
+		this.runFastBool = false;
 		if(dirRight && dirUp){
 			this.translation(2,-2);
 		} else if(dirLeft && dirUp) {
@@ -196,6 +211,7 @@ Character.prototype.updatePosition = function() {
 		}
 	}
 	else{
+		this.runFastBool = true;
 		if(dirRight && dirUp){
 			this.translation(4,-4);
 		} else if(dirLeft && dirUp) {
@@ -213,7 +229,6 @@ Character.prototype.updatePosition = function() {
 		} else if(dirRight) {
 			this.translation(4,0);
 		}
-		this.counter -= 1;
 	}
 };
 

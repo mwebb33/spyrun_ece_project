@@ -335,8 +335,15 @@
 
 		if(!killLoop) {
 		requestAnimFrame(animate);
+		
 		if(localChar.counter >= 0){
 			localChar.counter -= 1;
+		}
+		if(localChar.counter2 >= 0){
+			localChar.counter2 -= 1;
+		}
+		else{
+			localChar.invisBool = false;
 		}
 
 		localChar.updatePosition();
@@ -363,7 +370,7 @@
 
 		/* Detect for collisions */
 		var collision = gameBoard.detectCollision(localChar.charSprite.position.x, localChar.charSprite.position.y, 35, 40);	
-		if(collision == 2) {
+		if(collision == 2 && localChar.invisBool == false) {
 			localChar.setPosition(125,95);
 		}
 		else if(collision == 3) {
