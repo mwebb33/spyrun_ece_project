@@ -84,7 +84,7 @@ function camerasRotate() {
       else {
         reverse = true; 
         curVal = 0;
-        cameraRotArray[x] = 3/2 * Math.PI;
+        cameraRotArray[x] = 1/2 * Math.PI;
         cameraRotArrayString[x] = cameraRotArray[x].toFixed(2).toString();
       }
     } 
