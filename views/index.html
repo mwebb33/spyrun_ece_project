@@ -155,7 +155,7 @@
 	var spyWalkTransB; 
 	var killLoop = false;
 	var level = parseInt('<%= level %>') - 1;
-	
+
 	var levelBackgroundURL = "images/Level" + '<%= level %>' + ".png";
     var assetsToLoader = ["images/spy.json", "images/spyinvis.json","images/camera.json", "images/background.json", levelBackgroundURL];
     
@@ -238,9 +238,12 @@
 				if (otherChars[prop] == undefined) {
 					otherChars[prop] = new Character(false);
 				}
+				console.log("Name: " + charJson.name + "Level" + charJson.lvl);
 
-				otherChars[prop].addChar();
-		    	otherChars[prop].JSONupdate(charJson);
+				if(charJson.lvl == level){
+					otherChars[prop].addChar();
+			    	otherChars[prop].JSONupdate(charJson);
+		   		}
 
 		    } else if (prop == "cameras"){
 
@@ -313,18 +316,21 @@
 
 		function onTouchStart(event){
 			currentMousePos.x = event.pageX;
-			currentMousePos.y = event.pageY - 110;
+			//currentMousePos.y = event.pageY - 110;
+			currentMousePos.y = event.pageY;
 			touched = true;
 		}
 
 		function onTouchMove(event){
 			currentMousePos.x = event.pageX;
-			currentMousePos.y = event.pageY - 110;
+			//currentMousePos.y = event.pageY - 110;
+			currentMousePos.y = event.pageY;
 		}
 
 		function onTouchEnd(event){
 			currentMousePos.x = event.pageX;
-			currentMousePos.y = event.pageY - 110;
+			//currentMousePos.y = event.pageY - 110;
+			currentMousePos.y = event.pageY;
 			touched = false;
 		}
 
@@ -354,6 +360,7 @@
 		}
 
 		localChar.updatePosition();
+
 		updateState();
 
 		/* Update the cameras */
@@ -386,6 +393,7 @@
 		}
 
 		localChar.sendState();
+
 		renderer.render(stage);
 		}
 	}
