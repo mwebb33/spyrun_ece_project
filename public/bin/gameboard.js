@@ -120,6 +120,24 @@ GameBoard.prototype.setFinish = function(levelMaps, gameContainer) {
 	}
 };
 
+GameBoard.prototype.setPowerUps = function(levelMaps, gameContainer) {
+	var graphics = new PIXI.Graphics();
+	//graphics.lineStyle(1, 0x0F0F0F);
+	for(var i = 0; i < levelMaps.PowerUps[0].TopL.length; i++){
+		graphics.beginFill(0xFF0000);
+		graphics.moveTo(levelMaps.PowerUps[0].TopL[i][0],levelMaps.PowerUps[0].TopL[i][1]);
+		graphics.lineTo(levelMaps.PowerUps[0].TopR[i][0],levelMaps.PowerUps[0].TopR[i][1]);
+		graphics.lineTo(levelMaps.PowerUps[0].BotR[i][0],levelMaps.PowerUps[0].BotR[i][1]);
+		graphics.lineTo(levelMaps.PowerUps[0].BotL[i][0],levelMaps.PowerUps[0].BotL[i][1]);
+		graphics.endFill();
+		this.drawLine(levelMaps.PowerUps[0].TopL[i][0], levelMaps.PowerUps[0].TopL[i][1], levelMaps.PowerUps[0].BotL[i][0], levelMaps.PowerUps[0].BotL[i][1], 4);
+	this.drawLine(levelMaps.PowerUps[0].BotL[i][0], levelMaps.PowerUps[0].BotL[i][1], levelMaps.PowerUps[0].BotR[i][0], levelMaps.PowerUps[0].BotR[i][1], 4);
+	}
+	gameContainer.addChild(graphics);
+
+	
+}
+
 
 GameBoard.prototype.setCameras = function(levelMaps, gameContainer, cameraList) {
 	
@@ -135,10 +153,12 @@ GameBoard.prototype.setCameras = function(levelMaps, gameContainer, cameraList) 
 	
 		/* Now set the shadow that is associated with the camera */
 		var graphics = new PIXI.Graphics();
+		var graphics2 = new PIXI.Graphics();
 		var cameraInfo = levelMaps.Cameras[0];
 
 		/* Set the shadow attributes for the camera */
 		camera.shadow = graphics;
+		//camera.base = graphics2;
 		camera.shadowHeight = cameraInfo.height[i];
 		camera.shadowWidth = cameraInfo.width[i];
 
@@ -310,6 +330,10 @@ GameBoard.prototype.detectCollision = function(x, y, width, height) {
 			/* If we hit the finish line */
 			else if(this.board[i][j] == 3) {
 				return 3;
+			}
+
+			else if(this.board[i][j] == 4) {
+				return 4;
 			}
 		}
 	}

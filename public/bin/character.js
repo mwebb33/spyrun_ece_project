@@ -19,6 +19,8 @@ var Character = function(spyWalk , render) {
 	this.thisName.position.y = 50;
 	this.thisName.anchor.set(0.5, 0);
 	this.thisName.style.align = "center";
+	this.speed = false;
+	this.counter = 0;
 
 	if( render ){
 		stage.addChild(this.charSprite);
@@ -91,24 +93,21 @@ Character.prototype.translation = function(xAmount, yAmount) {
 		this.setPosition(this.charSprite.position.x + xAmount, this.charSprite.position.y + yAmount);
 	}
 
-	//possible sliding code
-	// if(collisionDetected == 1) {
-	// 	if(xAmount > 0){
-	// 		gameBoard.detectCollision(
-	// 	}
-	// 	this.setPosition(this.charSprite.position.x + xAmount, this.charSprite.position.y + yAmount);
-	// }
-
 	else if(collisionDetected == 2) {
 		this.setPosition(125,95);
 	}
 
 	else if(collisionDetected == 3) {
-		var style = {font:"50px Arial", fill:"white"};
-		var score = new PIXI.Text("You Win! Your Score was: " + score ,style);
+		var style = {font:"70px Arial", fill:"red"};
+		var score = new PIXI.Text("Your Score Is 4,000!!!",style);
 		score.position.x = 350;
 		score.position.y = 200;
 		gameContainer.addChild(score);
+	}
+
+	if(collisionDetected == 4) {
+		this.counter = 750;
+		this.setPosition(this.charSprite.position.x + xAmount, this.charSprite.position.y + yAmount);
 	}
 };
 
@@ -177,22 +176,44 @@ Character.prototype.updatePosition = function() {
 	this.updateAnimationState(dirLeft,dirRight,
 		dirDown,dirUp);
 
-	if(dirRight && dirUp){
-		this.translation(2,-2);
-	} else if(dirLeft && dirUp) {
-		this.translation(-2,-2);
-	} else if(dirLeft && dirDown) {
-		this.translation(-2,2);
-	} else if(dirRight && dirDown) {
-		this.translation(2,2);
-	} else if(dirLeft){
-		this.translation(-2,0);
-	} else if(dirUp) {
-		this.translation(0,-2);
-	} else if(dirDown) {
-		this.translation(0,2);
-	} else if(dirRight) {
-		this.translation(2,0);
+	if(this.counter <= 0){
+		if(dirRight && dirUp){
+			this.translation(2,-2);
+		} else if(dirLeft && dirUp) {
+			this.translation(-2,-2);
+		} else if(dirLeft && dirDown) {
+			this.translation(-2,2);
+		} else if(dirRight && dirDown) {
+			this.translation(2,2);
+		} else if(dirLeft){
+			this.translation(-2,0);
+		} else if(dirUp) {
+			this.translation(0,-2);
+		} else if(dirDown) {
+			this.translation(0,2);
+		} else if(dirRight) {
+			this.translation(2,0);
+		}
+	}
+	else{
+		if(dirRight && dirUp){
+			this.translation(4,-4);
+		} else if(dirLeft && dirUp) {
+			this.translation(-4,-4);
+		} else if(dirLeft && dirDown) {
+			this.translation(-4,4);
+		} else if(dirRight && dirDown) {
+			this.translation(4,4);
+		} else if(dirLeft){
+			this.translation(-4,0);
+		} else if(dirUp) {
+			this.translation(0,-4);
+		} else if(dirDown) {
+			this.translation(0,4);
+		} else if(dirRight) {
+			this.translation(4,0);
+		}
+		this.counter -= 1;
 	}
 };
 

@@ -57,7 +57,7 @@ all the features of the game, please sign in below, or proceed anonymously. </p>
 			      //heading.appendChild(image);
 			      //heading.appendChild(document.createTextNode(resp.result.displayName));
 			      //document.getElementById('content').appendChild(heading);
-			      window.location.href = host + "/login?id=" + resp.result.id;
+			      window.location.href = host + "/login?id=" + resp.result.id + "&name=" + resp.result.displayName;
 			    }, function(reason) {
 			      console.log('Error: ' + reason.result.error.message);
 			    });

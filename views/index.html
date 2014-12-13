@@ -25,15 +25,41 @@
 </head>
 <body>
 
-	<div id="container" style="width: 50%; margin: 0 auto; background-color: white;">
-		<div id="countdown"></div>
+	<div style="padding: 50px 0 0 120px;">
+	    	<input type="text" autocomplete="off" id="myText" placeholder="Enter a Nickname" onkeypress="if(event.keyCode == 13) enteredName();">
+	    	<select style="margin: 0 0 0 30px;">
+	    		<option href="/game?level=1">Level 1</option>
+	    	</select>
+	</div>
+    	
+
+	<!-- <div style="float:left; width: 10px; background-color: white; padding: 50px 0 0 0;">
+		
+	    <!-- <ul style="padding: 50px 0 0 0;">
+	    	<li>
+	    		<h3>Level Select</h3>
+	    	</li>
+	    	<li>
+	    		<a href="/game?level=1">Level 1</a>
+	    	</li>
+	    </ul>
+	</div> -->
+
+	<div id="container" style="float:right; width: 200px; background-color: white;">
 		<p id="highscore_p">Previous Best: <%= highscore %></p>
 		<p id="current_score"></p>
+		<table id="topTenListTable">
+			<thhead>
+				<tr>
+					<th>Position</th>
+					<th>Name</th>
+					<th>Score</th>
+				</tr>
+			</thhead>
+			<tbody>
+			</tbody>
+		</table>
 	</div>
-
-    <form id="myForm" autocomplete="off" onkeypress="return event.keyCode != 13;"> <input type="text" id="myText" value=""></form>
-    	<button onclick="enteredName()">Submit</button>
-	<br>
 
     <script>
 
@@ -43,7 +69,6 @@
 		consoleT.position.y = 20;
 		consoleT.anchor.set(0.5, 0);
 		consoleT.style.align = "center";
-		
 	var consoleTT = new PIXI.Text("Init", {font:"16px Consolas", fill:"white", align:"center"});
 		consoleTT.position.x = 320;
 		consoleTT.position.y = 20;
@@ -126,6 +151,7 @@
 	var WIDTH = 1080;
 	var spriteNum = 1;
 	var spyWalkB;
+	var killLoop = false;
 
     var assetsToLoader = ["images/spy.json","images/camera.json", "images/background.json","images/Level.png"];
     
@@ -148,7 +174,30 @@
     var key = new Key();
     var levelMaps = JSON.parse(Levels);
 
-    var temp = 0;
+    /* Populate the Top Ten Leaderboard */
+    var topTen = '<%= topten %>'.split(",");
+    var topList = document.getElementById("topTenListTable");
+    var rowNum = 1;
+    for(var i = topTen.length - 1; i > 0; i -= 2) { //List is in reverse order
+    	var row = topList.insertRow(rowNum);
+    	rowNum++;
+
+    	var cell1 = row.insertCell(0);
+    	var cell2 = row.insertCell(1);
+    	var cell3 = row.insertCell(2);
+
+    	cell1.innerHTML = (rowNum-1).toString();
+    	cell2.innerHTML = topTen[i-1];
+    	cell3.innerHTML = topTen[i];
+
+
+    	//var li = document.createElement('li');
+    	//li.innerHTML = topTen[i-1] + ": " + topTen[i];
+    	//topList.appendChild(tr);
+    }
+
+
+
 
     stage.addChild(gameContainer);
 
@@ -156,6 +205,7 @@
 
     function enteredName() {
 		clientName = document.getElementById("myText").value;
+		document.getElementById("myText").blur();
 		console.log("Changed name to: " + clientName);
 		localChar.updateName(clientName);
 	}
@@ -228,10 +278,14 @@
 		/* Draw the walls on the screen */
 		gameBoard.setWalls(levelMaps, gameContainer);
 		gameBoard.setFinish(levelMaps, gameContainer);
+		gameBoard.setPowerUps(levelMaps, gameContainer);
 		gameBoard.setCameras(levelMaps, gameContainer, cameraList);
 
 		/* Add the event listeners for the button pushes */
 		window.addEventListener('keydown', function(event) { 
+			if(event.keyCode >= 37 && event.keyCode <= 40) {
+				event.preventDefault();
+			}
 			key.onKeyDown(event.keyCode);
 		});
 
@@ -279,7 +333,11 @@
 	function animate() {
 		//console.log(globalCharNames)
 
+		if(!killLoop) {
 		requestAnimFrame(animate);
+		if(localChar.counter >= 0){
+			localChar.counter -= 1;
+		}
 
 		localChar.updatePosition();
 		updateState();
@@ -311,17 +369,21 @@
 		else if(collision == 3) {
 			/* Record their new high score and restart the level */
 			//setTimeout(function() { //Wait 3 seconds before the redirect so they can bask in the glory
-
-				var form = document.createElement("form");
-			    form.setAttribute("method", "post");
-			    form.setAttribute("action", "addHighScore?score=" + gameBoard.score + "&level=" + <%= level %>);
-			    form.submit();
+			
+			var url = "/addHighScore?score=" + gameBoard.score.toString() + "&level=" + <%= level %>;
+			/*var form = document.createElement("form");
+			form.setAttribute("method", "post");
+			form.setAttribute("action", url);
+			form.submit();*/
+			
+			window.location.href = url;
+			killLoop = true;
 			//}, 3000);
 		}
 
 		localChar.sendState();
-
 		renderer.render(stage);
+		}
 	}
 
     </script>

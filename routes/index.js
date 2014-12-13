@@ -26,10 +26,12 @@ router.get('/game', function(req, res) {
 	var level = url.level;
 
 	User.getHighScore(req, res, req.session.tokenid, level, function(req, res, highscore) {
-		console.log("Highscore: " + highscore)
-		if(highscore == undefined)
-			highscore = 0;
-		res.render('index', {highscore: highscore, level: level});
+		HighScore.get(req, res, level, function(req, res, topten) {
+			console.log("Highscore: " + topten)
+			if(highscore == undefined)
+				highscore = 0;
+			res.render('index', {highscore: highscore, level: level, topten: topten});
+		});
 	});
 	
 });
@@ -40,26 +42,43 @@ router.get('/login', function(req, res) {
 	/* Grab all of the information from the query string */
 	var url = querystring.parse(req.url.replace(/^.*\?/, ''));
 	var tokenid = url.id;
+	var name = url.name;
 
 	/* Set the user's ID and redirect to the game */
 	req.session.tokenid = tokenid;
+	req.session.name = name;
 	User.get(req, res, req.session.tokenid, function(req, res, user) { //Make sure the user exists
 		res.redirect('/game?level=1');
 	});
 });
 
 /* POST for adding high score */
-router.post('/addHighScore', function(req, res) {
+router.get('/addHighScore', function(req, res) {
 
 	/* Grab all of the information from the query string */
 	var url = querystring.parse(req.url.replace(/^.*\?/, ''));
 	var score = url.score;
 	var level = url.level;
 
-	User.addHighScore(req, res, req.session.tokenid, level, score, function(req, res, user) {
-		console.log("Score: " + user);
-		res.redirect('/game?level=' + level);
+	console.log("INDEX SCORE: " + level);
+	User.addHighScore(req, res, req.session.tokenid, level, score, function(req, res) {
+		HighScore.update(req, res, req.session.name, level, score, function(req, res) {
+			//console.log("Score: " + user);
+			res.redirect('/game?level=' + level);
+		});
 	});
+});
+
+router.get('/test', function(req, res) {
+	var url = querystring.parse(req.url.replace(/^.*\?/, ''));
+	var score = url.score;
+	var level = url.level;
+
+	HighScore.update(req, res, 'Test', level, score, function(req, res) {
+		//console.log("Score: " + user);
+		res.render('error', {});
+	});
+
 });
 
 /* POST for adding high score */
