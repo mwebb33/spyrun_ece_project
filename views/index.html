@@ -154,6 +154,7 @@
 	var spyWalkB;
 	var spyWalkTransB; 
 	var killLoop = false;
+	var level = parseInt('<%= level %>') - 1;
 	
 	var levelBackgroundURL = "images/Level" + '<%= level %>' + ".png";
     var assetsToLoader = ["images/spy.json", "images/spyinvis.json","images/camera.json", "images/background.json", levelBackgroundURL];
@@ -285,7 +286,6 @@
 		localChar = new Character(true);
 
 		/* Draw the walls on the screen */
-		var level = parseInt('<%= level %>') - 1;
 		gameBoard.setWalls(levelMaps, gameContainer, level);
 		gameBoard.setFinish(levelMaps, gameContainer, level);
 		gameBoard.setPowerUps(levelMaps, gameContainer, level);
@@ -359,7 +359,11 @@
 		/* Update the cameras */
 		//console.log(cameraRotArray)
 		for(var i = 0; i < cameraList.length; i++) {
-			cameraList[i].setCameraRotation(cameraRotArray[i]);
+			var index = 0;
+			if(level == 1)
+				index = 4;
+			cameraList[i].setCameraRotation(cameraRotArray[index + i]);
+			console.log(cameraRotArray);
 			cameraList[i].getShadowLines();
 		}
 

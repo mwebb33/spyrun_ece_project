@@ -135,6 +135,7 @@ function initCameras(err, data) {
       index++;
     }
   }
+  console.log(cameraObjArray)
 };
 
 function camerasRotate() {

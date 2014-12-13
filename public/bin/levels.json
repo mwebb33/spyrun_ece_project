@@ -13,11 +13,19 @@ var Levels = '{ "Walls" : [' +
 	' { "position": [[400,228], [290,412], [845,230], [635,520]],' +
 	' 	"pivot": [0, 70, 35, 35],' +
 	'	"height": [200, 200, 200, 200],' +
-	'	"width": [50, 50, 50, 50]},' +
-	'	{ "position": [[400,228], [290,412], [845,230], [635,520]],' +
-	' 	"pivot": [0, 70, 35, 35],' +
+	'	"width": [50, 50, 50, 50],' +
+	'	"startRotation": [1, 1, 2, 0],' +
+	'	"endRotation": [3, 3, 0, 2],' +
+	'	"sweep": [true, true, true, true],' +
+	'	"reverse": [true, false, false, true]},' +
+	'	{ "position": [[278,498], [464,224], [740,361], [477,550]],' +
+	' 	"pivot": [35, 35, 35, 0],' +
 	'	"height": [200, 200, 200, 200],' +
-	'	"width": [50, 50, 50, 50]}' +
+	'	"width": [50, 50, 50, 50],' +
+	'	"startRotation": [2, 2, 0, 3],' +
+	'	"endRotation": [0, 0, 4, 1],' +
+	'	"sweep": [true, true, false, true],' +
+	'	"reverse": [false, false, false, true]}' +
 	'],' +
 	' "PowerUps" : [[{' + 
 	'	"TopL": [[570, 5]],' +
