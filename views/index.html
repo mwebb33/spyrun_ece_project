@@ -160,7 +160,7 @@
 	//highScore_p.innerHTML = highScore;
 
 	// instance
-	var laserText = new PIXI.Text("Lasers On");
+	
 
 	var HEIGHT = 720;
 	var WIDTH = 1080;
@@ -308,18 +308,14 @@
 		localChar = new Character(true);
 
 		/* Draw the walls on the screen */
-		gameBoard.setWalls(levelMaps, gameContainer, level);
+		//gameBoard.setWalls(levelMaps, gameContainer, level);
 		gameBoard.setFinish(levelMaps, gameContainer, level);
 		gameBoard.setPowerUps(levelMaps, gameContainer, level);
+		gameBoard.setWalls(levelMaps, gameContainer, level);
 		gameBoard.setCameras(levelMaps, gameContainer, cameraList, level);
 		gameBoard.setLasers(levelMaps, gameContainer, laserList, level);
 
-		laserText.setStyle([fill='red']);
-		laserText.setStyle([font='bold 100pt Arial']);
-		laserText.position.x = 800;
-		laserText.position.y = 75;
-		gameContainer.addChild(laserText);
-
+		
 		/* Add the event listeners for the button pushes */
 		window.addEventListener('keydown', function(event) { 
 			if(event.keyCode >= 37 && event.keyCode <= 40) {
@@ -372,12 +368,6 @@
 		//console.log(globalCharNames)
 
 		gameBoard.updateLasers(levelMaps,laserList,level);
-		if(gameBoard.lasersOn == true){
-			laserText.setText("Lasers On");
-		}
-		else{
-			laserText.setText("Lasers Off")
-		}
 
 
 		if(!killLoop) {

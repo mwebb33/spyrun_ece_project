@@ -55,6 +55,7 @@ GameBoard.prototype.setLasers = function(levelMaps, gameContainer,laserList, lev
 		graphics.moveTo(levelMaps.Lasers[levelNum].start[i][0], levelMaps.Lasers[levelNum].start[i][1]);
 		graphics.lineTo(levelMaps.Lasers[levelNum].end[i][0], levelMaps.Lasers[levelNum].end[i][1]);
 		gameContainer.addChild(graphics);
+		//graphics.visible = false;
 
 		/* Now add the wall to the gameBoard object for collision detection */
 		this.drawLine(levelMaps.Lasers[levelNum].start[i][0], levelMaps.Lasers[levelNum].start[i][1], levelMaps.Lasers[levelNum].end[i][0], levelMaps.Lasers[levelNum].end[i][1], 2);
@@ -78,13 +79,15 @@ GameBoard.prototype.updateLasers = function(levelMaps, laserList, levelNum) {
 	}
 	for(var i = 0; i < laserList.length; i++){
 		if(this.lasersOn == true){
-			laserList[i].lineStyle(2, 0xFF0000);
-			laserList[i].lineColor = "red";
+			//laserList[i].lineStyle(2, 0xFF0000);
+			//laserList[i].lineColor = "red";
+			laserList[i].visible = true;
 			this.drawLine(levelMaps.Lasers[levelNum].start[i][0], levelMaps.Lasers[levelNum].start[i][1], levelMaps.Lasers[levelNum].end[i][0], levelMaps.Lasers[levelNum].end[i][1], 2);
 		}
 		else{
-			laserList[i].lineStyle(2, 0x000000);
-			laserList[i].lineColor = "white";
+			//laserList[i].lineStyle(2, 0x000000);
+			//laserList[i].lineColor = "white";
+			laserList[i].visible = false;
 			this.drawLine(levelMaps.Lasers[levelNum].start[i][0], levelMaps.Lasers[levelNum].start[i][1], levelMaps.Lasers[levelNum].end[i][0], levelMaps.Lasers[levelNum].end[i][1], 0);
 		}
 	}
