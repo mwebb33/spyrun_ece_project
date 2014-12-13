@@ -153,6 +153,7 @@ GameBoard.prototype.setCameras = function(levelMaps, gameContainer, cameraList, 
 		var graphics = new PIXI.Graphics();
 		var graphics2 = new PIXI.Graphics();
 		var cameraInfo = levelMaps.Cameras[levelNum];
+		console.log(levelNum)
 
 		/* Set the shadow attributes for the camera */
 		camera.shadow = graphics;
@@ -161,7 +162,7 @@ GameBoard.prototype.setCameras = function(levelMaps, gameContainer, cameraList, 
 		camera.shadowWidth = cameraInfo.width[i];
 
 		/* Draw the shadow on the gameboard */
-		camera.drawCamera(cameraInfo, i);
+		camera.drawCamera(cameraInfo, i, levelNum);
 		gameContainer.addChild(camera.shadow);
 
 		//graphics.beginFill(0xFFFF0B, .5);

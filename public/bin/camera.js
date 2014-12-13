@@ -194,11 +194,11 @@ Camera.prototype.getShadowLines = function(GameBoard) {
  	This draws the shadow for the camera to the map, and sets the approiate orientation and
 	attributes for the camera 
 **/
-Camera.prototype.drawCamera = function(cameraInfo, index) {
+Camera.prototype.drawCamera = function(cameraInfo, index, levelNum) {
 
 	this.shadow.beginFill(0xFFFF0B, .5);
 	/* Check the starting orientation of the camera (right/left) */
-	if(levelMaps.Cameras[0].pivot[index] == 0) {
+	if(levelMaps.Cameras[levelNum].pivot[index] == 0) {
 
 		//console.log(this.sprite.pivot.x);
 		
@@ -226,7 +226,7 @@ Camera.prototype.drawCamera = function(cameraInfo, index) {
 		this.old_mid_x2 = this.shadow.position.x + this.shadowHeight;
 		this.old_mid_y2 = this.shadow.position.y - this.shadowWidth;*/
 	}
-	else if(levelMaps.Cameras[0].pivot[index] == this.sprite.width) {
+	else if(levelMaps.Cameras[levelNum].pivot[index] == this.sprite.width) {
 
 		//this.rotationAmount = -this.rotationAmount;
 		/* Change the camera's pivot point since we're looking to the left */
@@ -256,7 +256,7 @@ Camera.prototype.drawCamera = function(cameraInfo, index) {
 		this.old_mid_y2 = this.shadow.position.y - this.shadowWidth;*/
 	}
 
-	else if(levelMaps.Cameras[0].pivot[index] == this.sprite.width/2) {
+	else if(levelMaps.Cameras[levelNum].pivot[index] == this.sprite.width/2) {
 
 		//this.rotationAmount = -this.rotationAmount;
 		this.rotationNum = 112;

@@ -373,11 +373,12 @@
 		//console.log(cameraRotArray)
 		for(var i = 0; i < cameraList.length; i++) {
 			var index = 0;
+			//console.log(cameraList.length);
 			if(level == 1)
 				index = 4;
 			cameraList[i].setCameraRotation(cameraRotArray[index + i]);
-			console.log(cameraRotArray);
-			cameraList[i].getShadowLines();
+			//console.log(cameraList[i]);
+			//cameraList[i].getShadowLines();
 		}
 
 		/* Update the score */

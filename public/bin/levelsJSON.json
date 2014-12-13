@@ -18,14 +18,14 @@
 		"endRotation": [3, 3, 0, 2],
 		"sweep": [true, true, true, true],
 		"reverse": [true, true, false, true]},
-		{ "position": [[278,498], [464,224], [740,361], [477,683]],
-	 	"pivot": [35, 35, 35, 0],
-		"height": [200, 200, 200, 200],
-		"width": [50, 50, 50, 50],
-		"startRotation": [2, 2, 0, 3],
-		"endRotation": [0, 0, 4, 1],
-		"sweep": [true, true, false, true],
-		"reverse": [true, false, false, true]}
+		{ "position": [[278,498], [464,224], [740,361], [477,683], [290,412]],
+	 	"pivot": [35, 35, 35, 0, 70],
+		"height": [200, 200, 200, 200, 200],
+		"width": [50, 50, 50, 50, 200],
+		"startRotation": [0, 2, 0, 1, 1],
+		"endRotation": [2, 0, 4, 3, 3],
+		"sweep": [true, true, false, true, true],
+		"reverse": [false, false, false, false, true]}
 	],
 	 "PowerUps" : [[{ 
 		"TopL": [[570, 5]],
