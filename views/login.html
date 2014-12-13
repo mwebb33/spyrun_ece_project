@@ -1,78 +1,81 @@
 <!DOCTYPE HTML>
 <html>
 <head>
+    <script src="https://apis.google.com/js/client:platform.js" async defer> </script>
+    <meta name="google-signin-clientid" content="CLIENT_ID" />
+    <meta name="google-signin-scope" content="https://www.googleapis.com/auth/plus.login" />
+    <meta name="google-signin-requestvisibleactions" content="http://schema.org/AddAction" />
+    <meta name="google-signin-cookiepolicy" content="single_host_origin" />
 
-	<script src="https://apis.google.com/js/client:platform.js" async defer> </script>
-	
-	<meta name="google-signin-clientid" content="CLIENT_ID" />
-	<meta name="google-signin-scope" content="https://www.googleapis.com/auth/plus.login" />
-	<meta name="google-signin-requestvisibleactions" content="http://schema.org/AddAction" />
-	<meta name="google-signin-cookiepolicy" content="single_host_origin" />
-
+    <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/semantic-ui/1.2.0/semantic.min.css"/>
 </head>
-
 <body>
+    <div class="ui page grid">
+        <div class="ui vertically divided grid">
+            <div class="one column row" style="height: 130px"></div>
+            <div class="three column row">
+                <div class="column"></div>
+                <div class="column">
+                    <div class="ui center aligned stacked segment">
+                        <h2 class="ui header">
+                            <i class="crosshairs icon"></i>
+                            <div class="content">
+                                Welcome to SpyRun
+                            </div>
+                        </h2>
+                        <div class="ui divider"></div>
+                        <p>
+                            SpyRun is an online, interactive game to play with friends. In order to use
+                            all the features of the game, please sign in below, or proceed anonymously.
+                        </p>
+                        <div class="ui segment">
+                            <div id="signInButton" onclick="signIn()" class="fluid ui positive button">
+                                <i class="sign in icon"></i>
+                                Sign In
+                            </div>
+                            <div class="ui horizontal divider">Or</div>
+                            <div id="anonymousButton" onclick="skipSignIn()" class="fluid ui button">Anonymous</div>
+                        </div>
+                    </div>
+                </div>
+                <div class="column"></div>
+            </div>
+            <div class="one column row" style="height: 1px"></div>
+        </div>
+    </div>
 
-<h1>Welcome to SpyRun</h1>
-<p>SpyRun is an online, interactive game to play with friends. In order to use
-all the features of the game, please sign in below, or proceed anonymously. </p>
-<button id="signInButton" onclick="signIn()">Sign In</button>
-<button id="anonymousButton" onclick="skipSignIn()">Proceed Anonymously</button>
+    <script>
+        var host = location.origin;
 
-<script>
+        function skipSignIn() {
+            window.location.href = host + "/login";
+        }
 
+        function signIn() {
 
-    var host = location.origin;
+            var additionalParams = {
+                'callback': 'signinCallback',
+                'clientid': '110770941702-t6p9u2sohgv19a6ul9ebjfioj8n0a6gt.apps.googleusercontent.com',
+            };
 
-	function skipSignIn() {
-		window.location.href = host + "/login";
-	};
-	function signIn() {
+            gapi.auth.signIn(additionalParams); // Will use page level configuration
+        }
 
-		var additionalParams = {
-			'callback': 'signinCallback',
-			'clientid': '110770941702-t6p9u2sohgv19a6ul9ebjfioj8n0a6gt.apps.googleusercontent.com',
-		};
-
-		gapi.auth.signIn(additionalParams); // Will use page level configuration
-	};
-
-	function signinCallback(authResult) {
-		if (authResult['status']['signed_in']) {
-			// Update the app to reflect a signed in user
-			// Hide the sign-in button now that the user is authorized, for example:
-			//document.getElementById('signinButton').setAttribute('style', 'display: none');
-			//alert("Client ID: " + authResult['client_id']);
-			//alert("Token ID: " + authResult['id_token']);
-			//window.location.href = host + "/login?id=" + authResult['client_id'];
-			//window.location.href = host + "/login?id=" + authResult['client_id'];
-			gapi.client.load('plus', 'v1').then(function() {
-			    var request = gapi.client.plus.people.get({
-			        'userId': 'me'
-			    });
-			    request.then(function(resp) {
-			      //var heading = document.createElement('h4');
-			      //var image = document.createElement('img');
-			      //image.src = resp.result.image.url;
-			      //heading.appendChild(image);
-			      //heading.appendChild(document.createTextNode(resp.result.displayName));
-			      //document.getElementById('content').appendChild(heading);
-			      window.location.href = host + "/login?id=" + resp.result.id + "&name=" + resp.result.displayName;
-			    }, function(reason) {
-			      console.log('Error: ' + reason.result.error.message);
-			    });
-  			});
-		} else {
-			
-			// Update the app to reflect a signed out user
-			// Possible error values:
-			//   "user_signed_out" - User is signed-out
-			//   "access_denied" - User denied access to your app
-			//   "immediate_failed" - Could not automatically log in the user
-			console.log('Sign-in state: ' + authResult['error']);
-		}
-	}
-
-</script>
-
+        function signinCallback(authResult) {
+            if (authResult['status']['signed_in']) {
+                gapi.client.load('plus', 'v1').then(function() {
+                    var request = gapi.client.plus.people.get({
+                        'userId': 'me'
+                    });
+                    request.then(function(resp) {
+                        window.location.href = host + "/login?id=" + resp.result.id + "&name=" + resp.result.displayName;
+                    }, function(reason) {
+                        console.log('Error: ' + reason.result.error.message);
+                    });
+                });
+            } else {
+                console.log('Sign-in state: ' + authResult['error']);
+            }
+        }
+    </script>
 </body>

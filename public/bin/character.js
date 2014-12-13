@@ -1,11 +1,17 @@
-var Character = function(spyWalk , render) {
+var Character = function(render) {
 	var charSpriteContainer = new PIXI.DisplayObjectContainer();
+	var charSpriteContainerT = new PIXI.DisplayObjectContainer();
 
-	spyWalkMovB = new PIXI.MovieClip(spyWalk);
+	spyWalkMovB = new PIXI.MovieClip(spyWalkB);
 		spyWalkMovB.animationSpeed = .1;
 		spyWalkMovB.playing = true;
 
+	spyWalkMovTransB = new PIXI.MovieClip(spyWalkTransB);
+		spyWalkMovTransB.animationSpeed = .1;
+		spyWalkMovTransB.playing = true;
+
 	charSpriteContainer.addChild(spyWalkMovB);
+	charSpriteContainer.addChild(spyWalkMovTransB);
 	this.charSprite = charSpriteContainer;
 
 	this.charSprite.children[0].x = 0;
@@ -14,6 +20,9 @@ var Character = function(spyWalk , render) {
 	this.charSprite.buttonMode = false;
 	this.charSprite.interactive = false;
 
+	this.charSprite.children[0].visible = true;
+	this.charSprite.children[1].visible = false;
+
 	this.thisName = new PIXI.Text(clientName, {font:"16px Consolas", fill:"white", align:"center"});
 	this.thisName.position.x = 120;
 	this.thisName.position.y = 50;
@@ -21,6 +30,9 @@ var Character = function(spyWalk , render) {
 	this.thisName.style.align = "center";
 	this.speed = false;
 	this.counter = 0;
+	this.invisBool = false; 
+	this.runFastBool = false; 
+	this.level = 1; 
 
 	if( render ){
 		stage.addChild(this.charSprite);
@@ -42,12 +54,11 @@ Character.prototype.JSONupdate = function(json) {
 	this.thisName.position.y = json.y - 45;
 	this.charSprite.rotation = parseFloat(json.rot); 
 	this.thisName.setText(json.name);
+	this.invisBool = json.invis; 
+	this.runFastBool = json.fast;
+	this.level = json.lvl; 
 	this.charSprite.children[0].playing = json.moving; 
 }
-
-Character.prototype.updateSprite = function(characterSprite) {
-	this.charSprite = characterSprite;
-};
 
 Character.prototype.addChar = function() {
 	stage.addChild(this.charSprite);
@@ -76,6 +87,9 @@ Character.prototype.getState= function() {
 	obj.y = this.charSprite.position.y;
 	obj.rot = this.charSprite.rotation.toFixed(2);
 	obj.moving = this.moving; 
+	obj.invis = this.invisBool; 
+	obj.fast = this.runFastBool;
+	obj.lvl = this.level; 
 	var charState = JSON.stringify(obj);
 
 	return charState;
@@ -99,7 +113,7 @@ Character.prototype.translation = function(xAmount, yAmount) {
 
 	else if(collisionDetected == 3) {
 		var style = {font:"70px Arial", fill:"red"};
-		var score = new PIXI.Text("Your Score Is 4,000!!!",style);
+		var score = new PIXI.Text("Finished level!!!",style);
 		score.position.x = 350;
 		score.position.y = 200;
 		gameContainer.addChild(score);
@@ -112,9 +126,6 @@ Character.prototype.translation = function(xAmount, yAmount) {
 };
 
 Character.prototype.sendState = function () {
-	//ws.send(this.getState(), {mask: true});
-	//console.log(this.getState());
-	
 	socket.emit('client', this.getState());
 }
 
@@ -146,7 +157,9 @@ Character.prototype.rotateCardinal = function(dirLeft,dirRight,dirDown,dirUp) {
 	}
 	else if(dirRight && dirDown) {
 		this.charSprite.rotation = 0 + Math.PI/4;
-	} else {}
+	} else {
+
+	}
 };
 
 Character.prototype.getPosition_x = function() {
@@ -177,6 +190,7 @@ Character.prototype.updatePosition = function() {
 		dirDown,dirUp);
 
 	if(this.counter <= 0){
+		this.runFastBool = false; 
 		if(dirRight && dirUp){
 			this.translation(2,-2);
 		} else if(dirLeft && dirUp) {
@@ -196,6 +210,7 @@ Character.prototype.updatePosition = function() {
 		}
 	}
 	else{
+		this.runFastBool = true; 
 		if(dirRight && dirUp){
 			this.translation(4,-4);
 		} else if(dirLeft && dirUp) {
@@ -218,15 +233,28 @@ Character.prototype.updatePosition = function() {
 };
 
 Character.prototype.updateAnimationState = function(dirLeft,dirRight,dirDown,dirUp) {
+	if(this.runFastBool){
+		this.charSprite.children[0].visible = false;
+		this.charSprite.children[1].visible = true;
+		this.charSprite.children[0].animationSpeed = 0.4;
+		this.charSprite.children[1].animationSpeed = 0.4;
+	} else {
+		this.charSprite.children[0].animationSpeed = 0.1;
+		this.charSprite.children[1].animationSpeed = 0.1;
+		this.charSprite.children[0].visible = true;
+		this.charSprite.children[1].visible = false;
+	}	
 
 	if(dirRight || dirLeft || dirDown || dirUp)
 	{
 		this.moving = true;
 		this.charSprite.children[0].playing = true;
+		this.charSprite.children[1].playing = true;
 	}
 	else 
 	{
 		this.moving = false;
 		this.charSprite.children[0].playing = false;
+		this.charSprite.children[1].playing = false;
 	}
 }

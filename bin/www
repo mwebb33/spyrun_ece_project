@@ -32,7 +32,6 @@ app.get('/', function (req, res) {
 });
 
 io.on('connection', function (socket) {
-
   socket.id = connectionIDCounter++;
   sockets[socket.id] = socket;
   serverClients[socket.id] = socket.id;
@@ -80,21 +79,18 @@ function camerasRotate() {
         curVal += 0.0104719*1.2;
         cameraRotArray[x] = curVal - Math.PI/2 - .1;
         cameraRotArrayString[x] = cameraRotArray[x].toFixed(2).toString();
-      } 
-      else {
+      } else {
         reverse = true; 
         curVal = 0;
         cameraRotArray[x] = 1/2 * Math.PI;
         cameraRotArrayString[x] = cameraRotArray[x].toFixed(2).toString();
       }
-    } 
-    else {
+    } else {
       if(curVal < Math.PI){
         curVal += 0.0104719*1.2;
         cameraRotArray[x] = Math.PI/2 - .1 - curVal ;
         cameraRotArrayString[x] = cameraRotArray[x].toFixed(2).toString();
-      } 
-      else {
+      } else {
         reverse = false; 
         curVal = 0;
         cameraRotArray[x] = 3/2 * Math.PI;
