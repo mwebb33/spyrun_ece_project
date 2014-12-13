@@ -150,12 +150,12 @@ Character.prototype.translation = function(xAmount, yAmount) {
 	}
 
 	else if(collisionDetected == 4) {
-		this.counter = 500;
+		this.counter = 200;
 		this.setPosition(this.charSprite.position.x + xAmount, this.charSprite.position.y + yAmount);
 	}
 
 	else if(collisionDetected == 5) {
-		this.counter2 = 500;
+		this.counter2 = 200;
 		this.invisBool = true;
 		this.setPosition(this.charSprite.position.x + xAmount, this.charSprite.position.y + yAmount);
 	}
