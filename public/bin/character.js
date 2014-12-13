@@ -106,7 +106,7 @@ Character.prototype.translation = function(xAmount, yAmount) {
 	}
 
 	if(collisionDetected == 4) {
-		this.counter = 750;
+		this.counter = 1000;
 		this.setPosition(this.charSprite.position.x + xAmount, this.charSprite.position.y + yAmount);
 	}
 };
