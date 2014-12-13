@@ -16,7 +16,9 @@ var Character = function(render) {
 
 	this.charSprite.children[0].x = 0;
 	this.charSprite.children[0].y = 0;
+
 	this.charSprite.pivot = new PIXI.Point(32,32);
+
 	this.charSprite.buttonMode = false;
 	this.charSprite.interactive = false;
 
@@ -30,7 +32,7 @@ var Character = function(render) {
 	this.thisName.style.align = "center";
 	this.speed = false;
 	this.counter = 0;
-	
+
 	this.invisBool = false; 
 	this.runFastBool = false; 
 	this.level = 1; 
@@ -60,6 +62,21 @@ Character.prototype.JSONupdate = function(json) {
 	this.invisBool = json.invis; 
 	this.runFastBool = json.fast;
 	this.level = json.lvl; 
+
+	if(this.runFastBool){
+		this.charSprite.children[0].visible = false;
+		this.charSprite.children[1].visible = true;
+		this.charSprite.children[0].animationSpeed = 0.4;
+		this.charSprite.children[1].animationSpeed = 0.4;
+	} 
+	else 
+	{
+		this.charSprite.children[0].animationSpeed = 0.1;
+		this.charSprite.children[1].animationSpeed = 0.1;
+		this.charSprite.children[0].visible = true;
+		this.charSprite.children[1].visible = false;
+	}
+
 	this.charSprite.children[0].playing = json.moving; 
 }
 
@@ -254,12 +271,14 @@ Character.prototype.updateAnimationState = function(dirLeft,dirRight,dirDown,dir
 		this.charSprite.children[1].visible = true;
 		this.charSprite.children[0].animationSpeed = 0.4;
 		this.charSprite.children[1].animationSpeed = 0.4;
-	} else {
+	} 
+	else 
+	{
 		this.charSprite.children[0].animationSpeed = 0.1;
 		this.charSprite.children[1].animationSpeed = 0.1;
 		this.charSprite.children[0].visible = true;
 		this.charSprite.children[1].visible = false;
-	}	
+	}
 
 	if(dirRight || dirLeft || dirDown || dirUp)
 	{
