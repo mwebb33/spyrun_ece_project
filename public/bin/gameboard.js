@@ -18,12 +18,12 @@ GameBoard.prototype.setWalls = function(levelMaps, gameContainer, levelNum) {
 
 	/* Add the walls to the graphics image */
 	//var graphics = new PIXI.Graphics();
-	//graphics.lineStyle(12, 0x0F0F0F); //0x0F0F0F
+	//graphics.lineStyle(1, 0xFFFFFF); //0x0F0F0F
 	for(var i = 0; i < levelMaps.Walls[levelNum].start.length; i++) {
-		/*graphics.beginFill(0xFF0000);
-		graphics.moveTo(levelMaps.Walls[levelNum].start[i][0], levelMaps.Walls[0].start[i][1]);
-		graphics.lineTo(levelMaps.Walls[levelNum].end[i][0], levelMaps.Walls[0].end[i][1]);
-		graphics.endFill();*/
+		//graphics.beginFill(0x000000);
+		//graphics.moveTo(levelMaps.Walls[levelNum].start[i][0], levelMaps.Walls[0].start[i][1]);
+		//graphics.lineTo(levelMaps.Walls[levelNum].end[i][0], levelMaps.Walls[0].end[i][1]);
+		//graphics.endFill();
 
 		/* Now add the wall to the gameBoard object for collision detection */
 		this.drawLine(levelMaps.Walls[levelNum].start[i][0], levelMaps.Walls[levelNum].start[i][1], levelMaps.Walls[levelNum].end[i][0], levelMaps.Walls[levelNum].end[i][1], 1);
@@ -38,6 +38,7 @@ GameBoard.prototype.setWalls = function(levelMaps, gameContainer, levelNum) {
 
 		this.drawLine(levelMaps.FinishLine[levelNum].start[i][0], levelMaps.FinishLine[levelNum].start[i][1], levelMaps.FinishLine[levelNum].end[i][0], levelMaps.FinishLine[levelNum].end[i][1], 3);
 	}
+	//gameContainer.addChild(graphics);
 };
 
 GameBoard.prototype.setLasers = function(levelMaps, gameContainer, levelNum) {
