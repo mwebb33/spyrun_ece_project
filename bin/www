@@ -3,6 +3,9 @@ var app = require('../app');
 var debug = require('debug')('test');
 var server = require('http').createServer(app);
 var io = require('socket.io').listen(server);  //pass a http.Server instance
+var fs = require('fs');
+var levelsJSON;
+fs.readFile('./public/bin/levelsJSON.json', 'utf8', initCameras);
 console.log("socket.io started")
 
 server.listen(app.get('port'));
@@ -22,16 +25,21 @@ var reverse2 = false;
 var reverse3 = false;
 
 cameraRotArray = [];
+cameraObjArray = [];
 cameraRotArrayString = [];
 camerasInitPosition();
 nIntervId = setInterval(camerasRotate, 33);
 nIntervIdProp = setInterval(propigate, 33);
+
+/* Get the camera's information */
+
 
 app.get('/', function (req, res) {
   res.sendfile(__dirname + '/index.html');
 });
 
 io.on('connection', function (socket) {
+
   socket.id = connectionIDCounter++;
   sockets[socket.id] = socket;
   serverClients[socket.id] = socket.id;
@@ -71,26 +79,110 @@ io.on('connection', function (socket) {
     alertDrop(socket.id);
   });
 });
- 
+
+function initCameras(err, data) {
+
+  if (err) throw err;
+  levelsJSON = JSON.parse(data);
+  /* Go through the cameras for every level */
+  var index = 0;
+  for(var i = 0; i < levelsJSON.Cameras.length; i++) {
+    for(var n = 0; n < levelsJSON.Cameras[i].startRotation.length; n++) {
+      cameraRotArray[index] = levelsJSON.Cameras[i].startRotation[n];
+      cameraObjArray[index] = new Object();
+      cameraObjArray[index].reverse = levelsJSON.Cameras[i].reverse;
+
+      /* Get the starting position */
+      switch(levelsJSON.Cameras[i].startRotation[n]) {
+        case 0:
+          cameraObjArray[index].start = 0;
+          break;
+        case 1:
+          cameraObjArray[index].start = Math.PI/2;
+          break;
+        case 2:
+          cameraObjArray[index].start = Math.PI;
+          break;
+        case 3:
+          cameraObjArray[index].start = (3*Math.PI)/2;
+          break;
+        case 4:
+          cameraObjArray[index].start = 2*Math.PI;
+          break;
+      }
+
+      /* Get the ending position */
+      switch(levelsJSON.Cameras[i].endRotation[n]) {
+        case 0:
+          cameraObjArray[index].end = 0;
+          break;
+        case 1:
+          cameraObjArray[index].end = Math.PI/2;
+          break;
+        case 2:
+          cameraObjArray[index].end = Math.PI;
+          break;
+        case 3:
+          cameraObjArray[index].end = (3*Math.PI)/2;
+          break;
+        case 4:
+          cameraObjArray[index].end = 2*Math.PI;
+          break;
+      }
+      cameraObjArray[index].sweep = levelsJSON.Cameras[i].sweep[n];
+      cameraObjArray[index].currVal = 0;
+      cameraRotArrayString[index] = cameraRotArray[index].toString();
+      index++;
+    }
+  }
+};
+
 function camerasRotate() {
+  var tick;
+  //console.log(cameraObjArray);
+  for(var i = 0; i < cameraObjArray.length; i++) {
+    if(cameraObjArray[i].reverse) {
+      tick = -0.0104719*2.8;
+    }
+    else {
+      tick =  0.0104719*2.8;
+    }
+    cameraObjArray[i].currVal += tick;
+    cameraRotArray[i] = cameraObjArray[i].start - cameraObjArray[i].currVal;
+    cameraRotArrayString[i] = cameraRotArray[i].toFixed(2).toString();
+
+    /* Reverse the direction if we've reached the end */
+    if(cameraObjArray[i].sweep) {
+      if(cameraObjArray[i].currVal > Math.PI)
+        cameraObjArray[i].reverse = true;
+      else if(cameraObjArray[i].currVal < 0)
+        cameraObjArray[i].reverse = false;
+    }
+  }
+};
+ 
+function camerasRotates() {
   for(var x = 0; x < 2; x++) {
     if(reverse == false){
       if(curVal < Math.PI){
         curVal += 0.0104719*1.2;
         cameraRotArray[x] = curVal - Math.PI/2 - .1;
         cameraRotArrayString[x] = cameraRotArray[x].toFixed(2).toString();
-      } else {
+      } 
+      else {
         reverse = true; 
         curVal = 0;
         cameraRotArray[x] = 1/2 * Math.PI;
         cameraRotArrayString[x] = cameraRotArray[x].toFixed(2).toString();
       }
-    } else {
+    } 
+    else {
       if(curVal < Math.PI){
         curVal += 0.0104719*1.2;
         cameraRotArray[x] = Math.PI/2 - .1 - curVal ;
         cameraRotArrayString[x] = cameraRotArray[x].toFixed(2).toString();
-      } else {
+      } 
+      else {
         reverse = false; 
         curVal = 0;
         cameraRotArray[x] = 3/2 * Math.PI;

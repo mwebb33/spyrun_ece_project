@@ -154,8 +154,9 @@
 	var spyWalkB;
 	var spyWalkTransB; 
 	var killLoop = false;
-
-    var assetsToLoader = ["images/spy.json","images/spyinvis.json","images/camera.json", "images/background.json","images/Level.png"];
+	
+	var levelBackgroundURL = "images/Level" + '<%= level %>' + ".png";
+    var assetsToLoader = ["images/spy.json", "images/spyinvis.json","images/camera.json", "images/background.json", levelBackgroundURL];
     
     loader = new PIXI.AssetLoader(assetsToLoader);
     loader.onComplete = onAssetsLoaded;
@@ -264,7 +265,7 @@
 	 */
 	function onAssetsLoaded() {
 		/* Get the background image */
-		var background = PIXI.Sprite.fromImage("/images/Level.png");
+		var background = PIXI.Sprite.fromImage(levelBackgroundURL);
 		gameContainer.addChild(background);
 
 		//Looking into movies//
@@ -284,10 +285,12 @@
 		localChar = new Character(true);
 
 		/* Draw the walls on the screen */
-		gameBoard.setWalls(levelMaps, gameContainer);
-		gameBoard.setFinish(levelMaps, gameContainer);
-		gameBoard.setPowerUps(levelMaps, gameContainer);
-		gameBoard.setCameras(levelMaps, gameContainer, cameraList);
+		var level = parseInt('<%= level %>') - 1;
+		gameBoard.setWalls(levelMaps, gameContainer, level);
+		gameBoard.setFinish(levelMaps, gameContainer, level);
+		gameBoard.setPowerUps(levelMaps, gameContainer, level);
+		gameBoard.setCameras(levelMaps, gameContainer, cameraList, level);
+		//gameBoard.setLasers(levelMaps, gameContainer, level);
 
 		/* Add the event listeners for the button pushes */
 		window.addEventListener('keydown', function(event) { 

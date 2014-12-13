@@ -14,89 +14,69 @@ var GameBoard = function() {
 	}
 };
 
-GameBoard.prototype.setWalls = function(levelMaps, gameContainer) {
+GameBoard.prototype.setWalls = function(levelMaps, gameContainer, levelNum) {
+
+	/* Add the walls to the graphics image */
+	//var graphics = new PIXI.Graphics();
+	//graphics.lineStyle(12, 0x0F0F0F); //0x0F0F0F
+	for(var i = 0; i < levelMaps.Walls[levelNum].start.length; i++) {
+		/*graphics.beginFill(0xFF0000);
+		graphics.moveTo(levelMaps.Walls[levelNum].start[i][0], levelMaps.Walls[0].start[i][1]);
+		graphics.lineTo(levelMaps.Walls[levelNum].end[i][0], levelMaps.Walls[0].end[i][1]);
+		graphics.endFill();*/
+
+		/* Now add the wall to the gameBoard object for collision detection */
+		this.drawLine(levelMaps.Walls[levelNum].start[i][0], levelMaps.Walls[levelNum].start[i][1], levelMaps.Walls[levelNum].end[i][0], levelMaps.Walls[levelNum].end[i][1], 1);
+	}
+
+	/* Set the finish line on the map next */
+	for(var i = 0; i < levelMaps.FinishLine[levelNum].start.length; i++) {
+		//graphics.beginFill(0xFF0000);
+		//graphics.moveTo(levelMaps.FinishLine[levelNum].start[i][0], levelMaps.FinishLine[levelNum].start[i][1]);
+		//graphics.lineTo(levelMaps.FinishLine[levelNum].end[i][0], levelMaps.FinishLine[levelNum].end[i][1]);
+		//graphics.endFill();
+
+		this.drawLine(levelMaps.FinishLine[levelNum].start[i][0], levelMaps.FinishLine[levelNum].start[i][1], levelMaps.FinishLine[levelNum].end[i][0], levelMaps.FinishLine[levelNum].end[i][1], 3);
+	}
+};
+
+GameBoard.prototype.setLasers = function(levelMaps, gameContainer, levelNum) {
 
 	/* Add the walls to the graphics image */
 	var graphics = new PIXI.Graphics();
 	graphics.lineStyle(12, 0x0F0F0F); //0x0F0F0F
-	for(var i = 0; i < levelMaps.Walls[0].start.length; i++) {
+	for(var i = 0; i < levelMaps.Walls[levelNum].start.length; i++) {
 		graphics.beginFill(0xFF0000);
-		graphics.moveTo(levelMaps.Walls[0].start[i][0], levelMaps.Walls[0].start[i][1]);
-		graphics.lineTo(levelMaps.Walls[0].end[i][0], levelMaps.Walls[0].end[i][1]);
+		graphics.moveTo(levelMaps.Walls[levelNum].start[i][0], levelMaps.Walls[0].start[i][1]);
+		graphics.lineTo(levelMaps.Walls[levelNum].end[i][0], levelMaps.Walls[0].end[i][1]);
 		graphics.endFill();
 
 		/* Now add the wall to the gameBoard object for collision detection */
-		this.drawLine(levelMaps.Walls[0].start[i][0], levelMaps.Walls[0].start[i][1], levelMaps.Walls[0].end[i][0], levelMaps.Walls[0].end[i][1], 1);
-
-		/*var slope = (levelMaps.Walls[0].end[i][1] - levelMaps.Walls[0].start[i][1])/(levelMaps.Walls[0].end[i][0] - levelMaps.Walls[0].start[i][0]);
-		var y = levelMaps.Walls[0].start[i][1];
-		var x = levelMaps.Walls[0].start[i][0];
-		var y_int = (y - (x * slope));
-		while(x < levelMaps.Walls[0].end[i][0] || y < levelMaps.Walls[0].end[i][1]) {
-			this.board[x][y] = 1
-			if(Math.abs(slope) == Number.POSITIVE_INFINITY) {
-				y += 1;
-			}
-			else if(slope == 0) {
-				x += 1;
-			}
-			else if(slope != 0) {
-				x += 1;
-				y = (x*slope) + y_int;
-			}
-		}*/
-	}
-
-	/* Set the finish line on the map next */
-	for(var i = 0; i < levelMaps.FinishLine[0].start.length; i++) {
-		graphics.beginFill(0xFF0000);
-		graphics.moveTo(levelMaps.FinishLine[0].start[i][0], levelMaps.FinishLine[0].start[i][1]);
-		graphics.lineTo(levelMaps.FinishLine[0].end[i][0], levelMaps.FinishLine[0].end[i][1]);
-		graphics.endFill();
-
-		this.drawLine(levelMaps.FinishLine[0].start[i][0], levelMaps.FinishLine[0].start[i][1], levelMaps.FinishLine[0].end[i][0], levelMaps.FinishLine[0].end[i][1], 3);
-
-		/*var slope = (levelMaps.FinishLine[0].end[i][1] - levelMaps.FinishLine[0].start[i][1])/(levelMaps.FinishLine[0].end[i][0] - levelMaps.FinishLine[0].start[i][0]);
-		var y = levelMaps.FinishLine[0].start[i][1];
-		var x = levelMaps.FinishLine[0].start[i][0];
-		var y_int = (y - (x * slope));
-		while(x < levelMaps.FinishLine[0].end[i][0] || y < levelMaps.FinishLine[0].end[i][1]) {
-			this.board[x][y] = 3
-			if(Math.abs(slope) == Number.POSITIVE_INFINITY) {
-				y += 1;
-			}
-			else if(slope == 0) {
-				x += 1;
-			}
-			else if(slope != 0) {
-				x += 1;
-				y = (x*slope) + y_int;
-			}
-		}*/
+		this.drawLine(levelMaps.Walls[levelNum].start[i][0], levelMaps.Walls[levelNum].start[i][1], levelMaps.Walls[levelNum].end[i][0], levelMaps.Walls[levelNum].end[i][1], 1);
 	}
 
 	return graphics;
 };
 
 
-GameBoard.prototype.setFinish = function(levelMaps, gameContainer) {
+GameBoard.prototype.setFinish = function(levelMaps, gameContainer, levelNum) {
 	var graphics = new PIXI.Graphics();
 	graphics.lineStyle(1, 0x0F0F0F); //0x0F0F0F
 
-	for(var i = 0; i < levelMaps.FinishLine[0].start.length; i++) {
+	for(var i = 0; i < levelMaps.FinishLine[levelNum].start.length; i++) {
 		graphics.beginFill(0xFF0000);
-		graphics.moveTo(levelMaps.FinishLine[0].start[i][0], levelMaps.FinishLine[0].start[i][1]);
-		graphics.lineTo(levelMaps.FinishLine[0].end[i][0], levelMaps.FinishLine[0].end[i][1]);
-		graphics.lineTo(levelMaps.FinishLine[0].end[i][0], levelMaps.FinishLine[0].end[i][1] + 90);
-		graphics.lineTo(levelMaps.FinishLine[0].start[i][0], levelMaps.FinishLine[0].start[i][1] + 90);
+		graphics.moveTo(levelMaps.FinishLine[levelNum].start[i][0], levelMaps.FinishLine[levelNum].start[i][1]);
+		graphics.lineTo(levelMaps.FinishLine[levelNum].end[i][0], levelMaps.FinishLine[levelNum].end[i][1]);
+		graphics.lineTo(levelMaps.FinishLine[levelNum].end[i][0], levelMaps.FinishLine[levelNum].end[i][1] + 90);
+		graphics.lineTo(levelMaps.FinishLine[levelNum].start[i][0], levelMaps.FinishLine[levelNum].start[i][1] + 90);
 		graphics.endFill();
 
 
-		var slope = (levelMaps.FinishLine[0].end[i][1] - levelMaps.FinishLine[0].start[i][1])/(levelMaps.FinishLine[0].end[i][0] - levelMaps.FinishLine[0].start[i][0]);
-		var y = levelMaps.FinishLine[0].start[i][1];
-		var x = levelMaps.FinishLine[0].start[i][0];
+		var slope = (levelMaps.FinishLine[levelNum].end[i][1] - levelMaps.FinishLine[levelNum].start[i][1])/(levelMaps.FinishLine[levelNum].end[i][0] - levelMaps.FinishLine[levelNum].start[i][0]);
+		var y = levelMaps.FinishLine[levelNum].start[i][1];
+		var x = levelMaps.FinishLine[levelNum].start[i][0];
 		var y_int = (y - (x * slope));
-		while(x < levelMaps.FinishLine[0].end[i][0] || y < levelMaps.FinishLine[0].end[i][1]) {
+		while(x < levelMaps.FinishLine[levelNum].end[i][0] || y < levelMaps.FinishLine[levelNum].end[i][1]) {
 			this.board[x][y] = 3
 			if(Math.abs(slope) == Number.POSITIVE_INFINITY) {
 				y += 1;
@@ -120,24 +100,24 @@ GameBoard.prototype.setFinish = function(levelMaps, gameContainer) {
 	}
 };
 
-GameBoard.prototype.setPowerUps = function(levelMaps, gameContainer) {
-	//var graphics = new PIXI.Graphics();
+GameBoard.prototype.setPowerUps = function(levelMaps, gameContainer, levelNum) {
+	var graphics = new PIXI.Graphics();
 	//graphics.lineStyle(1, 0x0F0F0F);
 	//alert(levelMaps.PowerUps[0][0].TopL.length);
-	for(var i = 0; i < levelMaps.PowerUps[0].length; i++){
+	for(var i = 0; i < levelMaps.PowerUps[levelNum].length; i++){
 		var graphics = new PIXI.Graphics();
-		for(var x = 0; x < levelMaps.PowerUps[0][i].TopL.length; x++){
+		for(var x = 0; x < levelMaps.PowerUps[levelNum][i].TopL.length; x++){
 
 			graphics.beginFill(0x0000FF);
-			graphics.moveTo(levelMaps.PowerUps[0][i].TopL[x][0],levelMaps.PowerUps[0][i].TopL[x][1]);
-			graphics.lineTo(levelMaps.PowerUps[0][i].TopR[x][0],levelMaps.PowerUps[0][i].TopR[x][1]);
-			graphics.lineTo(levelMaps.PowerUps[0][i].BotR[x][0],levelMaps.PowerUps[0][i].BotR[x][1]);
-			graphics.lineTo(levelMaps.PowerUps[0][i].BotL[x][0],levelMaps.PowerUps[0][i].BotL[x][1]);
+			graphics.moveTo(levelMaps.PowerUps[levelNum][i].TopL[x][0],levelMaps.PowerUps[levelNum][i].TopL[x][1]);
+			graphics.lineTo(levelMaps.PowerUps[levelNum][i].TopR[x][0],levelMaps.PowerUps[levelNum][i].TopR[x][1]);
+			graphics.lineTo(levelMaps.PowerUps[levelNum][i].BotR[x][0],levelMaps.PowerUps[levelNum][i].BotR[x][1]);
+			graphics.lineTo(levelMaps.PowerUps[levelNum][i].BotL[x][0],levelMaps.PowerUps[levelNum][i].BotL[x][1]);
 			graphics.endFill();
-			this.drawLine(levelMaps.PowerUps[0][i].TopL[x][0], levelMaps.PowerUps[0][i].TopL[x][1], levelMaps.PowerUps[0][i].BotL[x][0], levelMaps.PowerUps[0][i].BotL[x][1], i+4);
-			this.drawLine(levelMaps.PowerUps[0][i].BotL[x][0], levelMaps.PowerUps[0][i].BotL[x][1], levelMaps.PowerUps[0][i].BotR[x][0], levelMaps.PowerUps[0][i].BotR[x][1], i+4);
-			this.drawLine(levelMaps.PowerUps[0][i].TopL[x][0], levelMaps.PowerUps[0][i].TopL[x][1], levelMaps.PowerUps[0][i].TopR[x][0], levelMaps.PowerUps[0][i].TopR[x][1], i+4);
-			this.drawLine(levelMaps.PowerUps[0][i].TopR[x][0], levelMaps.PowerUps[0][i].TopR[x][1], levelMaps.PowerUps[0][i].BotR[x][0], levelMaps.PowerUps[0][i].BotR[x][1], i+4);
+			this.drawLine(levelMaps.PowerUps[levelNum][i].TopL[x][0], levelMaps.PowerUps[levelNum][i].TopL[x][1], levelMaps.PowerUps[levelNum][i].BotL[x][0], levelMaps.PowerUps[levelNum][i].BotL[x][1], i+4);
+			this.drawLine(levelMaps.PowerUps[levelNum][i].BotL[x][0], levelMaps.PowerUps[levelNum][i].BotL[x][1], levelMaps.PowerUps[levelNum][i].BotR[x][0], levelMaps.PowerUps[levelNum][i].BotR[x][1], i+4);
+			this.drawLine(levelMaps.PowerUps[levelNum][i].TopL[x][0], levelMaps.PowerUps[levelNum][i].TopL[x][1], levelMaps.PowerUps[levelNum][i].TopR[x][0], levelMaps.PowerUps[levelNum][i].TopR[x][1], i+4);
+			this.drawLine(levelMaps.PowerUps[levelNum][i].TopR[x][0], levelMaps.PowerUps[levelNum][i].TopR[x][1], levelMaps.PowerUps[levelNum][i].BotR[x][0], levelMaps.PowerUps[levelNum][i].BotR[x][1], i+4);
 			gameContainer.addChild(graphics);
 
 			if(i == 0){
@@ -148,30 +128,30 @@ GameBoard.prototype.setPowerUps = function(levelMaps, gameContainer) {
 			}
 			power.setStyle([fill='black']);
 			power.setStyle([font='bold 100pt Arial']);
-			power.position.x = levelMaps.PowerUps[0][i].TopL[x][0]+17;
-			power.position.y = levelMaps.PowerUps[0][i].TopL[x][1]+15;
+			power.position.x = levelMaps.PowerUps[levelNum][i].TopL[x][0]+17;
+			power.position.y = levelMaps.PowerUps[levelNum][i].TopL[x][1]+15;
 			gameContainer.addChild(power);
 		}
 	}
 }
 
 
-GameBoard.prototype.setCameras = function(levelMaps, gameContainer, cameraList) {
+GameBoard.prototype.setCameras = function(levelMaps, gameContainer, cameraList, levelNum) {
 	
 	/* Get the location from the levels file */
-	for(var i = 0; i < levelMaps.Cameras[0].position.length; i++) {
+	for(var i = 0; i < levelMaps.Cameras[levelNum].position.length; i++) {
 
 		/* Load the camera image */
 		var camera = new Camera(PIXI.Sprite.fromImage("/images/camera.png"));
 		cameraList.push(camera);
-		camera.sprite.position.x = levelMaps.Cameras[0].position[i][0];
-		camera.sprite.position.y = levelMaps.Cameras[0].position[i][1];
+		camera.sprite.position.x = levelMaps.Cameras[levelNum].position[i][0];
+		camera.sprite.position.y = levelMaps.Cameras[levelNum].position[i][1];
 		gameContainer.addChild(camera.sprite);
 	
 		/* Now set the shadow that is associated with the camera */
 		var graphics = new PIXI.Graphics();
 		var graphics2 = new PIXI.Graphics();
-		var cameraInfo = levelMaps.Cameras[0];
+		var cameraInfo = levelMaps.Cameras[levelNum];
 
 		/* Set the shadow attributes for the camera */
 		camera.shadow = graphics;
