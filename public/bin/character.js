@@ -165,8 +165,8 @@ Character.prototype.updatePosition = function() {
 	var dirUp = key.isDown(key.UP);
 
 	if(touched) {
-		if(this.charSprite.position.x - currentMousePos.x > 3)dirLeft = true;
-		if(this.charSprite.position.x - currentMousePos.x < -3)dirRight = true;
+		if(this.charSprite.position.x - currentMousePos.x > 3) dirLeft = true;
+		if(this.charSprite.position.x - currentMousePos.x < -3) dirRight = true;
 		if(this.charSprite.position.y - currentMousePos.y > 3) dirUp = true;
 		if(this.charSprite.position.y - currentMousePos.y < -3) dirDown = true;
 	}
